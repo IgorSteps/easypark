@@ -32,7 +32,7 @@ Platform:
 
 -   IOS, Android, web browser 
 
--   Required hardware: 
+Required hardware: 
 
 -   Barriers and cameras so it can record data on car park accesses 
 
@@ -58,7 +58,7 @@ Lacks several useful features such as:
 
 -   A built-in payment system 
 
--   A way of notifying the admin when the driver’s arrival to/depart from their space 
+-   A way of notifying the admin when a driver has arrived at their space or left it
 
 
 System name: Swarco 
@@ -121,7 +121,7 @@ Required software:
 
 5. Cons: 
 
--   Lacks several useful features such as: 
+Lacks several useful features such as: 
 
 -   Notifying the admin when the drivers arrive or left their space using their GPS coordinates 
 
@@ -156,9 +156,7 @@ Admins can:
 
 Platform:   
 
--   Available on iOS and Android devices 
-
--   Can be accessed through a web browser 
+-   IOS, Android, web browser
 
 Required hardware: 
 
@@ -178,7 +176,7 @@ Good scalability:
 
 Good UI: 
 
--   Separate GUIs for admins and users 
+-   Separate GUIs for admins and drivers 
 
 -   Profiles are presented in a similar way to social media profiles making them simple and familiar to use 
 
@@ -196,7 +194,7 @@ Good extra features:
 
 Lacking admin features: 
 
--   Cannot receive notifications about GPS discrepancies or users arriving late or spending too long in their space 
+-   Cannot receive notifications about GPS discrepancies or drivers arriving late or spending too long in their space 
 
 -   No GPS notification for when a driver arrives 
 
@@ -206,7 +204,7 @@ System name: Workero
 
 1. General overview: 
 
-Workero is a PMS that fits some but not that many of our criteria. Users can make bookings and pay for them, as well as see the total number of available and taken spaces in the car park. Admins can see various metrics about the car park, such as total rejected and accepted spaces, as well as editing spaces. Workero is mostly marketed towards businesses with integrated features like desk booking, but it could be used for other organisations. 
+Workero is a PMS that fits some but not that many of our criteria. Drivers can make bookings and pay for them, as well as see the total number of available and taken spaces in the car park. Admins can see various metrics about the car park, such as total rejected and accepted spaces, as well as editing spaces. Workero is mostly marketed towards businesses with integrated features like desk booking, but it could be used for other organisations. 
 
 2. Major features: 
 
@@ -226,7 +224,7 @@ Admins can:
 
 Platform:   
 
--   Available on iOS and Android devices 
+-   IOS, Android 
 
 Required hardware: 
 
@@ -246,35 +244,31 @@ Good scalability
 
 Good extra features: 
 
--   Notify drivers when available spaces fall below a certain amount  
-
--   Give drivers a forecast of what parking occupancy will be like on certain days 
-
 -   Syncs with other parking systems to prevent double bookings 
 
 5. Cons: 
 
 Lacking admin features: 
 
--   Cannot receive notifications about GPS discrepancies or users arriving late or spending too long in their space 
+-   Cannot receive notifications about GPS discrepancies or drivers arriving late or spending too long in their space 
 
 -   No GPS notification for when a driver arrives 
 
 -   Cannot manage profiles 
 
-Lacking user  features: 
+Lacking driver features: 
 
 -   Cannot make profiles 
 
 -   No communication with admin 
 
--   No details on UI 
+No details on UI 
 
 System name: Parkable 
 
 1. General overview:  
 
-Parkable is a PMS that fits our system’s criteria well. Workero can be accessed via the app. Drivers can create profiles, make and view bookings and see the total occupancy of a car park. Admins can manage profiles and spaces, as well as see useful metrics about the car park. Parkable can work with most organisations, and specifically mentions Universities on their website 
+Parkable is a PMS that fits our system’s criteria well. It can be accessed via the app. Drivers can create profiles, make and view bookings and see the total occupancy of a car park. Admins can manage profiles and spaces, as well as see useful metrics about the car park. Parkable can work with most organisations, and specifically mentions universities on their website 
 
 2. Major features: 
 
@@ -298,7 +292,7 @@ Admins can:
 
 Platform:   
 
--   Available on iOS and Android devices, accessed through a web browser 
+-   IOS, Android, web browser 
 
 Required hardware: 
 
@@ -316,7 +310,7 @@ Good UI:
 
 -   Useful information on the driver’s profile such as their space number, how long they’ve spent there and their total cost displayed front and centre in blocks, making for a simple UI 
 
--   Making and viewing bookings is done using a simple calendar and google maps interface 
+-   Making and viewing bookings is done using a simple calendar and Google Maps interface 
 
 -   The occupancy of the car park is displayed using a gradually filling green bar with the metrics next to it 
 
@@ -338,13 +332,13 @@ Good extra features:
 
 5. Cons: 
 
--   Lacking admin features: 
+Lacking admin features: 
 
--   Cannot receive notifications about GPS discrepancies or users arriving late or spending too long in their space 
+-   Cannot receive notifications about GPS discrepancies or drivers arriving late or spending too long in their space 
 
 -   No GPS notification for when a driver arrives 
 
-Lacking user features: 
+Lacking driver features: 
 
 -   No communication with admin 
 
