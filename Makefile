@@ -18,3 +18,8 @@ run:
 .PHONY: unit
 unit:
 	$(GO) test $(INTERNAL_DIR)/...
+
+## vendor: copy dependencies from Go to our repository.
+.PHONY: vendor
+vendor:
+	$(GO) mod vendor
