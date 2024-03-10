@@ -23,3 +23,8 @@ unit:
 .PHONY: vendor
 vendor:
 	$(GO) mod vendor
+
+## mocks: generate mocks
+.PHONY: mocks
+mocks:
+	mockery --dir=./internal --output=./mocks

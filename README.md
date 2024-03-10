@@ -5,4 +5,11 @@
 ## Running the app
 
 To build the app, run `make build`.
+
 To run the app, run `make run`.
+
+## Testing
+
+To generate mocks, run `make mocks`.
+
+To run unit tests, run `make unit`.
