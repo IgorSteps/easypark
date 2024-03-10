@@ -1,4 +1,4 @@
-package enitities
+package entities
 
 // UserRole defines the type for user roles within EasyPark.
 type UserRole string
