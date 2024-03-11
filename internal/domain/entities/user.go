@@ -6,11 +6,11 @@ import (
 
 // Represents a User in EasyPark: a driver or an admin.
 type User struct {
-	ID        uuid.UUID `json:"-" gorm:"primary_key"`
-	Username  string    `json:"username"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	FirstName string    `json:"firstname"`
-	LastName  string    `json:"lastname"`
-	Role      UserRole  `json:"-"`
+	ID        uuid.UUID
+	Username  string
+	Email     string
+	Password  string
+	FirstName string
+	LastName  string
+	Role      UserRole
 }

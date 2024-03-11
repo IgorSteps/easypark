@@ -6,3 +6,7 @@ database:
   password: devPassword
   dbname: easypark
   sslmode: disable
+
+httpserver:
+  port: 8080
+  host: localhost
