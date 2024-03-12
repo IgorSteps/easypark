@@ -14,7 +14,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const email = "mail"
+const (
+	email    = "mail"
+	username = "what"
+)
 
 func TestRegisterUser_HappyPath(t *testing.T) {
 	// --------
@@ -25,18 +28,10 @@ func TestRegisterUser_HappyPath(t *testing.T) {
 	usecase := usecases.NewRegisterUser(testLogger, mockUserRepository)
 	ctx := context.Background()
 
-	testUser := entities.User{
-		ID:        uuid.New(),
-		Username:  "boo",
-		Email:     email,
-		Password:  "foo",
-		FirstName: "john",
-		LastName:  "smith",
-		Role:      entities.Driver,
-	}
+	testUser := CreateTestUser()
 
-	mockUserRepository.EXPECT().CheckUserExistsByEmail(ctx, email).Return(false, nil)
-	mockUserRepository.EXPECT().CreateUser(ctx, testUser).Return(testUser, nil)
+	mockUserRepository.EXPECT().CheckUserExists(ctx, email, username).Return(false, nil)
+	mockUserRepository.EXPECT().CreateUser(ctx, testUser).Return(nil)
 
 	// --------
 	// ACT
@@ -52,6 +47,7 @@ func TestRegisterUser_HappyPath(t *testing.T) {
 	assert.Equal(t, 0, len(hook.Entries))
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())
+	mockUserRepository.AssertExpectations(t)
 }
 
 func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
@@ -63,17 +59,9 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 	usecase := usecases.NewRegisterUser(testLogger, mockUserRepository)
 	ctx := context.Background()
 
-	testUser := entities.User{
-		ID:        uuid.New(),
-		Username:  "boo",
-		Email:     email,
-		Password:  "foo",
-		FirstName: "john",
-		LastName:  "smith",
-		Role:      entities.Driver,
-	}
+	testUser := CreateTestUser()
 
-	mockUserRepository.EXPECT().CheckUserExistsByEmail(ctx, email).Return(true, nil)
+	mockUserRepository.EXPECT().CheckUserExists(ctx, email, username).Return(true, nil)
 
 	// --------
 	// ACT
@@ -84,7 +72,7 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
-	assert.Equal(t, err.Error(), "user already exists")
+	assert.Equal(t, err.Error(), "user with given username or email already exists")
 
 	// Assert logger.
 	assert.Equal(t, 1, len(hook.Entries))
@@ -94,6 +82,7 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())
+	mockUserRepository.AssertExpectations(t)
 }
 
 func TestRegisterUser_UnhappyPath_CreateUser_Fails(t *testing.T) {
@@ -106,18 +95,10 @@ func TestRegisterUser_UnhappyPath_CreateUser_Fails(t *testing.T) {
 	ctx := context.Background()
 
 	testError := errors.New("boom")
-	testUser := entities.User{
-		ID:        uuid.New(),
-		Username:  "boo",
-		Email:     email,
-		Password:  "foo",
-		FirstName: "john",
-		LastName:  "smith",
-		Role:      entities.Driver,
-	}
+	testUser := CreateTestUser()
 
-	mockUserRepository.EXPECT().CheckUserExistsByEmail(ctx, email).Return(false, nil)
-	mockUserRepository.EXPECT().CreateUser(ctx, testUser).Return(testUser, testError)
+	mockUserRepository.EXPECT().CheckUserExists(ctx, email, username).Return(false, nil)
+	mockUserRepository.EXPECT().CreateUser(ctx, testUser).Return(testError)
 
 	// --------
 	// ACT
@@ -134,6 +115,7 @@ func TestRegisterUser_UnhappyPath_CreateUser_Fails(t *testing.T) {
 	assert.Equal(t, 0, len(hook.Entries))
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())
+	mockUserRepository.AssertExpectations(t)
 }
 
 func TestRegisterUser_UnhappyPath_CheckUserExistsByEmail_Fails(t *testing.T) {
@@ -146,17 +128,9 @@ func TestRegisterUser_UnhappyPath_CheckUserExistsByEmail_Fails(t *testing.T) {
 	ctx := context.Background()
 
 	testError := errors.New("boom")
-	testUser := entities.User{
-		ID:        uuid.New(),
-		Username:  "boo",
-		Email:     email,
-		Password:  "foo",
-		FirstName: "john",
-		LastName:  "smith",
-		Role:      entities.Driver,
-	}
+	testUser := CreateTestUser()
 
-	mockUserRepository.EXPECT().CheckUserExistsByEmail(ctx, email).Return(false, testError)
+	mockUserRepository.EXPECT().CheckUserExists(ctx, email, username).Return(false, testError)
 
 	// --------
 	// ACT
@@ -172,10 +146,24 @@ func TestRegisterUser_UnhappyPath_CheckUserExistsByEmail_Fails(t *testing.T) {
 	// Assert logger.
 	assert.Equal(t, 1, len(hook.Entries))
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "failed to get user by email", hook.LastEntry().Message, "Messages are not equal")
+	assert.Equal(t, "failed to check if user exists", hook.LastEntry().Message, "Messages are not equal")
 	assert.Equal(t, email, hook.LastEntry().Data["email"])
 	assert.Equal(t, testError.Error(), hook.LastEntry().Data["error"], "Error in the logger fields is not equal")
 
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())
+	mockUserRepository.AssertExpectations(t)
+}
+
+func CreateTestUser() *entities.User {
+	return &entities.User{
+		ID:        uuid.New(),
+		Username:  username,
+		Email:     email,
+		Password:  "foo",
+		FirstName: "john",
+		LastName:  "smith",
+		Role:      entities.RoleDriver,
+	}
+
 }

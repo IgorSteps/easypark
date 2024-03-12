@@ -12,7 +12,7 @@
 ### Setting up environment
 
 1. Run `docker-compose up -d` to create required PostgreSQL image.
-2. Run `make setup-db` to create tables and connection to the database.
+2. Run `make setup-db` to truncate existing tables and start fresh.
 
 ### Starting the app
 
@@ -24,6 +24,22 @@
 To generate mocks, run `make mocks`.
 
 To run unit tests, run `make unit`.
+
+## App Spec
+
+1. Create Driver:
+
+```bash
+curl -X POST http://localhost:8080/register \
+-H "Content-Type: application/json" \
+-d '{
+    "Username": "johndoe",
+    "Email": "john.doe@example.com",
+    "Password": "securepassword",
+    "FirstName": "John",
+    "LastName": "Doe"
+}'
+```
 
 ## Useful things
 

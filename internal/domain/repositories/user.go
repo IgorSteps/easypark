@@ -9,8 +9,8 @@ import (
 // UserRepository provides an interface for CRUD operations on users.
 type UserRepository interface {
 	// CreateUser creates a new user.
-	CreateUser(ctx context.Context, user entities.User) (entities.User, error)
+	CreateUser(ctx context.Context, user *entities.User) error
 
-	// CheckUserExists checs if a user with given email exists.
-	CheckUserExistsByEmail(ctx context.Context, email string) (bool, error)
+	// CheckUserExists checks if a user exists with given username and email.
+	CheckUserExists(ctx context.Context, email, uname string) (bool, error)
 }

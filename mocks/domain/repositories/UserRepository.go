@@ -22,27 +22,27 @@ func (_m *UserRepository) EXPECT() *UserRepository_Expecter {
 	return &UserRepository_Expecter{mock: &_m.Mock}
 }
 
-// CheckUserExistsByEmail provides a mock function with given fields: ctx, email
-func (_m *UserRepository) CheckUserExistsByEmail(ctx context.Context, email string) (bool, error) {
-	ret := _m.Called(ctx, email)
+// CheckUserExists provides a mock function with given fields: ctx, email, uname
+func (_m *UserRepository) CheckUserExists(ctx context.Context, email string, uname string) (bool, error) {
+	ret := _m.Called(ctx, email, uname)
 
 	if len(ret) == 0 {
-		panic("no return value specified for CheckUserExistsByEmail")
+		panic("no return value specified for CheckUserExists")
 	}
 
 	var r0 bool
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) (bool, error)); ok {
-		return rf(ctx, email)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) (bool, error)); ok {
+		return rf(ctx, email, uname)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) bool); ok {
-		r0 = rf(ctx, email)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) bool); ok {
+		r0 = rf(ctx, email, uname)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, email)
+	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = rf(ctx, email, uname)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -50,61 +50,52 @@ func (_m *UserRepository) CheckUserExistsByEmail(ctx context.Context, email stri
 	return r0, r1
 }
 
-// UserRepository_CheckUserExistsByEmail_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckUserExistsByEmail'
-type UserRepository_CheckUserExistsByEmail_Call struct {
+// UserRepository_CheckUserExists_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckUserExists'
+type UserRepository_CheckUserExists_Call struct {
 	*mock.Call
 }
 
-// CheckUserExistsByEmail is a helper method to define mock.On call
+// CheckUserExists is a helper method to define mock.On call
 //   - ctx context.Context
 //   - email string
-func (_e *UserRepository_Expecter) CheckUserExistsByEmail(ctx interface{}, email interface{}) *UserRepository_CheckUserExistsByEmail_Call {
-	return &UserRepository_CheckUserExistsByEmail_Call{Call: _e.mock.On("CheckUserExistsByEmail", ctx, email)}
+//   - uname string
+func (_e *UserRepository_Expecter) CheckUserExists(ctx interface{}, email interface{}, uname interface{}) *UserRepository_CheckUserExists_Call {
+	return &UserRepository_CheckUserExists_Call{Call: _e.mock.On("CheckUserExists", ctx, email, uname)}
 }
 
-func (_c *UserRepository_CheckUserExistsByEmail_Call) Run(run func(ctx context.Context, email string)) *UserRepository_CheckUserExistsByEmail_Call {
+func (_c *UserRepository_CheckUserExists_Call) Run(run func(ctx context.Context, email string, uname string)) *UserRepository_CheckUserExists_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string))
+		run(args[0].(context.Context), args[1].(string), args[2].(string))
 	})
 	return _c
 }
 
-func (_c *UserRepository_CheckUserExistsByEmail_Call) Return(_a0 bool, _a1 error) *UserRepository_CheckUserExistsByEmail_Call {
+func (_c *UserRepository_CheckUserExists_Call) Return(_a0 bool, _a1 error) *UserRepository_CheckUserExists_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *UserRepository_CheckUserExistsByEmail_Call) RunAndReturn(run func(context.Context, string) (bool, error)) *UserRepository_CheckUserExistsByEmail_Call {
+func (_c *UserRepository_CheckUserExists_Call) RunAndReturn(run func(context.Context, string, string) (bool, error)) *UserRepository_CheckUserExists_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // CreateUser provides a mock function with given fields: ctx, user
-func (_m *UserRepository) CreateUser(ctx context.Context, user entities.User) (entities.User, error) {
+func (_m *UserRepository) CreateUser(ctx context.Context, user *entities.User) error {
 	ret := _m.Called(ctx, user)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateUser")
 	}
 
-	var r0 entities.User
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, entities.User) (entities.User, error)); ok {
-		return rf(ctx, user)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, entities.User) entities.User); ok {
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.User) error); ok {
 		r0 = rf(ctx, user)
 	} else {
-		r0 = ret.Get(0).(entities.User)
+		r0 = ret.Error(0)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, entities.User) error); ok {
-		r1 = rf(ctx, user)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
+	return r0
 }
 
 // UserRepository_CreateUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateUser'
@@ -114,24 +105,24 @@ type UserRepository_CreateUser_Call struct {
 
 // CreateUser is a helper method to define mock.On call
 //   - ctx context.Context
-//   - user entities.User
+//   - user *entities.User
 func (_e *UserRepository_Expecter) CreateUser(ctx interface{}, user interface{}) *UserRepository_CreateUser_Call {
 	return &UserRepository_CreateUser_Call{Call: _e.mock.On("CreateUser", ctx, user)}
 }
 
-func (_c *UserRepository_CreateUser_Call) Run(run func(ctx context.Context, user entities.User)) *UserRepository_CreateUser_Call {
+func (_c *UserRepository_CreateUser_Call) Run(run func(ctx context.Context, user *entities.User)) *UserRepository_CreateUser_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(entities.User))
+		run(args[0].(context.Context), args[1].(*entities.User))
 	})
 	return _c
 }
 
-func (_c *UserRepository_CreateUser_Call) Return(_a0 entities.User, _a1 error) *UserRepository_CreateUser_Call {
-	_c.Call.Return(_a0, _a1)
+func (_c *UserRepository_CreateUser_Call) Return(_a0 error) *UserRepository_CreateUser_Call {
+	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *UserRepository_CreateUser_Call) RunAndReturn(run func(context.Context, entities.User) (entities.User, error)) *UserRepository_CreateUser_Call {
+func (_c *UserRepository_CreateUser_Call) RunAndReturn(run func(context.Context, *entities.User) error) *UserRepository_CreateUser_Call {
 	_c.Call.Return(run)
 	return _c
 }

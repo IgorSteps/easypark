@@ -1,19 +1,19 @@
 GO := go
+WIRE := wire
 
 CMD_DIR := ./cmd
 DIST_DIR := ./dist
 INTERNAL_DIR := ./internal
 
+## setup-db: truncates db tables
+.PHONY: setup-db
+setup-db:
+	./build/cleandb.sh
+
 ## build: build the project
 .PHONY: build
 build:
 	$(GO) build -o $(DIST_DIR)/easypark $(CMD_DIR)/easypark
-	$(GO) build -o $(DIST_DIR)/easypark-dbmigrate $(CMD_DIR)/easypark-dbmigrate
-
-## setup-db: run easypark-dbmigrate to setup DB connection and migrate schemas
-.PHONY: setup-db
-setup-db:
-	./dist/easypark-dbmigrate
 
 ## run: run easypark 
 .PHONY: run
@@ -34,3 +34,8 @@ vendor:
 .PHONY: mocks
 mocks:
 	mockery --dir=./internal --output=./mocks
+
+## wire: generate DI files
+.PHONY: wire
+wire:
+	$(WIRE) $(CMD_DIR)/easypark

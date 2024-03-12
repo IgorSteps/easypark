@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -56,6 +57,8 @@ func newDatabase(config DatabaseConfig) (*gorm.DB, error) {
 		log.Fatalf("Failed to connect to database: %v", err)
 		return nil, err
 	}
+
+	db.AutoMigrate(&entities.User{})
 
 	return db, nil
 }

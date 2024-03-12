@@ -8,5 +8,4 @@ database:
   sslmode: disable
 
 httpserver:
-  port: 8080
-  host: localhost
+  address: :8081
