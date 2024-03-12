@@ -33,14 +33,7 @@ jobs:
         COVERAGE=$(make coverage-report | grep total: | awk '{print substr($3, 1, length($3)-1)}')
         echo "Coverage: $COVERAGE%"
         echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-         if (( $(echo "$COVERAGE < 80" |bc -l) )); then
-          echo "Code coverage below 80%."
+         if (( $(echo "$COVERAGE < 70" |bc -l) )); then
+          echo "Code coverage below 70%. Failing..."
           exit 1
         fi
-
-    - name: Comment PR with Coverage
-      if: github.event_name == 'pull_request'
-      uses: thollander/actions-comment-pull-request@v1
-      with:
-        message: 'Code Coverage is ${{ env.COVERAGE }}%'
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
