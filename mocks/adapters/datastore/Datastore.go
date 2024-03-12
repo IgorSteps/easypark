@@ -5,8 +5,7 @@ package mocks
 import (
 	context "context"
 
-	gorm "gorm.io/gorm"
-
+	datastore "github.com/IgorSteps/easypark/internal/adapters/datastore"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -23,20 +22,20 @@ func (_m *Datastore) EXPECT() *Datastore_Expecter {
 	return &Datastore_Expecter{mock: &_m.Mock}
 }
 
-// Create provides a mock function with given fields: ctx, value
-func (_m *Datastore) Create(ctx context.Context, value interface{}) *gorm.DB {
-	ret := _m.Called(ctx, value)
+// Create provides a mock function with given fields: value
+func (_m *Datastore) Create(value interface{}) datastore.Datastore {
+	ret := _m.Called(value)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Create")
 	}
 
-	var r0 *gorm.DB
-	if rf, ok := ret.Get(0).(func(context.Context, interface{}) *gorm.DB); ok {
-		r0 = rf(ctx, value)
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(interface{}) datastore.Datastore); ok {
+		r0 = rf(value)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*gorm.DB)
+			r0 = ret.Get(0).(datastore.Datastore)
 		}
 	}
 
@@ -49,33 +48,125 @@ type Datastore_Create_Call struct {
 }
 
 // Create is a helper method to define mock.On call
-//   - ctx context.Context
 //   - value interface{}
-func (_e *Datastore_Expecter) Create(ctx interface{}, value interface{}) *Datastore_Create_Call {
-	return &Datastore_Create_Call{Call: _e.mock.On("Create", ctx, value)}
+func (_e *Datastore_Expecter) Create(value interface{}) *Datastore_Create_Call {
+	return &Datastore_Create_Call{Call: _e.mock.On("Create", value)}
 }
 
-func (_c *Datastore_Create_Call) Run(run func(ctx context.Context, value interface{})) *Datastore_Create_Call {
+func (_c *Datastore_Create_Call) Run(run func(value interface{})) *Datastore_Create_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(interface{}))
+		run(args[0].(interface{}))
 	})
 	return _c
 }
 
-func (_c *Datastore_Create_Call) Return(_a0 *gorm.DB) *Datastore_Create_Call {
+func (_c *Datastore_Create_Call) Return(_a0 datastore.Datastore) *Datastore_Create_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *Datastore_Create_Call) RunAndReturn(run func(context.Context, interface{}) *gorm.DB) *Datastore_Create_Call {
+func (_c *Datastore_Create_Call) RunAndReturn(run func(interface{}) datastore.Datastore) *Datastore_Create_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// Where provides a mock function with given fields: ctx, query, args
-func (_m *Datastore) Where(ctx context.Context, query interface{}, args ...interface{}) *gorm.DB {
+// Error provides a mock function with given fields:
+func (_m *Datastore) Error() error {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for Error")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func() error); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Datastore_Error_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Error'
+type Datastore_Error_Call struct {
+	*mock.Call
+}
+
+// Error is a helper method to define mock.On call
+func (_e *Datastore_Expecter) Error() *Datastore_Error_Call {
+	return &Datastore_Error_Call{Call: _e.mock.On("Error")}
+}
+
+func (_c *Datastore_Error_Call) Run(run func()) *Datastore_Error_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *Datastore_Error_Call) Return(_a0 error) *Datastore_Error_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_Error_Call) RunAndReturn(run func() error) *Datastore_Error_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// First provides a mock function with given fields: value
+func (_m *Datastore) First(value interface{}) datastore.Datastore {
+	ret := _m.Called(value)
+
+	if len(ret) == 0 {
+		panic("no return value specified for First")
+	}
+
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(interface{}) datastore.Datastore); ok {
+		r0 = rf(value)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(datastore.Datastore)
+		}
+	}
+
+	return r0
+}
+
+// Datastore_First_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'First'
+type Datastore_First_Call struct {
+	*mock.Call
+}
+
+// First is a helper method to define mock.On call
+//   - value interface{}
+func (_e *Datastore_Expecter) First(value interface{}) *Datastore_First_Call {
+	return &Datastore_First_Call{Call: _e.mock.On("First", value)}
+}
+
+func (_c *Datastore_First_Call) Run(run func(value interface{})) *Datastore_First_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(interface{}))
+	})
+	return _c
+}
+
+func (_c *Datastore_First_Call) Return(_a0 datastore.Datastore) *Datastore_First_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_First_Call) RunAndReturn(run func(interface{}) datastore.Datastore) *Datastore_First_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// Where provides a mock function with given fields: query, args
+func (_m *Datastore) Where(query interface{}, args ...interface{}) datastore.Datastore {
 	var _ca []interface{}
-	_ca = append(_ca, ctx, query)
+	_ca = append(_ca, query)
 	_ca = append(_ca, args...)
 	ret := _m.Called(_ca...)
 
@@ -83,12 +174,12 @@ func (_m *Datastore) Where(ctx context.Context, query interface{}, args ...inter
 		panic("no return value specified for Where")
 	}
 
-	var r0 *gorm.DB
-	if rf, ok := ret.Get(0).(func(context.Context, interface{}, ...interface{}) *gorm.DB); ok {
-		r0 = rf(ctx, query, args...)
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(interface{}, ...interface{}) datastore.Datastore); ok {
+		r0 = rf(query, args...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*gorm.DB)
+			r0 = ret.Get(0).(datastore.Datastore)
 		}
 	}
 
@@ -101,33 +192,80 @@ type Datastore_Where_Call struct {
 }
 
 // Where is a helper method to define mock.On call
-//   - ctx context.Context
 //   - query interface{}
 //   - args ...interface{}
-func (_e *Datastore_Expecter) Where(ctx interface{}, query interface{}, args ...interface{}) *Datastore_Where_Call {
+func (_e *Datastore_Expecter) Where(query interface{}, args ...interface{}) *Datastore_Where_Call {
 	return &Datastore_Where_Call{Call: _e.mock.On("Where",
-		append([]interface{}{ctx, query}, args...)...)}
+		append([]interface{}{query}, args...)...)}
 }
 
-func (_c *Datastore_Where_Call) Run(run func(ctx context.Context, query interface{}, args ...interface{})) *Datastore_Where_Call {
+func (_c *Datastore_Where_Call) Run(run func(query interface{}, args ...interface{})) *Datastore_Where_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]interface{}, len(args)-2)
-		for i, a := range args[2:] {
+		variadicArgs := make([]interface{}, len(args)-1)
+		for i, a := range args[1:] {
 			if a != nil {
 				variadicArgs[i] = a.(interface{})
 			}
 		}
-		run(args[0].(context.Context), args[1].(interface{}), variadicArgs...)
+		run(args[0].(interface{}), variadicArgs...)
 	})
 	return _c
 }
 
-func (_c *Datastore_Where_Call) Return(_a0 *gorm.DB) *Datastore_Where_Call {
+func (_c *Datastore_Where_Call) Return(_a0 datastore.Datastore) *Datastore_Where_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *Datastore_Where_Call) RunAndReturn(run func(context.Context, interface{}, ...interface{}) *gorm.DB) *Datastore_Where_Call {
+func (_c *Datastore_Where_Call) RunAndReturn(run func(interface{}, ...interface{}) datastore.Datastore) *Datastore_Where_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// WithContext provides a mock function with given fields: ctx
+func (_m *Datastore) WithContext(ctx context.Context) datastore.Datastore {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for WithContext")
+	}
+
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(context.Context) datastore.Datastore); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(datastore.Datastore)
+		}
+	}
+
+	return r0
+}
+
+// Datastore_WithContext_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WithContext'
+type Datastore_WithContext_Call struct {
+	*mock.Call
+}
+
+// WithContext is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *Datastore_Expecter) WithContext(ctx interface{}) *Datastore_WithContext_Call {
+	return &Datastore_WithContext_Call{Call: _e.mock.On("WithContext", ctx)}
+}
+
+func (_c *Datastore_WithContext_Call) Run(run func(ctx context.Context)) *Datastore_WithContext_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *Datastore_WithContext_Call) Return(_a0 datastore.Datastore) *Datastore_WithContext_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_WithContext_Call) RunAndReturn(run func(context.Context) datastore.Datastore) *Datastore_WithContext_Call {
 	_c.Call.Return(run)
 	return _c
 }

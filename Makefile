@@ -20,10 +20,10 @@ build:
 run:
 	./dist/easypark
 
-## unit: runs unit tests
+## unit: runs unit tests and creates test coverage report.
 .PHONY: unit
 unit:
-	$(GO) test $(INTERNAL_DIR)/...
+	$(GO) test $(INTERNAL_DIR)/...  -coverprofile=unit-test-coverage.out
 
 ## vendor: copy dependencies from Go to our repository.
 .PHONY: vendor
@@ -39,3 +39,8 @@ mocks:
 .PHONY: wire
 wire:
 	$(WIRE) $(CMD_DIR)/easypark
+
+## coverage-report: generate test coverage report.
+.PHONY: coverage-report
+coverage-report:
+	$(GO) tool cover -func=unit-test-coverage.out

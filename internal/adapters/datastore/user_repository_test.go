@@ -26,7 +26,9 @@ func TestUserRepository_CreateUser_HappyPath(t *testing.T) {
 
 	testUser := CreateTestUser()
 
-	mockDatastore.EXPECT().Create(ctx, &testUser).Return(&gorm.DB{Error: nil}).Once()
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Create(&testUser).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(nil).Once()
 
 	// --------
 	// ACT
@@ -55,7 +57,9 @@ func Test_UserRepository_CreateUser_UnhappyPath(t *testing.T) {
 	testError := errors.New("boom")
 	testUser := CreateTestUser()
 
-	mockDatastore.EXPECT().Create(ctx, &testUser).Return(&gorm.DB{Error: testError}).Once()
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Create(&testUser).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(testError).Once()
 
 	// --------
 	// ACT
@@ -74,6 +78,102 @@ func Test_UserRepository_CreateUser_UnhappyPath(t *testing.T) {
 
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_CheckUserExists_HappyPath_UserFound(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	query := "email = ? OR username = ?"
+	testEmail := "email"
+	testUsername := "username"
+
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where(query, testEmail, testUsername).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&entities.User{}).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	exist, err := repository.CheckUserExists(ctx, testEmail, testUsername)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.True(t, exist, "Must exist")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_CheckUserExists_HappyPath_UserNotFound(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	query := "email = ? OR username = ?"
+	testEmail := "email"
+	testUsername := "username"
+
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where(query, testEmail, testUsername).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&entities.User{}).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(gorm.ErrRecordNotFound).Once()
+
+	// --------
+	// ACT
+	// --------
+	exist, err := repository.CheckUserExists(ctx, testEmail, testUsername)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.False(t, exist, "Must not exist")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_CheckUserExists_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	testError := errors.New("boom")
+	query := "email = ? OR username = ?"
+	testEmail := "email"
+	testUsername := "username"
+
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where(query, testEmail, testUsername).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&entities.User{}).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(testError).Once()
+
+	// --------
+	// ACT
+	// --------
+	exist, err := repository.CheckUserExists(ctx, testEmail, testUsername)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.False(t, exist, "Must not exist")
+	assert.Equal(t, testError, err, "Errors don't match")
+	mockDatastore.AssertExpectations(t)
 }
 
 func CreateTestUser() *entities.User {

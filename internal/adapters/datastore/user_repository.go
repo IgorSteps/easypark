@@ -23,11 +23,12 @@ func NewUserPostgresRepository(db Datastore, lgr *logrus.Logger) *UserPostgresRe
 }
 
 func (s *UserPostgresRepository) CreateUser(ctx context.Context, user *entities.User) error {
-	result := s.DB.Create(ctx, &user)
-	if result.Error != nil {
-		s.Logger.WithError(result.Error).Error("failed to insert user into the database")
+	result := s.DB.WithContext(ctx).Create(&user)
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).Error("failed to insert user into the database")
 
-		return result.Error
+		return err
 	}
 
 	return nil
@@ -36,14 +37,15 @@ func (s *UserPostgresRepository) CreateUser(ctx context.Context, user *entities.
 // CheckUserExists queries DB to check if user with given email or username exists.
 func (s *UserPostgresRepository) CheckUserExists(ctx context.Context, email, uname string) (bool, error) {
 	var user entities.User
-	result := s.DB.Where(ctx, "email = ? OR username = ?", email, uname).First(&user)
-	if result.Error != nil {
-		if result.Error == gorm.ErrRecordNotFound {
-			return false, nil
+	result := s.DB.WithContext(ctx).Where("email = ? OR username = ?", email, uname).First(&user)
+	err := result.Error()
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, nil // User not found
 		}
 
-		s.Logger.WithError(result.Error).Error("failed to query for user in the database")
-		return false, result.Error
+		s.Logger.WithError(err).Error("failed to query for user in the database")
+		return false, err
 	}
 
 	return true, nil // User found
