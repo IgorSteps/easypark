@@ -11,6 +11,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/rest/handlers"
 	"github.com/IgorSteps/easypark/internal/adapters/rest/routes"
 	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
+	"github.com/IgorSteps/easypark/internal/drivers/auth"
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/usecases"
@@ -28,9 +29,14 @@ func BuildDIForApp() (*App, error) {
 	gormWrapper := db.NewGormWrapper(gormDB)
 	userPostgresRepository := datastore.NewUserPostgresRepository(gormWrapper, logger)
 	registerUser := usecases.NewRegisterUser(logger, userPostgresRepository)
-	userFacade := usecasefacades.NewUserFacade(registerUser)
+	jwtTokenService, err := auth.NewJWTTokenServiceFromConfig()
+	if err != nil {
+		return nil, err
+	}
+	authenticateUser := usecases.NewAuthenticateUser(logger, userPostgresRepository, jwtTokenService)
+	userFacade := usecasefacades.NewUserFacade(registerUser, authenticateUser)
 	handlerFactory := handlers.NewHandlerFactory(logger, userFacade)
-	router := routes.NewRouter(handlerFactory)
+	router := routes.NewRouter(handlerFactory, logger)
 	server := httpserver.NewServer(router)
 	app := NewApp(server, logger)
 	return app, nil

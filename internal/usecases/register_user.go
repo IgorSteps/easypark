@@ -2,7 +2,6 @@ package usecases
 
 import (
 	"context"
-	"errors"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
@@ -31,7 +30,10 @@ func (s *RegisterUser) Execute(ctx context.Context, user *entities.User) error {
 		return err
 	}
 
+	// TODO: Move to user entity
 	user.ID = uuid.New()
+	user.Role = entities.RoleDriver
+
 	err = s.UserRepository.CreateUser(ctx, user)
 	if err != nil {
 		return err
@@ -44,22 +46,16 @@ func (s *RegisterUser) Execute(ctx context.Context, user *entities.User) error {
 func (s *RegisterUser) validate(ctx context.Context, user *entities.User) error {
 	doesExist, err := s.UserRepository.CheckUserExists(ctx, user.Email, user.Username)
 	if err != nil {
-		s.Logger.WithFields(logrus.Fields{
-			"email":    user.Email,
-			"username": user.Username,
-			"error":    err.Error(),
-		}).Error("failed to check if user exists")
-
 		return err
 	}
 
-	if doesExist == true {
+	if doesExist {
 		s.Logger.WithFields(logrus.Fields{
 			"username": user.Username,
 			"email":    user.Email,
 		}).Warn("user already exists")
 
-		return errors.New("user with given username or email already exists")
+		return repositories.NewUserAlreadyExistsError(user.Username, user.Email)
 	}
 
 	return nil

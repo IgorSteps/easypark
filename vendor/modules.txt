@@ -1,3 +1,6 @@
+# github.com/chi-middleware/logrus-logger v0.3.0
+## explicit; go 1.14
+github.com/chi-middleware/logrus-logger
 # github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -8,6 +11,9 @@ github.com/fsnotify/fsnotify
 ## explicit; go 1.14
 github.com/go-chi/chi/v5
 github.com/go-chi/chi/v5/middleware
+# github.com/golang-jwt/jwt/v5 v5.2.1
+## explicit; go 1.18
+github.com/golang-jwt/jwt/v5
 # github.com/google/uuid v1.6.0
 ## explicit
 github.com/google/uuid

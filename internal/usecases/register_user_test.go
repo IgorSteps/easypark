@@ -72,7 +72,7 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
-	assert.Equal(t, err.Error(), "user with given username or email already exists")
+	assert.Equal(t, err.Error(), "User 'what'/'mail' already exists")
 
 	// Assert logger.
 	assert.Equal(t, 1, len(hook.Entries))
@@ -144,11 +144,7 @@ func TestRegisterUser_UnhappyPath_CheckUserExistsByEmail_Fails(t *testing.T) {
 	assert.Equal(t, err, testError, "Errors are not equal")
 
 	// Assert logger.
-	assert.Equal(t, 1, len(hook.Entries))
-	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "failed to check if user exists", hook.LastEntry().Message, "Messages are not equal")
-	assert.Equal(t, email, hook.LastEntry().Data["email"])
-	assert.Equal(t, testError.Error(), hook.LastEntry().Data["error"], "Error in the logger fields is not equal")
+	assert.Equal(t, 0, len(hook.Entries))
 
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())

@@ -7,6 +7,7 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/adapters/datastore"
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	mocks "github.com/IgorSteps/easypark/mocks/adapters/datastore"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -152,7 +153,7 @@ func Test_UserRepository_CheckUserExists_UnhappyPath(t *testing.T) {
 	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
 	ctx := context.Background()
 
-	testError := errors.New("boom")
+	testError := repositories.NewInternalError("failed to query for user in the database")
 	query := "email = ? OR username = ?"
 	testEmail := "email"
 	testUsername := "username"
@@ -173,6 +174,99 @@ func Test_UserRepository_CheckUserExists_UnhappyPath(t *testing.T) {
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.False(t, exist, "Must not exist")
 	assert.Equal(t, testError, err, "Errors don't match")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_FindByUsername_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	query := "username = ?"
+	testUsername := "username"
+
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where(query, testUsername).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&entities.User{}).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	user, err := repository.FindByUsername(ctx, testUsername)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.NotNil(t, user, "User must not be nil")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_FindByUsername_UnhappyPath_NotFound(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	query := "username = ?"
+	testUsername := "username"
+
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where(query, testUsername).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&entities.User{}).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(gorm.ErrRecordNotFound).Once()
+
+	// --------
+	// ACT
+	// --------
+	user, err := repository.FindByUsername(ctx, testUsername)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.EqualError(t, err, "User 'username' not found")
+	assert.Empty(t, user, "User must be empty")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_FindByUsername_UnhappyPath_FailedToQuery(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	query := "username = ?"
+	testUsername := "username"
+	testError := repositories.NewInternalError("boom")
+
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where(query, testUsername).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&entities.User{}).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(testError).Once()
+
+	// --------
+	// ACT
+	// --------
+	user, err := repository.FindByUsername(ctx, testUsername)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.EqualError(t, err, "Internal error: failed to query for user in the database")
+	assert.Empty(t, user, "User must be empty")
 	mockDatastore.AssertExpectations(t)
 }
 

@@ -2,8 +2,8 @@
 // +build wireinject
 
 /***********************************************************************************
-If you want to edit/activate Intelisense in this file:
- 1) remove the build constraints,
+If you want to edit/activate InteliSense in this file:
+ 1) remove the build constraints above,
  2) edit file,
  3) put constraints back in
 ***********************************************************************************/
@@ -16,6 +16,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/rest/routes"
 	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
+	"github.com/IgorSteps/easypark/internal/drivers/auth"
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/usecases"
@@ -37,9 +38,15 @@ func BuildDIForApp() (*App, error) {
 		db.NewGormWrapper,
 		wire.Bind(new(datastore.Datastore), new(*db.GormWrapper)),
 
+		// jwt
+		auth.NewJWTTokenServiceFromConfig,
+		wire.Bind(new(usecases.TokenService), new(*auth.JWTTokenService)),
+
 		// usecase
 		usecases.NewRegisterUser,
 		wire.Bind(new(usecasefacades.UserCreator), new(*usecases.RegisterUser)),
+		usecases.NewAuthenticateUser,
+		wire.Bind(new(usecasefacades.UserAuthenticator), new(*usecases.AuthenticateUser)),
 
 		// facades
 		usecasefacades.NewUserFacade,

@@ -1,7 +1,6 @@
 package httpserver
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -19,6 +18,5 @@ func NewServer(r chi.Router) *Server {
 
 // Run starts the HTTP server on the given address.
 func (s *Server) Run(addr string) error {
-	log.Printf("Starting HTTP server on %s", addr)
 	return http.ListenAndServe(addr, s.router)
 }
