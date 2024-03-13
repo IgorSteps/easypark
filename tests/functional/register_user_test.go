@@ -48,8 +48,8 @@ func (s *TestCreateUserSuite) TestCreateUser_HappyPath() {
 	s.Require().Equal(http.StatusCreated, responseCode, "Response code is wrong")
 }
 
-// TestCreateUser_UnhappyPath tests user cannot be created using our REST API if another user with the same email or username is present.
-func (s *TestCreateUserSuite) TestCreateUser_UnhappyPath() {
+// TestCreateUser_UnhappyPath_UserAlreadyExists tests user cannot be created using our REST API if another user with the same email or username is present.
+func (s *TestCreateUserSuite) TestCreateUser_UnhappyPath_UserAlreadyExists() {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -89,8 +89,8 @@ func (s *TestCreateUserSuite) TestCreateUser_UnhappyPath() {
 	s.Require().Equal(http.StatusCreated, responseCode, "Response code 1 is wrong")
 
 	s.Require().NoError(err2, "Creating user 2 should not return an error")
-	s.Require().Equal("failed to create user\n", string(responseBody2), "Response body 2 message is wrong")
-	s.Require().Equal(http.StatusInternalServerError, responseCode2, "Response code 2 is wrong")
+	s.Require().Equal("User 'gloom'/'boom@example.com' already exists\n", string(responseBody2), "Response body 2 message is wrong")
+	s.Require().Equal(http.StatusBadRequest, responseCode2, "Response code 2 is wrong")
 }
 
 func TestInit(t *testing.T) {
