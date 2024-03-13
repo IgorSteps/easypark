@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	"github.com/sirupsen/logrus"
 )
 
@@ -37,10 +38,20 @@ func (s *UserCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	domainUser := request.ToDomain()
 	err = s.facade.CreateUser(r.Context(), domainUser)
 	if err != nil {
-		// TODO: Handle every error type differently?
-		s.logger.Error("failed to create user: ", err)
-		http.Error(w, "failed to create user", http.StatusInternalServerError)
-		return
+		s.logger.WithError(err).Error("failed to create user")
+
+		switch err.(type) {
+		case *repositories.UserAlreadyExistsError:
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		case *repositories.InternalError:
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		default:
+			s.logger.WithError(err).Warn("unknown error type")
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	w.WriteHeader(http.StatusCreated)

@@ -25,3 +25,7 @@ func NewHandlerFactory(logger *logrus.Logger, facade UserFacade) *HandlerFactory
 func (s *HandlerFactory) UserCreate() http.Handler {
 	return NewUserCreateHandler(s.facade, s.logger)
 }
+
+func (s *HandlerFactory) UserAuthorise() http.Handler {
+	return NewUserLoginHandler(s.facade, s.logger)
+}

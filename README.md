@@ -31,9 +31,69 @@ To regenerate mocks, run `make mocks`.
 
 To run unit tests, run `make unit`.
 
-## App Spec
+To run functional tests, run `make functional`.
 
-1. Sample POST request to create a user:
+## API Spec
+
+### 1. User Login API Endpoint
+
+**Endpoint**: `POST /login`
+
+**Description**: Authenticates a user and returns a JWT for authorised access.
+
+**Request**:
+
+```bash
+curl -X POST http://localhost:8080/login \
+-H "Content-Type: application/json" \
+-d '{
+    "Username": "johndoe",
+    "Password": "securepassword"
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+    ```json
+    {
+      "message": "User logged in successfully",
+      "token": "jwt token here redacted"
+    }
+    ```
+
+- **400 Bad Request**
+
+    ```json
+    {
+      "error": "invalid request body"
+    }
+    ```
+
+- **401 Unauthorized**
+  
+    ```json
+    {
+      "error": "Invalid credentials" // or "User not found"
+    }
+    ```
+
+- **500 Internal Server Error**
+
+    ```json
+    {
+      "error": "An unexpected error occurred"
+    }
+    ```
+
+### 2. User Creation API Endpoint
+
+**Endpoint**: `POST /register`
+
+**Description**: Registers a new user in the system.
+
+**Request Body**:
 
 ```bash
 curl -X POST http://localhost:8080/register \
@@ -47,6 +107,32 @@ curl -X POST http://localhost:8080/register \
 }'
 ```
 
+**Responses**:
+
+- **201 Created**
+
+    ```json
+    {
+      "message": "user created successfully"
+    }
+    ```
+
+- **400 Bad Request**
+
+    ```json
+    {
+      "error": "User already exists" // or "invalid request body"
+    }
+    ```
+
+- **500 Internal Server Error**
+
+    ```json
+    {
+      "error": "An unexpected error occurred"
+    }
+    ```
+    
 ## Useful things
 
 ### Connecting to PgAdmin

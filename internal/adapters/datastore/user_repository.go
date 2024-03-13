@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -28,7 +29,7 @@ func (s *UserPostgresRepository) CreateUser(ctx context.Context, user *entities.
 	if err != nil {
 		s.Logger.WithError(err).Error("failed to insert user into the database")
 
-		return err
+		return repositories.NewInternalError("failed to insert user into the database")
 	}
 
 	return nil
@@ -45,9 +46,31 @@ func (s *UserPostgresRepository) CheckUserExists(ctx context.Context, email, una
 			return false, nil // User not found
 		}
 
-		s.Logger.WithError(err).Error("failed to query for user in the database")
-		return false, err
+		s.Logger.WithError(err).WithFields(logrus.Fields{
+			"email":    user.Email,
+			"username": user.Username,
+		}).Error("failed to query for user in the database")
+		return false, repositories.NewInternalError("failed to query for user in the database")
 	}
 
 	return true, nil // User found
+}
+
+// FindByUsername queries DB to find user with given username.
+func (s *UserPostgresRepository) FindByUsername(ctx context.Context, username string) (*entities.User, error) {
+	var user entities.User
+
+	result := s.DB.WithContext(ctx).Where("username = ?", username).First(&user)
+	err := result.Error()
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			s.Logger.WithField("username", username).Warn("failed to find user with given username in the database")
+			return &entities.User{}, repositories.NewUserNotFoundError(username)
+		}
+
+		s.Logger.WithError(err).Error("failed to query for user in the database")
+		return &entities.User{}, repositories.NewInternalError("failed to query for user in the database")
+	}
+
+	return &user, nil // User found
 }

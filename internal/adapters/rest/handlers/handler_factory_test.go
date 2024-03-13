@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandlers_DriverCreate_HappyPath(t *testing.T) {
+func TestHandlers_UserCreate_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -22,6 +22,26 @@ func TestHandlers_DriverCreate_HappyPath(t *testing.T) {
 	// ACT
 	// ---
 	handler := handlerFactory.UserCreate()
+
+	// ------
+	// ASSERT
+	// ------
+	assert.NotNil(t, handler, "Handler must not be nil")
+}
+
+func TestHandlers_UserLogin_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger := logrus.New()
+	mockFacade := &mocks.UserFacade{}
+
+	handlerFactory := handlers.NewHandlerFactory(testLogger, mockFacade)
+
+	// ---
+	// ACT
+	// ---
+	handler := handlerFactory.UserAuthorise()
 
 	// ------
 	// ASSERT

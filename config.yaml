@@ -9,3 +9,6 @@ database:
 
 httpserver:
   address: :8081
+
+auth:
+  secret-key: whatever

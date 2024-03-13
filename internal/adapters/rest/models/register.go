@@ -11,6 +11,11 @@ type UserCreationRequest struct {
 	Email     string `json:"email"`
 }
 
+// CreateUserResponse represents response to create user request.
+type CreateUserResponse struct {
+	Message string `json:"message"`
+}
+
 func (s *UserCreationRequest) ToDomain() *entities.User {
 	return &entities.User{
 		FirstName: s.Firstname,

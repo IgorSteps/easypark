@@ -127,6 +127,65 @@ func (_c *UserRepository_CreateUser_Call) RunAndReturn(run func(context.Context,
 	return _c
 }
 
+// FindByUsername provides a mock function with given fields: ctx, username
+func (_m *UserRepository) FindByUsername(ctx context.Context, username string) (*entities.User, error) {
+	ret := _m.Called(ctx, username)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindByUsername")
+	}
+
+	var r0 *entities.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*entities.User, error)); ok {
+		return rf(ctx, username)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) *entities.User); ok {
+		r0 = rf(ctx, username)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, username)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UserRepository_FindByUsername_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByUsername'
+type UserRepository_FindByUsername_Call struct {
+	*mock.Call
+}
+
+// FindByUsername is a helper method to define mock.On call
+//   - ctx context.Context
+//   - username string
+func (_e *UserRepository_Expecter) FindByUsername(ctx interface{}, username interface{}) *UserRepository_FindByUsername_Call {
+	return &UserRepository_FindByUsername_Call{Call: _e.mock.On("FindByUsername", ctx, username)}
+}
+
+func (_c *UserRepository_FindByUsername_Call) Run(run func(ctx context.Context, username string)) *UserRepository_FindByUsername_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *UserRepository_FindByUsername_Call) Return(_a0 *entities.User, _a1 error) *UserRepository_FindByUsername_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *UserRepository_FindByUsername_Call) RunAndReturn(run func(context.Context, string) (*entities.User, error)) *UserRepository_FindByUsername_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewUserRepository creates a new instance of UserRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewUserRepository(t interface {
