@@ -59,7 +59,7 @@ jobs:
 
     - name: Start Easypark
           run: |
-            ./path/to/your/application &
+            make run &
             APP_PID=$!
             sleep 5
 
