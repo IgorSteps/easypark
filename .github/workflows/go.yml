@@ -58,7 +58,6 @@ jobs:
       run: until pg_isready -h localhost -p 5432; do sleep 1; done
 
     - name: Functional Tests
-    - name: Start Easypark
       run: |
         make run &
         APP_PID=$!
