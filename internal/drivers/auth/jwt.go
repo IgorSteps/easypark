@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	configPath = "." // located in project root.
+	configPath = "../../../" // located in project root.
 	configName = "config"
 	configType = "yaml"
 	configKey  = "auth"

@@ -1,8 +1,5 @@
 mode: set
 github.com/IgorSteps/easypark/internal/adapters/rest/models/register.go:19.57,27.2 1 0
-github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:12.31,16.2 1 0
-github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:24.63,26.2 1 0
-github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:29.95,37.2 2 0
 github.com/IgorSteps/easypark/internal/drivers/db/database.go:30.48,37.45 5 0
 github.com/IgorSteps/easypark/internal/drivers/db/database.go:37.45,39.3 1 0
 github.com/IgorSteps/easypark/internal/drivers/db/database.go:41.2,42.16 2 0
@@ -31,6 +28,7 @@ github.com/IgorSteps/easypark/internal/adapters/datastore/user_repository.go:65.
 github.com/IgorSteps/easypark/internal/adapters/datastore/user_repository.go:66.36,69.4 2 1
 github.com/IgorSteps/easypark/internal/adapters/datastore/user_repository.go:71.3,72.101 2 1
 github.com/IgorSteps/easypark/internal/adapters/datastore/user_repository.go:75.2,75.19 1 1
+github.com/IgorSteps/easypark/internal/adapters/rest/routes/routes.go:19.81,27.2 5 1
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/handler_factory.go:17.82,22.2 1 1
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/handler_factory.go:25.52,27.2 1 1
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/handler_factory.go:29.55,31.2 1 1
@@ -54,7 +52,6 @@ github.com/IgorSteps/easypark/internal/adapters/rest/handlers/user_login.go:48.3
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/user_login.go:51.11,54.10 3 0
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/user_login.go:58.2,60.33 3 1
 github.com/IgorSteps/easypark/internal/adapters/rest/models/register.go:19.57,27.2 1 1
-github.com/IgorSteps/easypark/internal/adapters/rest/routes/routes.go:17.58,25.2 5 1
 github.com/IgorSteps/easypark/internal/adapters/usecasefacades/user.go:26.88,31.2 1 1
 github.com/IgorSteps/easypark/internal/adapters/usecasefacades/user.go:34.81,36.2 1 1
 github.com/IgorSteps/easypark/internal/adapters/usecasefacades/user.go:39.100,41.2 1 1
@@ -63,8 +60,15 @@ github.com/IgorSteps/easypark/internal/domain/repositories/errors.go:21.63,25.2 
 github.com/IgorSteps/easypark/internal/domain/repositories/errors.go:33.80,37.2 1 1
 github.com/IgorSteps/easypark/internal/domain/repositories/errors.go:45.60,49.2 1 1
 github.com/IgorSteps/easypark/internal/domain/repositories/errors.go:57.54,61.2 1 1
-github.com/IgorSteps/easypark/internal/drivers/httpserver/server.go:16.38,18.2 1 1
-github.com/IgorSteps/easypark/internal/drivers/httpserver/server.go:21.41,24.2 2 0
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:20.63,27.45 5 1
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:27.45,29.3 1 0
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:31.2,32.16 2 1
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:32.16,34.3 1 0
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:36.2,36.50 1 1
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:45.60,47.2 1 1
+github.com/IgorSteps/easypark/internal/drivers/auth/jwt.go:50.95,58.2 2 1
+github.com/IgorSteps/easypark/internal/drivers/httpserver/server.go:15.38,17.2 1 1
+github.com/IgorSteps/easypark/internal/drivers/httpserver/server.go:20.41,22.2 1 0
 github.com/IgorSteps/easypark/internal/usecases/authenticate_user.go:26.119,32.2 1 1
 github.com/IgorSteps/easypark/internal/usecases/authenticate_user.go:35.100,37.16 2 1
 github.com/IgorSteps/easypark/internal/usecases/authenticate_user.go:37.16,39.3 1 1
