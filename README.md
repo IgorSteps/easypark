@@ -11,23 +11,29 @@
 
 ### Setting up environment
 
+From project root, run:
+
 1. Run `docker-compose up -d` to create required PostgreSQL image.
 2. Run `make setup-db` to truncate existing tables and start fresh.
 
 ### Starting the app
 
+From project root, run:
+
 1. Build the app, run `make build`.
 2. To run the app, run `make run`.
 
+If changes to dependecy graph have been made, run `make wire` to regenerate dependecy injection code.
+
 ## Testing
 
-To generate mocks, run `make mocks`.
+To regenerate mocks, run `make mocks`.
 
 To run unit tests, run `make unit`.
 
 ## App Spec
 
-1. Create Driver:
+1. Sample POST request to create a user:
 
 ```bash
 curl -X POST http://localhost:8080/register \
@@ -45,7 +51,7 @@ curl -X POST http://localhost:8080/register \
 
 ### Connecting to PgAdmin
 
-PgAdming provides a nice UI for db management and debugging.
+PgAdming provides a nice UI for DB management and debugging.
 
 1. Go to `http://localhost:5050` to access PgAdmin
 2. Log in with the `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in the docker-compose.yml file

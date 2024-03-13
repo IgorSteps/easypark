@@ -1,6 +1,13 @@
 //go:build wireinject
 // +build wireinject
 
+/***********************************************************************************
+If you want to edit/activate Intelisense in this file:
+ 1) remove the build constraints,
+ 2) edit file,
+ 3) put constraints back in
+***********************************************************************************/
+
 package main
 
 import (

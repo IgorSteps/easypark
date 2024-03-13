@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-// Datastore defines the interface for database operations using GORM.
+// Datastore defines the interface that abstracts data storage/access implementations.
 type Datastore interface {
 	WithContext(ctx context.Context) Datastore
 	Create(value interface{}) Datastore

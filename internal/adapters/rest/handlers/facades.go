@@ -8,6 +8,6 @@ import (
 
 // UserFacade is provides an interface implemented by usecasefacades.UserFacade.
 type UserFacade interface {
-	// CreateUser is implemented by secasefacades.UserFacade that wraps user creation usecase.
+	// CreateUser is implemented by usecasefacades.UserFacade that wraps user creation usecase.
 	CreateUser(ctx context.Context, driver *entities.User) error
 }

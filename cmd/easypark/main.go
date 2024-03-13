@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const httpServerPort = ":8081"
+const httpServerPort = ":8080"
 
 func main() {
 	app, err := BuildDIForApp()
