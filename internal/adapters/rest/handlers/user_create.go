@@ -37,16 +37,13 @@ func (s *UserCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	domainUser := request.ToDomain()
 	err = s.facade.CreateUser(r.Context(), domainUser)
 	if err != nil {
-		// TODO: Handle every error differently?
+		// TODO: Handle every error type differently?
 		s.logger.Error("failed to create user: ", err)
 		http.Error(w, "failed to create user", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	// TODO: Need a seperate request response model?
-	response := map[string]string{
-		"message": "user created successfully",
-	}
-	json.NewEncoder(w).Encode(response)
+	resp := models.CreateUserResponse{Message: "user created successfully"}
+	json.NewEncoder(w).Encode(resp)
 }

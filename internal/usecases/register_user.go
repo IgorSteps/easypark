@@ -53,7 +53,7 @@ func (s *RegisterUser) validate(ctx context.Context, user *entities.User) error 
 		return err
 	}
 
-	if doesExist {
+	if doesExist == true {
 		s.Logger.WithFields(logrus.Fields{
 			"username": user.Username,
 			"email":    user.Email,

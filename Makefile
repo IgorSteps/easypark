@@ -4,6 +4,7 @@ WIRE := wire
 CMD_DIR := ./cmd
 DIST_DIR := ./dist
 INTERNAL_DIR := ./internal
+FUNCTIONAL_DIR := ./tests/functional
 
 ## setup-db: truncates db tables
 .PHONY: setup-db
@@ -44,3 +45,8 @@ wire:
 .PHONY: coverage-report
 coverage-report:
 	$(GO) tool cover -func=unit-test-coverage.out
+
+## functional: runs functional tests
+.PHONY: functional
+functional:
+	$(GO) test $(FUNCTIONAL_DIR)/...
