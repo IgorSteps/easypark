@@ -72,7 +72,7 @@ func (s *RestClientSuite) CreateUser(ctx context.Context, req *models.UserCreati
 	return responseBody, resp.StatusCode, nil
 }
 
-func (s *RestClientSuite) UnmarshalCreateUserResponse(responseBody []byte, targetModel interface{}) error {
+func (s *RestClientSuite) UnmarshalHTTPResponse(responseBody []byte, targetModel interface{}) error {
 	if err := json.Unmarshal(responseBody, &targetModel); err != nil {
 		s.T().Logf("failed to unmarshal response body: %v", err)
 		return err

@@ -42,13 +42,12 @@ func (s *UserPostgresRepository) CheckUserExists(ctx context.Context, email, una
 	err := result.Error()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			s.Logger.Debug("User not found")
 			return false, nil // User not found
 		}
 
 		s.Logger.WithError(err).Error("failed to query for user in the database")
 		return false, err
 	}
-	s.Logger.Debug("User found")
+
 	return true, nil // User found
 }

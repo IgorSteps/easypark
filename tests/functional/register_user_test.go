@@ -40,7 +40,7 @@ func (s *TestCreateUserSuite) TestCreateUser_HappyPath() {
 	s.Require().NoError(err, "Creating user should not return an error")
 
 	var targetModel models.CreateUserResponse
-	err = s.UnmarshalCreateUserResponse(responseBody, &targetModel)
+	err = s.UnmarshalHTTPResponse(responseBody, &targetModel)
 	if err != nil {
 		s.T().Fail()
 	}
@@ -81,7 +81,7 @@ func (s *TestCreateUserSuite) TestCreateUser_UnhappyPath() {
 	s.Require().NoError(err, "Creating user 1 should not return an error")
 
 	var targetModel models.CreateUserResponse
-	err = s.UnmarshalCreateUserResponse(responseBody, &targetModel)
+	err = s.UnmarshalHTTPResponse(responseBody, &targetModel)
 	if err != nil {
 		s.T().Fail()
 	}
