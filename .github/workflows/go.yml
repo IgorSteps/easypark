@@ -13,6 +13,22 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        # Same as in docker-compose file
+        env:
+          POSTGRES_USER: devUser
+          POSTGRES_PASSWORD: devPassword
+          POSTGRES_DB: easypark
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
     - uses: actions/checkout@v3
 
@@ -37,3 +53,9 @@ jobs:
           echo "Code coverage below 70%. Failing..."
           exit 1
         fi
+    
+    - name: Wait for PostgreSQL
+      run: until pg_isready -h localhost -p 5432; do sleep 1; done
+
+    - name: Functional Tests
+      run: make functional
