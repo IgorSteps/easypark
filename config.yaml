@@ -11,4 +11,8 @@ httpserver:
   address: :8081
 
 auth:
-  secret-key: whatever
+  secretkey: whatever
+
+logging:
+  level: info
+  gormlevel: error

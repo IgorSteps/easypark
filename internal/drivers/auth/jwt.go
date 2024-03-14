@@ -2,37 +2,12 @@ package auth
 
 import (
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 )
 
-const (
-	configPath = "../../../" // located in project root.
-	configName = "config"
-	configType = "yaml"
-	configKey  = "auth"
-)
-
-type AuthConfig struct {
-	SecretKey string
-}
-
-func NewJWTTokenServiceFromConfig() (*JWTTokenService, error) {
-	viper.AddConfigPath(configPath)
-	viper.SetConfigName(configName)
-	viper.SetConfigType(configType)
-
-	var config AuthConfig
-
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
-	}
-
-	err := viper.UnmarshalKey(configKey, &config)
-	if err != nil {
-		return nil, err
-	}
-
+// NewJWTTokenServiceFromConfig returns new JWTTokenService from config.
+func NewJWTTokenServiceFromConfig(config config.AuthConfig) (*JWTTokenService, error) {
 	return newJWTTokenService(config.SecretKey), nil
 }
 

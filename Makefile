@@ -6,9 +6,9 @@ DIST_DIR := ./dist
 INTERNAL_DIR := ./internal
 FUNCTIONAL_DIR := ./tests/functional
 
-## setup-db: truncates db tables
-.PHONY: setup-db
-setup-db:
+## clean-db: truncates db tables
+.PHONY: clean-db
+clean-db:
 	./build/cleandb.sh
 
 ## build: build the project
@@ -34,7 +34,8 @@ vendor:
 ## mocks: generate mocks
 .PHONY: mocks
 mocks:
-	mockery --dir=./internal --output=./mocks
+	rm -rf mocks
+	mockery --dir=$(INTERNAL_DIR) --output=./mocks
 
 ## wire: generate DI files
 .PHONY: wire

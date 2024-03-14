@@ -14,7 +14,7 @@
 From project root, run:
 
 1. Run `docker-compose up -d` to create required PostgreSQL image.
-2. Run `make setup-db` to truncate existing tables and start fresh.
+2. Run `make setcleanup-db` to truncate existing tables and start fresh.
 
 ### Starting the app
 

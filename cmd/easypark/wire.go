@@ -17,17 +17,23 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	"github.com/IgorSteps/easypark/internal/drivers/auth"
+	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
+	"github.com/IgorSteps/easypark/internal/drivers/logger"
 	"github.com/IgorSteps/easypark/internal/usecases"
 	"github.com/google/wire"
-	"github.com/sirupsen/logrus"
 )
 
 func BuildDIForApp() (*App, error) {
 	wire.Build(
+		// config
+		config.LoadConfig,
+		wire.FieldsOf(new(*config.Config), "Database", "Auth", "Logging"),
+
 		// logger
-		logrus.New,
+		logger.NewLoggerFromConfig,
+		db.NewGormLogrusLoggerFromConfig,
 
 		// repositories
 		datastore.NewUserPostgresRepository,

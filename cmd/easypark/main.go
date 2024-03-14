@@ -17,6 +17,7 @@ func main() {
 	app.logger.Info("starting Easypark")
 
 	app.logger.Level = logrus.DebugLevel
+	//app.logger.Formatter = new(logrus.JSONFormatter) // if we want JSON looking logs
 
 	// This is blocking thread, nothing will run after this.
 	app.logger.WithField("address", HTTPServerPort).Info("starting http server")
