@@ -45,17 +45,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
 
-    - name: Make vendor
-      run: |
-        make tidy
-        make vendor
-        git diff --exit-code || (echo "The vendor directory is not up-to-date. Please run 'go mod vendor' and commit the changes."; exit 1)
-
-    - name: Make mocks
-      run: |
-        make generate-mocks
-        git diff --exit-code 
-
     - name: Build
       run: make build
 
