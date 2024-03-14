@@ -8,7 +8,7 @@ database:
   sslmode: disable
 
 httpserver:
-  address: :8081
+  address: :8080
 
 auth:
   secretkey: whatever
