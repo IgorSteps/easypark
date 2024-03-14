@@ -31,6 +31,11 @@ unit:
 vendor:
 	$(GO) mod vendor
 
+## tidy: tidy up mod file
+.PHONY: tidy
+tidy:
+	$(GO) mod tidy
+
 ## mocks: generate mocks
 .PHONY: mocks
 mocks:
