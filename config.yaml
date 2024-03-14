@@ -7,8 +7,12 @@ database:
   dbname: easypark
   sslmode: disable
 
-httpserver:
-  address: :8081
+http:
+  address: :8080
 
 auth:
-  secret-key: whatever
+  secretkey: whatever
+
+logging:
+  level: info
+  gormlevel: error

@@ -2,48 +2,23 @@ package auth
 
 import (
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 )
 
-const (
-	configPath = "../../../" // located in project root.
-	configName = "config"
-	configType = "yaml"
-	configKey  = "auth"
-)
-
-type AuthConfig struct {
-	SecretKey string
-}
-
-func NewJWTTokenServiceFromConfig() (*JWTTokenService, error) {
-	viper.AddConfigPath(configPath)
-	viper.SetConfigName(configName)
-	viper.SetConfigType(configType)
-
-	var config AuthConfig
-
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
-	}
-
-	err := viper.UnmarshalKey(configKey, &config)
-	if err != nil {
-		return nil, err
-	}
-
+// NewJWTTokenServiceFromConfig returns new JWTTokenService from config.
+func NewJWTTokenServiceFromConfig(config config.AuthConfig) (*JWTTokenService, error) {
 	return newJWTTokenService(config.SecretKey), nil
 }
 
 // JWTTokenService provides functionality to generate JWT tokens.
 type JWTTokenService struct {
-	secretKey string
+	SecretKey string
 }
 
 // NewJWTTokenService returns new instance of JWTTokenService.
 func newJWTTokenService(secretKey string) *JWTTokenService {
-	return &JWTTokenService{secretKey: secretKey}
+	return &JWTTokenService{SecretKey: secretKey}
 }
 
 // GenerateToken generates JWT token for a given user for a given time.
@@ -54,5 +29,5 @@ func (s *JWTTokenService) GenerateToken(user *entities.User, expiresAt int64) (s
 		"exp":      expiresAt,
 	})
 
-	return token.SignedString([]byte(s.secretKey))
+	return token.SignedString([]byte(s.SecretKey))
 }

@@ -3,20 +3,25 @@ package httpserver
 import (
 	"net/http"
 
+	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/go-chi/chi/v5"
 )
 
 // Server represents the HTTP server that handles the requests using chi.
 type Server struct {
-	router chi.Router
+	Router  chi.Router
+	Address string
 }
 
 // NewServer creates a new Server instance.
-func NewServer(r chi.Router) *Server {
-	return &Server{router: r}
+func NewServerFromConfig(r chi.Router, config config.HTTPConfig) *Server {
+	return &Server{
+		Router:  r,
+		Address: config.Address,
+	}
 }
 
 // Run starts the HTTP server on the given address.
-func (s *Server) Run(addr string) error {
-	return http.ListenAndServe(addr, s.router)
+func (s *Server) Run() error {
+	return http.ListenAndServe(s.Address, s.Router)
 }

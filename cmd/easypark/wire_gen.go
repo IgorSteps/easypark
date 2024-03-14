@@ -12,32 +12,42 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/rest/routes"
 	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
 	"github.com/IgorSteps/easypark/internal/drivers/auth"
+	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
+	"github.com/IgorSteps/easypark/internal/drivers/logger"
 	"github.com/IgorSteps/easypark/internal/usecases"
-	"github.com/sirupsen/logrus"
 )
 
 // Injectors from wire.go:
 
 func BuildDIForApp() (*App, error) {
-	logger := logrus.New()
-	gormDB, err := db.NewDatabaseFromConfig()
+	configConfig, err := config.LoadConfig()
+	if err != nil {
+		return nil, err
+	}
+	loggingConfig := configConfig.Logging
+	logrusLogger := logger.NewLoggerFromConfig(loggingConfig)
+	databaseConfig := configConfig.Database
+	gormLogrusLogger := db.NewGormLogrusLoggerFromConfig(loggingConfig, logrusLogger)
+	gormDB, err := db.NewDatabaseFromConfig(databaseConfig, gormLogrusLogger)
 	if err != nil {
 		return nil, err
 	}
 	gormWrapper := db.NewGormWrapper(gormDB)
-	userPostgresRepository := datastore.NewUserPostgresRepository(gormWrapper, logger)
-	registerUser := usecases.NewRegisterUser(logger, userPostgresRepository)
-	jwtTokenService, err := auth.NewJWTTokenServiceFromConfig()
+	userPostgresRepository := datastore.NewUserPostgresRepository(gormWrapper, logrusLogger)
+	registerUser := usecases.NewRegisterUser(logrusLogger, userPostgresRepository)
+	authConfig := configConfig.Auth
+	jwtTokenService, err := auth.NewJWTTokenServiceFromConfig(authConfig)
 	if err != nil {
 		return nil, err
 	}
-	authenticateUser := usecases.NewAuthenticateUser(logger, userPostgresRepository, jwtTokenService)
+	authenticateUser := usecases.NewAuthenticateUser(logrusLogger, userPostgresRepository, jwtTokenService)
 	userFacade := usecasefacades.NewUserFacade(registerUser, authenticateUser)
-	handlerFactory := handlers.NewHandlerFactory(logger, userFacade)
-	router := routes.NewRouter(handlerFactory, logger)
-	server := httpserver.NewServer(router)
-	app := NewApp(server, logger)
+	handlerFactory := handlers.NewHandlerFactory(logrusLogger, userFacade)
+	router := routes.NewRouter(handlerFactory, logrusLogger)
+	httpConfig := configConfig.HTTP
+	server := httpserver.NewServerFromConfig(router, httpConfig)
+	app := NewApp(server, logrusLogger)
 	return app, nil
 }

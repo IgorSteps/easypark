@@ -2,11 +2,7 @@ package main
 
 import (
 	"log"
-
-	"github.com/sirupsen/logrus"
 )
-
-const HTTPServerPort = "localhost:8080"
 
 func main() {
 	app, err := BuildDIForApp()
@@ -16,11 +12,9 @@ func main() {
 
 	app.logger.Info("starting Easypark")
 
-	app.logger.Level = logrus.DebugLevel
-
 	// This is blocking thread, nothing will run after this.
-	app.logger.WithField("address", HTTPServerPort).Info("starting http server")
-	err = app.server.Run(HTTPServerPort)
+	app.logger.WithField("address", app.server.Address).Info("starting http server")
+	err = app.server.Run()
 	if err != nil {
 		log.Fatalf("failed to start REST server: %v", err)
 	}
