@@ -2,36 +2,7 @@
 
 [Trello board](https://trello.com/invite/b/lGdfavnm/ATTI15a8afbd1ced04b229e8f2380279ac156CE4A0AF/easypark)
 
-## Running locally
-
-### Prerequisites
-
-- Docker
-- LTS Go version
-
-### Setting up environment
-
-From project root, run:
-
-1. Run `docker-compose up -d` to create required PostgreSQL image.
-2. Run `make setcleanup-db` to truncate existing tables and start fresh.
-
-### Starting the app
-
-From project root, run:
-
-1. Build the app, run `make build`.
-2. To run the app, run `make run`.
-
-If changes to dependecy graph have been made, run `make wire` to regenerate dependecy injection code.
-
-## Testing
-
-To regenerate mocks, run `make mocks`.
-
-To run unit tests, run `make unit`.
-
-To run functional tests, run `make functional`.
+Easpark is a REST API built with clean architecture principles. This backend ensures scalability, maintainability, and flexibility, allowing for integration with our frontend and other services services.
 
 ## API Spec
 
@@ -132,7 +103,44 @@ curl -X POST http://localhost:8080/register \
       "error": "An unexpected error occurred"
     }
     ```
-    
+
+## Running locally
+
+### Prerequisites
+
+- Linux environment
+- VS Code
+- Docker
+- Golang (LTS version)
+
+### Setting up environment
+
+From project root, run:
+
+1. Run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
+2. Run `make cleanup-db` to truncate existing tables and start fresh.
+
+### Starting the app
+
+From project root, run:
+
+1. Build the app, run `make build`.
+2. To run the app, run `make run`.
+
+If changes to dependecy graph have been made, you must edit `wire.go` file and run `make wire` to regenerate dependecy injection code(`wire_gen.go` file).
+
+### Troubleshooting
+
+Will be edited once problems appear.
+
+## Testing
+
+To regenerate mocks for unit tests, run `make mocks`.
+
+To run unit tests, run `make unit`.
+
+To run functional tests, run `make functional`.
+
 ## Useful things
 
 ### Connecting to PgAdmin
