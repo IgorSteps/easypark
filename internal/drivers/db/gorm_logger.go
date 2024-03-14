@@ -65,7 +65,7 @@ func (l *GormLogrusLogger) Trace(ctx context.Context, begin time.Time, fc func()
 			"elapsed": elapsed,
 			"sql":     sql,
 		}).Error("sql error")
-	case elapsed > time.Second && l.LogLevel >= logger.Warn: // slow query threshold set to 1s.
+	case elapsed > time.Second && l.LogLevel >= logger.Warn: // slow query threshold set to 1s. // TODO: Move to config?
 		sql, rows := fc()
 		l.Logrus.WithContext(ctx).WithFields(logrus.Fields{
 			"elapsed": elapsed,

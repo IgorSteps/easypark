@@ -2,10 +2,9 @@ package main
 
 import (
 	"log"
-
-	"github.com/sirupsen/logrus"
 )
 
+// TODO: Move to config
 const HTTPServerPort = "localhost:8080"
 
 func main() {
@@ -15,9 +14,6 @@ func main() {
 	}
 
 	app.logger.Info("starting Easypark")
-
-	app.logger.Level = logrus.DebugLevel
-	//app.logger.Formatter = new(logrus.JSONFormatter) // if we want JSON looking logs
 
 	// This is blocking thread, nothing will run after this.
 	app.logger.WithField("address", HTTPServerPort).Info("starting http server")

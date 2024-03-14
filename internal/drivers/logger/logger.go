@@ -8,9 +8,11 @@ import (
 // NewLoggerFromConfig returns new logrus logger from given config.
 func NewLoggerFromConfig(config config.LoggingConfig) *logrus.Logger {
 	logger := logrus.New()
+
 	logLevel, err := logrus.ParseLevel(config.Level)
 	if err != nil {
-		logger.Errorf("Invalid log level: %s", config.Level)
+		logger.WithError(err).Error("invalid log level, setting to info")
+		logger.SetLevel(logrus.InfoLevel)
 	} else {
 		logger.SetLevel(logLevel)
 	}

@@ -13,12 +13,12 @@ func NewJWTTokenServiceFromConfig(config config.AuthConfig) (*JWTTokenService, e
 
 // JWTTokenService provides functionality to generate JWT tokens.
 type JWTTokenService struct {
-	secretKey string
+	SecretKey string
 }
 
 // NewJWTTokenService returns new instance of JWTTokenService.
 func newJWTTokenService(secretKey string) *JWTTokenService {
-	return &JWTTokenService{secretKey: secretKey}
+	return &JWTTokenService{SecretKey: secretKey}
 }
 
 // GenerateToken generates JWT token for a given user for a given time.
@@ -29,5 +29,5 @@ func (s *JWTTokenService) GenerateToken(user *entities.User, expiresAt int64) (s
 		"exp":      expiresAt,
 	})
 
-	return token.SignedString([]byte(s.secretKey))
+	return token.SignedString([]byte(s.SecretKey))
 }

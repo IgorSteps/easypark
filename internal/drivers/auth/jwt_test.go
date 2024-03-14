@@ -1,10 +1,12 @@
-package auth
+package auth_test
 
 import (
 	"testing"
 	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/IgorSteps/easypark/internal/drivers/auth"
+	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +15,10 @@ func TestJWTTokenService_GenerateToken(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	tokenService, err := NewJWTTokenServiceFromConfig()
+	config := config.AuthConfig{
+		SecretKey: "supersecret",
+	}
+	tokenService, err := auth.NewJWTTokenServiceFromConfig(config)
 	assert.NoError(t, err, "Instantiating new token service shouldn't return an error")
 	testUser := &entities.User{
 		Username: "flob",
@@ -33,7 +38,7 @@ func TestJWTTokenService_GenerateToken(t *testing.T) {
 
 	// Parse the token to get the claims.
 	token, parseErr := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(tokenService.secretKey), nil
+		return []byte(tokenService.SecretKey), nil
 	})
 	assert.NoError(t, parseErr, "Token parsing should not return an error")
 

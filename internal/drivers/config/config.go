@@ -3,9 +3,9 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	Database DatabaseConfig `mapstructure:"database"`
-	Auth     AuthConfig     `mapstructure:"auth"`
-	Logging  LoggingConfig  `mapstructure:"logging"`
+	Database DatabaseConfig
+	Auth     AuthConfig
+	Logging  LoggingConfig
 }
 
 type DatabaseConfig struct {
