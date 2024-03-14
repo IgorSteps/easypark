@@ -29,7 +29,7 @@ func BuildDIForApp() (*App, error) {
 	wire.Build(
 		// config
 		config.LoadConfig,
-		wire.FieldsOf(new(*config.Config), "Database", "Auth", "Logging"),
+		wire.FieldsOf(new(*config.Config), "Database", "Auth", "Logging", "HTTP"),
 
 		// logger
 		logger.NewLoggerFromConfig,
@@ -64,7 +64,7 @@ func BuildDIForApp() (*App, error) {
 
 		// rest server
 		routes.NewRouter,
-		httpserver.NewServer,
+		httpserver.NewServerFromConfig,
 
 		// service
 		NewApp,

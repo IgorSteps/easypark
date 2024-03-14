@@ -46,7 +46,8 @@ func BuildDIForApp() (*App, error) {
 	userFacade := usecasefacades.NewUserFacade(registerUser, authenticateUser)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, userFacade)
 	router := routes.NewRouter(handlerFactory, logrusLogger)
-	server := httpserver.NewServer(router)
+	httpConfig := configConfig.HTTP
+	server := httpserver.NewServerFromConfig(router, httpConfig)
 	app := NewApp(server, logrusLogger)
 	return app, nil
 }

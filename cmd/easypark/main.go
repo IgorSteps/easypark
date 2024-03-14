@@ -4,9 +4,6 @@ import (
 	"log"
 )
 
-// TODO: Move to config
-const HTTPServerPort = "localhost:8080"
-
 func main() {
 	app, err := BuildDIForApp()
 	if err != nil {
@@ -16,8 +13,8 @@ func main() {
 	app.logger.Info("starting Easypark")
 
 	// This is blocking thread, nothing will run after this.
-	app.logger.WithField("address", HTTPServerPort).Info("starting http server")
-	err = app.server.Run(HTTPServerPort)
+	app.logger.WithField("address", app.server.Address).Info("starting http server")
+	err = app.server.Run()
 	if err != nil {
 		log.Fatalf("failed to start REST server: %v", err)
 	}

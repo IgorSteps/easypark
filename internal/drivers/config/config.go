@@ -4,6 +4,7 @@ import "github.com/spf13/viper"
 
 type Config struct {
 	Database DatabaseConfig
+	HTTP     HTTPConfig
 	Auth     AuthConfig
 	Logging  LoggingConfig
 }
@@ -15,6 +16,10 @@ type DatabaseConfig struct {
 	Password string
 	DBName   string
 	SSLMode  string
+}
+
+type HTTPConfig struct {
+	Address string
 }
 
 type AuthConfig struct {
