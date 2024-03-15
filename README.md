@@ -148,7 +148,24 @@ To run functional tests, run `make functional`.
 Run the follwoing psql command in the database container:
 
 ```bash
-psql -U devUser -d easypark -c "INSERT INTO users (id, username, email, password, first_name, last_name, role) VALUES ('123456789', 'adminUsername', 'admin@example.com', 'securePassword', 'Admin', 'User', 'admin');"
+psql -U devUser -d easypark -c "INSERT INTO users (id, username, email, password, first_name, last_name, role) VALUES ('a131a9a0-8d09-4166-b6fc-f8a08ba549e9', 'adminUsername', 'admin@example.com', 'securePassword', 'Admin', 'User', 'admin');"
+```
+
+To get JWT for this admin, run:
+
+```bash
+curl -X POST http://localhost:8080/login \
+-H "Content-Type: application/json" \
+-d '{
+    "Username": "adminUsername",
+    "Password": "securePassword"
+}'
+```
+
+To access admin routes:
+
+```bash
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJhMTMxYTlhMC04ZDA5LTQxNjYtYjZmYy1mOGEwOGJhNTQ5ZTkiLCJ1c2VybmFtZSI6ImFkbWluVXNlcm5hbWUiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MTA1Mzk4NjR9.7qjL67k50MUtqEzZ2IHm5-TdRvcWaQRiILUDwVbv7XI" http://localhost:8080/admin
 ```
 
 ### Connecting to PgAdmin
