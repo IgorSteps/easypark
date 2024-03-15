@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/IgorSteps/easypark/internal/adapters/datastore"
 	"github.com/IgorSteps/easypark/internal/adapters/rest/handlers"
+	"github.com/IgorSteps/easypark/internal/adapters/rest/middleware"
 	"github.com/IgorSteps/easypark/internal/adapters/rest/routes"
 	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
 	"github.com/IgorSteps/easypark/internal/drivers/auth"
@@ -45,7 +46,8 @@ func BuildDIForApp() (*App, error) {
 	authenticateUser := usecases.NewAuthenticateUser(logrusLogger, userPostgresRepository, jwtTokenService)
 	userFacade := usecasefacades.NewUserFacade(registerUser, authenticateUser)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, userFacade)
-	router := routes.NewRouter(handlerFactory, logrusLogger)
+	authMiddleware := middleware.NewAuthMiddleware(jwtTokenService, logrusLogger)
+	router := routes.NewRouter(handlerFactory, authMiddleware, logrusLogger)
 	httpConfig := configConfig.HTTP
 	server := httpserver.NewServerFromConfig(router, httpConfig)
 	app := NewApp(server, logrusLogger)

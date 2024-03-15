@@ -13,6 +13,7 @@ package main
 import (
 	"github.com/IgorSteps/easypark/internal/adapters/datastore"
 	"github.com/IgorSteps/easypark/internal/adapters/rest/handlers"
+	"github.com/IgorSteps/easypark/internal/adapters/rest/middleware"
 	"github.com/IgorSteps/easypark/internal/adapters/rest/routes"
 	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
@@ -46,7 +47,7 @@ func BuildDIForApp() (*App, error) {
 
 		// jwt
 		auth.NewJWTTokenServiceFromConfig,
-		wire.Bind(new(usecases.TokenService), new(*auth.JWTTokenService)),
+		wire.Bind(new(repositories.TokenRepository), new(*auth.JWTTokenService)),
 
 		// usecase
 		usecases.NewRegisterUser,
@@ -59,6 +60,8 @@ func BuildDIForApp() (*App, error) {
 		wire.Bind(new(handlers.UserFacade), new(*usecasefacades.UserFacade)),
 
 		// rest handlers
+		middleware.NewAuthMiddleware,
+		wire.Bind(new(routes.RequestAuthoriser), new(*middleware.AuthMiddleware)),
 		handlers.NewHandlerFactory,
 		wire.Bind(new(routes.HandlerFactory), new(*handlers.HandlerFactory)),
 

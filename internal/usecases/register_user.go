@@ -42,7 +42,7 @@ func (s *RegisterUser) Execute(ctx context.Context, user *entities.User) error {
 	return nil
 }
 
-// Validate checks if the user already exists using their email.
+// Validate checks if the user already exists using their email or username.
 func (s *RegisterUser) validate(ctx context.Context, user *entities.User) error {
 	doesExist, err := s.UserRepository.CheckUserExists(ctx, user.Email, user.Username)
 	if err != nil {

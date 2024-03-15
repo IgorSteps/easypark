@@ -5,9 +5,11 @@ import (
 	"testing"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/routes"
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	mocks "github.com/IgorSteps/easypark/mocks/adapters/rest/routes"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestRoutes_NewRouter_HappyPath(t *testing.T) {
@@ -15,19 +17,31 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	mockHandlerFactory := &mocks.HandlerFactory{}
+	mockMiddleware := &mocks.RequestAuthoriser{}
 	logger := logrus.New()
 	// Test handler to return from the factory.
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
+	// Define a simple pass-through middleware function for testing
+	passThroughMiddleware := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			next.ServeHTTP(w, r) // Call the next handler in the chain
+		})
+	}
+
 	mockHandlerFactory.EXPECT().UserCreate().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().UserAuthorise().Return(testHandler).Once()
+
+	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Twice()
+	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
+	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
 
 	// --------
 	// ACT
 	// --------
-	r := routes.NewRouter(mockHandlerFactory, logger)
+	r := routes.NewRouter(mockHandlerFactory, mockMiddleware, logger)
 
 	// --------
 	// ASSERT

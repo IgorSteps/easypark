@@ -2,7 +2,6 @@ package auth_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/drivers/auth"
@@ -24,12 +23,11 @@ func TestJWTTokenService_GenerateToken(t *testing.T) {
 		Username: "flob",
 		Role:     "blob",
 	}
-	expiresAt := time.Now().Add(1 * time.Hour).Unix() // 1 hour
 
 	// ----
 	// ACT
 	// ----
-	tokenString, err := tokenService.GenerateToken(testUser, expiresAt)
+	tokenString, err := tokenService.GenerateToken(testUser)
 
 	// ------
 	// ASSERT
@@ -46,5 +44,5 @@ func TestJWTTokenService_GenerateToken(t *testing.T) {
 	assert.True(t, ok, "Token claims should be of type jwt.MapClaims")
 	assert.Equal(t, testUser.Username, (*claims)["username"], "Username should match")
 	assert.Equal(t, string(testUser.Role), (*claims)["role"], "Role should match")
-	assert.Equal(t, float64(expiresAt), (*claims)["exp"], "Expiery should match")
+	assert.Equal(t, 1, (*claims)["exp"], "Expiery should match")
 }

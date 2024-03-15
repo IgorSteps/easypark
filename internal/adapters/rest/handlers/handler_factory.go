@@ -26,6 +26,7 @@ func (s *HandlerFactory) UserCreate() http.Handler {
 	return NewUserCreateHandler(s.facade, s.logger)
 }
 
+// UserAuthorise returns new REST handler for user authentication.
 func (s *HandlerFactory) UserAuthorise() http.Handler {
 	return NewUserLoginHandler(s.facade, s.logger)
 }

@@ -23,6 +23,8 @@ curl -X POST http://localhost:8080/login \
 }'
 ```
 
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJmNmRiMWUzMS01NTU1LTQyMDgtOThlNC02NjBmNDU1ZjRlYzQiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJyb2xlIjoiZHJpdmVyIiwiZXhwIjoxNzEwNDk4NjU1fQ.R45I8RI2rzpj9WZ16hXOXNxdh67HHaBsmE3phZQdCt0" http://localhost:8080/driver
+
 **Responses**:
 
 - **200 OK**
