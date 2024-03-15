@@ -2,7 +2,7 @@
 
 [Trello board](https://trello.com/invite/b/lGdfavnm/ATTI15a8afbd1ced04b229e8f2380279ac156CE4A0AF/easypark)
 
-Easpark is a REST API built with clean architecture principles. This backend ensures scalability, maintainability, and flexibility, allowing for integration with our frontend and other services services.
+Easpark is a REST API built with Clean Architecture. It provides a set of endpoints for drivers and admins to use and manage parking.
 
 ## API Spec
 
