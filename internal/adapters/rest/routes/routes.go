@@ -37,6 +37,7 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 	// Driver routes
 	router.Group(func(r chi.Router) {
 		r.Use(requestAuthoriser.Authorise, requestAuthoriser.RequireRole(entities.RoleDriver))
+		// Placeholder:
 		r.Get("/driver", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Welcome, Driver!"))
 		})
@@ -45,6 +46,7 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 	// Admin routes
 	router.Group(func(r chi.Router) {
 		r.Use(requestAuthoriser.Authorise, requestAuthoriser.RequireRole(entities.RoleAdmin))
+		// Placeholder:
 		r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Welcome, Admin!"))
 		})

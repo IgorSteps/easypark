@@ -50,6 +50,16 @@ func (s *RestClientSuite) LoginUser(ctx context.Context, req *models.LoginUserRe
 	return s.sendRequest(ctx, "POST", "/login", req)
 }
 
+// PlaceholderDriverRoute interacts with the REST API to a placeholder for driver routrs.
+func (s *RestClientSuite) PlaceholderDriverRoute(ctx context.Context, token string) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, "GET", "/driver", nil, token)
+}
+
+// PlaceholderADminRoute interacts with the REST API to a placeholder for admin routrs.
+func (s *RestClientSuite) PlaceholderAdminRoute(ctx context.Context, token string) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, "GET", "/admin", nil, token)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)
@@ -63,6 +73,35 @@ func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, 
 		return nil, 0, err
 	}
 	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := s.Client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, resp.StatusCode, err
+	}
+
+	return responseBody, resp.StatusCode, nil
+}
+
+// sendRequest sends a HTTP request via provided method and path.
+func (s *RestClientSuite) sendRequestWithToken(ctx context.Context, method, path string, body interface{}, token string) ([]byte, int, error) {
+	requestBody, err := json.Marshal(body)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	url := fmt.Sprintf("%s%s", s.BaseURL, path)
+	req, err := http.NewRequestWithContext(ctx, method, url, bytes.NewBuffer(requestBody))
+	if err != nil {
+		return nil, 0, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
 	resp, err := s.Client.Do(req)
 	if err != nil {
