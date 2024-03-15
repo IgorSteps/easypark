@@ -145,6 +145,14 @@ To run functional tests, run `make functional`.
 
 ## Useful things
 
+### Creating admin user
+
+Run the follwoing psql command in the database container:
+
+```bash
+psql -U devUser -d easypark -c "INSERT INTO users (id, username, email, password, first_name, last_name, role) VALUES ('123456789', 'adminUsername', 'admin@example.com', 'securePassword', 'Admin', 'User', 'admin');"
+```
+
 ### Connecting to PgAdmin
 
 PgAdming provides a nice UI for DB management and debugging.

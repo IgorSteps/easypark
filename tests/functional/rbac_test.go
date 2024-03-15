@@ -117,7 +117,7 @@ func (s *TestLoginUserSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() 
 	s.Require().Equal("User logged in successfully", targetModel.Message, "Response messages don't match")
 	s.Require().NotEmpty(targetModel.Token, "Token must not be empty")
 
-	s.Require().Equal(http.StatusForbidden, respC, "request to admin route sby driver hould return 401")
+	s.Require().Equal(http.StatusForbidden, respC, "Request to admin route bby driver hould return 403")
 	s.Require().Equal("Forbidden\n", string(respB))
 }
 
