@@ -9,12 +9,10 @@ import (
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	"github.com/IgorSteps/easypark/internal/usecases"
 	repositoriesMocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
-	usecasesMocks "github.com/IgorSteps/easypark/mocks/usecases"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestAuthenticateUser_HappyPath(t *testing.T) {
@@ -24,7 +22,7 @@ func TestAuthenticateUser_HappyPath(t *testing.T) {
 	ctx := context.Background()
 	logger, _ := test.NewNullLogger()
 	mockRepo := &repositoriesMocks.UserRepository{}
-	mockTokenService := &usecasesMocks.TokenService{}
+	mockTokenService := &repositoriesMocks.TokenRepository{}
 	usecase := usecases.NewAuthenticateUser(logger, mockRepo, mockTokenService)
 	testUsername := "uname"
 	testPassword := "pwd"
@@ -40,7 +38,7 @@ func TestAuthenticateUser_HappyPath(t *testing.T) {
 	}
 
 	mockRepo.EXPECT().FindByUsername(ctx, testUsername).Return(user, nil).Once()
-	mockTokenService.EXPECT().GenerateToken(user, mock.AnythingOfType("int64")).Return(testToken, nil).Once()
+	mockTokenService.EXPECT().GenerateToken(user).Return(testToken, nil).Once()
 
 	// --------
 	// ACT
@@ -63,7 +61,7 @@ func TestAuthenticateUser_UnhappyPath_FindByUsername(t *testing.T) {
 	ctx := context.Background()
 	logger, _ := test.NewNullLogger()
 	mockRepo := &repositoriesMocks.UserRepository{}
-	mockTokenService := &usecasesMocks.TokenService{}
+	mockTokenService := &repositoriesMocks.TokenRepository{}
 	usecase := usecases.NewAuthenticateUser(logger, mockRepo, mockTokenService)
 	testUsername := "uname"
 	testPassword := "pwd"
@@ -93,7 +91,7 @@ func TestAuthenticateUser_UnhappyPath_Credentials(t *testing.T) {
 	ctx := context.Background()
 	logger, hook := test.NewNullLogger()
 	mockRepo := &repositoriesMocks.UserRepository{}
-	mockTokenService := &usecasesMocks.TokenService{}
+	mockTokenService := &repositoriesMocks.TokenRepository{}
 	usecase := usecases.NewAuthenticateUser(logger, mockRepo, mockTokenService)
 	testUsername := "uname"
 	testPassword := "pwd"
@@ -140,7 +138,7 @@ func TestAuthenticateUser_UnhappyPath_Token(t *testing.T) {
 	ctx := context.Background()
 	logger, hook := test.NewNullLogger()
 	mockRepo := &repositoriesMocks.UserRepository{}
-	mockTokenService := &usecasesMocks.TokenService{}
+	mockTokenService := &repositoriesMocks.TokenRepository{}
 	usecase := usecases.NewAuthenticateUser(logger, mockRepo, mockTokenService)
 	testUsername := "uname"
 	testPassword := "pwd"
@@ -156,7 +154,7 @@ func TestAuthenticateUser_UnhappyPath_Token(t *testing.T) {
 	testError := errors.New("Internal error: failed to generate auth token")
 
 	mockRepo.EXPECT().FindByUsername(ctx, testUsername).Return(user, nil).Once()
-	mockTokenService.EXPECT().GenerateToken(user, mock.AnythingOfType("int64")).Return("", testError).Once()
+	mockTokenService.EXPECT().GenerateToken(user).Return("", testError).Once()
 
 	// --------
 	// ACT

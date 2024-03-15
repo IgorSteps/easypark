@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestJWTTokenService_GenerateToken(t *testing.T) {
+func TestJWTTokenService(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -24,27 +24,25 @@ func TestJWTTokenService_GenerateToken(t *testing.T) {
 		Username: "flob",
 		Role:     "blob",
 	}
-	expiresAt := time.Now().Add(1 * time.Hour).Unix() // 1 hour
 
 	// ----
 	// ACT
 	// ----
-	tokenString, err := tokenService.GenerateToken(testUser, expiresAt)
-
-	// ------
-	// ASSERT
-	// ------
+	tokenString, err := tokenService.GenerateToken(testUser)
 	assert.NoError(t, err, "Token generation should not return an error")
 
 	// Parse the token to get the claims.
-	token, parseErr := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, parseErr := jwt.ParseWithClaims(tokenString, &entities.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(tokenService.SecretKey), nil
 	})
 	assert.NoError(t, parseErr, "Token parsing should not return an error")
 
-	claims, ok := token.Claims.(*jwt.MapClaims)
-	assert.True(t, ok, "Token claims should be of type jwt.MapClaims")
-	assert.Equal(t, testUser.Username, (*claims)["username"], "Username should match")
-	assert.Equal(t, string(testUser.Role), (*claims)["role"], "Role should match")
-	assert.Equal(t, float64(expiresAt), (*claims)["exp"], "Expiery should match")
+	// ------
+	// ASSERT
+	// ------
+	claims := token.Claims.(*entities.Claims)
+	assert.Equal(t, testUser.Username, claims.Username, "Username should match")
+	assert.Equal(t, string(testUser.Role), claims.Role, "Role should match")
+	precision := 5 * time.Second
+	assert.WithinDuration(t, time.Now().Add(1*time.Hour), claims.ExpiresAt.Time, precision, "Expiration time should be roughly 5 sec from now")
 }
