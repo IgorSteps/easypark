@@ -118,7 +118,6 @@ curl -X POST http://localhost:8080/register \
 From project root, run:
 
 1. Run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
-2. Run `make cleanup-db` to truncate existing tables and start fresh.
 
 ### Starting the app
 
@@ -142,6 +141,10 @@ To run unit tests, run `make unit`.
 To run functional tests, run `make functional`.
 
 ## Useful things
+
+### Cleaning database tables
+
+Run `make clean-db` to truncate existing tables. Note, you need to add new table names to `./build/clean-bd.sh` script.
 
 ### Creating admin user
 
