@@ -23,7 +23,7 @@ func TestUserCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	// --------
 	testLogger, _ := test.NewNullLogger()
 	mockFacade := &mocks.UserFacade{}
-	handler := handlers.NewUserCreateHandler(mockFacade, testLogger)
+	handler := handlers.NewDriverCreateHandler(mockFacade, testLogger)
 
 	testUserReq := models.UserCreationRequest{
 		Firstname: "John",
@@ -39,7 +39,7 @@ func TestUserCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().CreateUser(req.Context(), testDomainUser).Return(nil).Once()
+	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(nil).Once()
 
 	// --------
 	// ACT
@@ -60,7 +60,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_DecoderFailure(t *testing.T) {
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockFacade := &mocks.UserFacade{}
-	handler := handlers.NewUserCreateHandler(mockFacade, testLogger)
+	handler := handlers.NewDriverCreateHandler(mockFacade, testLogger)
 	testUserReq := []byte(`{"invalid":"testuser"}`)
 
 	requestBody, _ := json.Marshal(testUserReq)
@@ -99,7 +99,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_UserAlreadyExistsError(t *testi
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockFacade := &mocks.UserFacade{}
-	handler := handlers.NewUserCreateHandler(mockFacade, testLogger)
+	handler := handlers.NewDriverCreateHandler(mockFacade, testLogger)
 	testUsername := "testuser"
 	testEmail := "test@example.com"
 	testUserReq := models.UserCreationRequest{
@@ -116,7 +116,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_UserAlreadyExistsError(t *testi
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().CreateUser(req.Context(), testDomainUser).Return(testError).Once()
+	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(testError).Once()
 
 	// --------
 	// ACT
@@ -147,7 +147,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_InternalError(t *testing.T) {
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockFacade := &mocks.UserFacade{}
-	handler := handlers.NewUserCreateHandler(mockFacade, testLogger)
+	handler := handlers.NewDriverCreateHandler(mockFacade, testLogger)
 
 	testUserReq := models.UserCreationRequest{
 		Firstname: "John",
@@ -164,7 +164,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_InternalError(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().CreateUser(req.Context(), testDomainUser).Return(testError).Once()
+	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(testError).Once()
 
 	// --------
 	// ACT

@@ -37,6 +37,11 @@ func (s *GormWrapper) First(value interface{}) datastore.Datastore {
 	return &GormWrapper{DB: s.DB.First(value)}
 }
 
+// FindAll gets all records.
+func (s *GormWrapper) FindAll(value interface{}) datastore.Datastore {
+	return &GormWrapper{DB: s.DB.Find(value)}
+}
+
 // Error returns any errors encountered.
 func (s *GormWrapper) Error() error {
 	return s.DB.Error

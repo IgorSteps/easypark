@@ -21,12 +21,16 @@ func NewHandlerFactory(logger *logrus.Logger, facade UserFacade) *HandlerFactory
 	}
 }
 
-// UserCreate returns new REST handler for the creation of users.
-func (s *HandlerFactory) UserCreate() http.Handler {
-	return NewUserCreateHandler(s.facade, s.logger)
+// DriverCreate returns new REST handler for the creation of driver users.
+func (s *HandlerFactory) DriverCreate() http.Handler {
+	return NewDriverCreateHandler(s.facade, s.logger)
 }
 
 // UserAuthorise returns new REST handler for user authentication.
 func (s *HandlerFactory) UserAuthorise() http.Handler {
 	return NewUserLoginHandler(s.facade, s.logger)
+}
+
+func (s *HandlerFactory) GetAllDrivers() http.Handler {
+	return NewDriverUsersGetHandler(s.logger, s.facade)
 }

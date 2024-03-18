@@ -37,14 +37,15 @@ func BuildDIForApp() (*App, error) {
 	}
 	gormWrapper := db.NewGormWrapper(gormDB)
 	userPostgresRepository := datastore.NewUserPostgresRepository(gormWrapper, logrusLogger)
-	registerUser := usecases.NewRegisterUser(logrusLogger, userPostgresRepository)
+	registerDriver := usecases.NewRegisterDriver(logrusLogger, userPostgresRepository)
 	authConfig := configConfig.Auth
 	jwtTokenService, err := auth.NewJWTTokenServiceFromConfig(authConfig)
 	if err != nil {
 		return nil, err
 	}
 	authenticateUser := usecases.NewAuthenticateUser(logrusLogger, userPostgresRepository, jwtTokenService)
-	userFacade := usecasefacades.NewUserFacade(registerUser, authenticateUser)
+	getDrivers := usecases.NewGetDrivers(logrusLogger, userPostgresRepository)
+	userFacade := usecasefacades.NewUserFacade(registerDriver, authenticateUser, getDrivers)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, userFacade)
 	authMiddleware := middleware.NewAuthMiddleware(jwtTokenService, logrusLogger)
 	router := routes.NewRouter(handlerFactory, authMiddleware, logrusLogger)

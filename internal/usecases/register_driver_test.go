@@ -25,7 +25,7 @@ func TestRegisterUser_HappyPath(t *testing.T) {
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockUserRepository := &mocks.UserRepository{}
-	usecase := usecases.NewRegisterUser(testLogger, mockUserRepository)
+	usecase := usecases.NewRegisterDriver(testLogger, mockUserRepository)
 	ctx := context.Background()
 
 	testUser := CreateTestUser()
@@ -56,7 +56,7 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockUserRepository := &mocks.UserRepository{}
-	usecase := usecases.NewRegisterUser(testLogger, mockUserRepository)
+	usecase := usecases.NewRegisterDriver(testLogger, mockUserRepository)
 	ctx := context.Background()
 
 	testUser := CreateTestUser()
@@ -91,7 +91,7 @@ func TestRegisterUser_UnhappyPath_CreateUser_Fails(t *testing.T) {
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockUserRepository := &mocks.UserRepository{}
-	usecase := usecases.NewRegisterUser(testLogger, mockUserRepository)
+	usecase := usecases.NewRegisterDriver(testLogger, mockUserRepository)
 	ctx := context.Background()
 
 	testError := errors.New("boom")
@@ -124,7 +124,7 @@ func TestRegisterUser_UnhappyPath_CheckUserExistsByEmail_Fails(t *testing.T) {
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockUserRepository := &mocks.UserRepository{}
-	usecase := usecases.NewRegisterUser(testLogger, mockUserRepository)
+	usecase := usecases.NewRegisterDriver(testLogger, mockUserRepository)
 	ctx := context.Background()
 
 	testError := errors.New("boom")

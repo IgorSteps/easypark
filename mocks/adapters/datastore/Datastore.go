@@ -115,6 +115,54 @@ func (_c *Datastore_Error_Call) RunAndReturn(run func() error) *Datastore_Error_
 	return _c
 }
 
+// FindAll provides a mock function with given fields: value
+func (_m *Datastore) FindAll(value interface{}) datastore.Datastore {
+	ret := _m.Called(value)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAll")
+	}
+
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(interface{}) datastore.Datastore); ok {
+		r0 = rf(value)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(datastore.Datastore)
+		}
+	}
+
+	return r0
+}
+
+// Datastore_FindAll_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindAll'
+type Datastore_FindAll_Call struct {
+	*mock.Call
+}
+
+// FindAll is a helper method to define mock.On call
+//   - value interface{}
+func (_e *Datastore_Expecter) FindAll(value interface{}) *Datastore_FindAll_Call {
+	return &Datastore_FindAll_Call{Call: _e.mock.On("FindAll", value)}
+}
+
+func (_c *Datastore_FindAll_Call) Run(run func(value interface{})) *Datastore_FindAll_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(interface{}))
+	})
+	return _c
+}
+
+func (_c *Datastore_FindAll_Call) Return(_a0 datastore.Datastore) *Datastore_FindAll_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_FindAll_Call) RunAndReturn(run func(interface{}) datastore.Datastore) *Datastore_FindAll_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // First provides a mock function with given fields: value
 func (_m *Datastore) First(value interface{}) datastore.Datastore {
 	ret := _m.Called(value)

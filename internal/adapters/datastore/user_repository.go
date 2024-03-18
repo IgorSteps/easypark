@@ -24,7 +24,7 @@ func NewUserPostgresRepository(db Datastore, lgr *logrus.Logger) *UserPostgresRe
 }
 
 func (s *UserPostgresRepository) CreateUser(ctx context.Context, user *entities.User) error {
-	result := s.DB.WithContext(ctx).Create(&user)
+	result := s.DB.WithContext(ctx).Create(user)
 	err := result.Error()
 	if err != nil {
 		s.Logger.WithError(err).Error("failed to insert user into the database")
@@ -47,8 +47,8 @@ func (s *UserPostgresRepository) CheckUserExists(ctx context.Context, email, una
 		}
 
 		s.Logger.WithError(err).WithFields(logrus.Fields{
-			"email":    user.Email,
-			"username": user.Username,
+			"email":    email,
+			"username": uname,
 		}).Error("failed to query for user in the database")
 		return false, repositories.NewInternalError("failed to query for user in the database")
 	}
@@ -65,12 +65,26 @@ func (s *UserPostgresRepository) FindByUsername(ctx context.Context, username st
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			s.Logger.WithField("username", username).Warn("failed to find user with given username in the database")
-			return &entities.User{}, repositories.NewUserNotFoundError(username)
+			return nil, repositories.NewUserNotFoundError(username)
 		}
 
 		s.Logger.WithError(err).Error("failed to query for user in the database")
-		return &entities.User{}, repositories.NewInternalError("failed to query for user in the database")
+		return nil, repositories.NewInternalError("failed to query for user in the database")
 	}
 
 	return &user, nil // User found
+}
+
+// GetAllDriverUsers gets all the driver users from the databas.
+func (s *UserPostgresRepository) GetAllDriverUsers(ctx context.Context) ([]entities.User, error) {
+	var users []entities.User
+
+	result := s.DB.WithContext(ctx).Where("role <> ?", entities.RoleAdmin).FindAll(&users)
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).Error("failed to query for all users in the database")
+		return users, repositories.NewInternalError("failed to query for all users in the database")
+	}
+
+	return users, nil
 }

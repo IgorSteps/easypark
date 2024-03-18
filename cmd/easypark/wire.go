@@ -50,10 +50,12 @@ func BuildDIForApp() (*App, error) {
 		wire.Bind(new(repositories.TokenRepository), new(*auth.JWTTokenService)),
 
 		// usecase
-		usecases.NewRegisterUser,
-		wire.Bind(new(usecasefacades.UserCreator), new(*usecases.RegisterUser)),
+		usecases.NewRegisterDriver,
+		wire.Bind(new(usecasefacades.DriverCreator), new(*usecases.RegisterDriver)),
 		usecases.NewAuthenticateUser,
 		wire.Bind(new(usecasefacades.UserAuthenticator), new(*usecases.AuthenticateUser)),
+		usecases.NewGetDrivers,
+		wire.Bind(new(usecasefacades.DriversGetter), new(*usecases.GetDrivers)),
 
 		// facades
 		usecasefacades.NewUserFacade,

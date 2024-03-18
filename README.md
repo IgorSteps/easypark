@@ -165,10 +165,10 @@ curl -X POST http://localhost:8080/login \
 }'
 ```
 
-To access admin routes:
+For example, as an admin, you can curl `drivers` endpoint to get all drivers:
 
 ```bash
-curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJhMTMxYTlhMC04ZDA5LTQxNjYtYjZmYy1mOGEwOGJhNTQ5ZTkiLCJ1c2VybmFtZSI6ImFkbWluVXNlcm5hbWUiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MTA1Mzk4NjR9.7qjL67k50MUtqEzZ2IHm5-TdRvcWaQRiILUDwVbv7XI" http://localhost:8080/admin
+curl -H "Authorization: Bearer <TOKEN_FROM_LOGIN>" http://localhost:8080/drivers
 ```
 
 ### Connecting to PgAdmin

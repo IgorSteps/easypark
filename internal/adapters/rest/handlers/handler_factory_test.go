@@ -21,7 +21,7 @@ func TestHandlers_UserCreate_HappyPath(t *testing.T) {
 	// ---
 	// ACT
 	// ---
-	handler := handlerFactory.UserCreate()
+	handler := handlerFactory.DriverCreate()
 
 	// ------
 	// ASSERT

@@ -9,28 +9,28 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// RegisterUser provides business logic to register a user.
-type RegisterUser struct {
+// RegisterDriver provides business logic to register a driver user.
+type RegisterDriver struct {
 	Logger         *logrus.Logger
 	UserRepository repositories.UserRepository
 }
 
-// NewRegisterUser returns new RegisterUser usecase.
-func NewRegisterUser(logger *logrus.Logger, repo repositories.UserRepository) *RegisterUser {
-	return &RegisterUser{
+// NewRegisterDriver returns new RegisterDriver usecase.
+func NewRegisterDriver(logger *logrus.Logger, repo repositories.UserRepository) *RegisterDriver {
+	return &RegisterDriver{
 		Logger:         logger,
 		UserRepository: repo,
 	}
 }
 
 // Execute runs the usecase business logic.
-func (s *RegisterUser) Execute(ctx context.Context, user *entities.User) error {
+func (s *RegisterDriver) Execute(ctx context.Context, user *entities.User) error {
 	err := s.validate(ctx, user)
 	if err != nil {
 		return err
 	}
 
-	// TODO: Move to user entity
+	// TODO: Move to the user entity
 	user.ID = uuid.New()
 	user.Role = entities.RoleDriver
 
@@ -43,7 +43,7 @@ func (s *RegisterUser) Execute(ctx context.Context, user *entities.User) error {
 }
 
 // Validate checks if the user already exists using their email or username.
-func (s *RegisterUser) validate(ctx context.Context, user *entities.User) error {
+func (s *RegisterDriver) validate(ctx context.Context, user *entities.User) error {
 	doesExist, err := s.UserRepository.CheckUserExists(ctx, user.Email, user.Username)
 	if err != nil {
 		return err
