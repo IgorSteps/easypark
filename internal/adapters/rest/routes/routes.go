@@ -47,7 +47,7 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 	// Admin routes
 	router.Group(func(r chi.Router) {
 		r.Use(requestAuthoriser.Authorise, requestAuthoriser.RequireRole(entities.RoleAdmin))
-		router.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
+		r.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
 	})
 
 	return router

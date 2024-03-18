@@ -168,7 +168,7 @@ curl -X POST http://localhost:8080/login \
 For example, as an admin, you can curl `drivers` endpoint to get all drivers:
 
 ```bash
-curl -H "Authorization: Bearer <TOKEN_FROM_LOGIN>" http://localhost:8080/drivers
+curl -H "Authorization: Bearer <TOKEN_FROM_ABOVE> http://localhost:8080/drivers
 ```
 
 ### Connecting to PgAdmin

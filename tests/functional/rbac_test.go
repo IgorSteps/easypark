@@ -15,7 +15,7 @@ type TestRBACSuite struct {
 	client.RestClientSuite
 }
 
-func (s *TestLoginUserSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
+func (s *TestRBACSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -68,7 +68,7 @@ func (s *TestLoginUserSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
 	s.Require().Equal("Welcome, Driver!", string(respB))
 }
 
-func (s *TestLoginUserSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() {
+func (s *TestRBACSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -107,7 +107,7 @@ func (s *TestLoginUserSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() 
 	}
 	s.T().Log(targetModel.Token)
 	// Make request to driver route
-	respB, respC, err := s.PlaceholderAdminRoute(ctx, targetModel.Token)
+	respB, respC, err := s.GetAllDrivers(ctx, targetModel.Token)
 	s.Require().NoError(err, "Making request to driver route should not return an error")
 
 	// --------
@@ -117,7 +117,7 @@ func (s *TestLoginUserSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() 
 	s.Require().Equal("User logged in successfully", targetModel.Message, "Response messages don't match")
 	s.Require().NotEmpty(targetModel.Token, "Token must not be empty")
 
-	s.Require().Equal(http.StatusForbidden, respC, "Request to admin route bby driver hould return 403")
+	s.Require().Equal(http.StatusForbidden, respC, "Request to admin route by driver hould return 403")
 	s.Require().Equal("Forbidden\n", string(respB))
 }
 
