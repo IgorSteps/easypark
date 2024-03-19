@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       database:
+        container_name: database
         image: postgres:latest
         # Same as in docker-compose file
         env:
