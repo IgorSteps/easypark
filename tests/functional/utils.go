@@ -1,6 +1,7 @@
 package functional
 
 import (
+	"bytes"
 	"context"
 	"net/http"
 	"os/exec"
@@ -11,7 +12,7 @@ import (
 )
 
 // PopulateUsers creates multiple users in the database using our REST API.
-func PopulateUsers(ctx context.Context, s *client.RestClientSuite) ([]models.UserCreationRequest, error) {
+func PopulateUsers(ctx context.Context, s *client.RestClientSuite) error {
 	users := []models.UserCreationRequest{
 		{
 			Username:  "testuser1",
@@ -33,18 +34,20 @@ func PopulateUsers(ctx context.Context, s *client.RestClientSuite) ([]models.Use
 		_, statusCode, err := s.CreateUser(ctx, &userReq)
 		if err != nil || statusCode != http.StatusCreated {
 			s.T().Logf("Failed to create user: %v with status code: %d", err, statusCode)
-			return nil, err
+			return err
 		}
 	}
 
-	return users, nil
+	return nil
 }
 
 func CreateAdmin(ctx context.Context, s *client.RestClientSuite) string {
-	cmd := exec.Command("../../build/createadmin.sh")
+	cmd := exec.Command("sh", "../../build/createadmin.sh")
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		s.T().Fatalf("Failed to create admin user: %v", err)
+		s.T().Fatalf("Failed to create admin user: %v, Stderr %s", err, stderr.String())
 	}
 
 	// Must match what's in the above shell script.
