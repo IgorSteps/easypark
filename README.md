@@ -104,6 +104,43 @@ curl -X POST http://localhost:8080/register \
     }
     ```
 
+### 3. Get All Drivers API Endpoint
+
+**Endpoint**: `GET /drivers`
+
+**Description**: Gets all driver users in the system.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
+```
+
+**Responses**:
+
+- **200 OK**
+
+    ```json
+    [
+      {"ID":"910e78c8-d2eb-41e8-aec6-c70a33b692df","Username":"user1",
+      "Email":"user1@example.com",
+      "Password":"securepassword",
+      "FirstName":"test",
+      "LastName":"user1",
+      "Role":"driver"
+      },
+      other users...
+    ]
+    ```
+
+- **500 Internal Server Error**
+
+    ```json
+    {
+      "error": "An unexpected error occurred"
+    }
+    ```
+
 ## Running locally
 
 ### Prerequisites
@@ -144,11 +181,23 @@ To run functional tests, run `make functional`.
 
 ### Cleaning database tables
 
-Run `make clean-db` to truncate existing tables. Note, you need to add new table names to `./build/clean-bd.sh` script.
+Run `make clean-db` to truncate existing tables. Note, you need to add new table names to `./build/clean-db.sh` script.
 
 ### Creating admin user
 
-Run the `createadmin.sh` script, to create a user with admin role in the database.
+Run the `./build/createadmin.sh` script to create a user with admin role in the database. This creates an admin with the following details:
+
+```json
+{
+  "id":"a131a9a0-8d09-4166-b6fc-f8a08ba549e9",
+  "username":"adminUsername",
+  "email":"admin@example.com", 
+  "password":"securePassword",
+  "firstname":"Admin",
+  "lastname":"User",
+  "role":"admin"
+}
+```
 
 To get JWT for this admin, run:
 
@@ -164,7 +213,7 @@ curl -X POST http://localhost:8080/login \
 For example, as an admin, you can curl `drivers` endpoint to get all drivers:
 
 ```bash
-curl -H "Authorization: Bearer <TOKEN_FROM_ABOVE> http://localhost:8080/drivers
+curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/drivers
 ```
 
 ### Connecting to PgAdmin
