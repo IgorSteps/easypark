@@ -14,5 +14,5 @@ auth:
   secretkey: whatever
 
 logging:
-  level: info
+  level: debug
   gormlevel: error

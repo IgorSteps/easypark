@@ -10,6 +10,7 @@ type Datastore interface {
 	Create(value interface{}) Datastore
 	Where(query interface{}, args ...interface{}) Datastore
 	First(value interface{}) Datastore
+	FindAll(value interface{}) Datastore
 
 	Error() error
 }

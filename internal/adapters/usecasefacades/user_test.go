@@ -16,9 +16,10 @@ func TestUsecaseFacade_CreateUser_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.UserCreator{}
+	mockUserCreator := &mocks.DriverCreator{}
 	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator)
+	mockUserGetter := &mocks.DriversGetter{}
+	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
 	ctx := context.Background()
 	testUser := &entities.User{
 		ID:        uuid.New(),
@@ -34,7 +35,7 @@ func TestUsecaseFacade_CreateUser_HappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := facade.CreateUser(ctx, testUser)
+	err := facade.CreateDriver(ctx, testUser)
 
 	// --------
 	// ASSERT
@@ -47,9 +48,10 @@ func TestUsecasefacade_CreateUser_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.UserCreator{}
+	mockUserCreator := &mocks.DriverCreator{}
 	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator)
+	mockUserGetter := &mocks.DriversGetter{}
+	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
 	ctx := context.Background()
 	testUser := &entities.User{
 		ID:        uuid.New(),
@@ -66,7 +68,7 @@ func TestUsecasefacade_CreateUser_UnhappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := facade.CreateUser(ctx, testUser)
+	err := facade.CreateDriver(ctx, testUser)
 
 	// --------
 	// ASSERT
@@ -80,9 +82,10 @@ func TestUsecasefacade_AuthoriseUser_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.UserCreator{}
+	mockUserCreator := &mocks.DriverCreator{}
 	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator)
+	mockUserGetter := &mocks.DriversGetter{}
+	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
 	ctx := context.Background()
 	testEmail := "tmail"
 	testPwd := "tpwd"
@@ -107,9 +110,10 @@ func TestUsecasefacade_AuthoriseUser_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.UserCreator{}
+	mockUserCreator := &mocks.DriverCreator{}
 	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator)
+	mockUserGetter := &mocks.DriversGetter{}
+	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
 	ctx := context.Background()
 	testEmail := "tmail"
 	testPwd := "tpwd"
@@ -129,4 +133,59 @@ func TestUsecasefacade_AuthoriseUser_UnhappyPath(t *testing.T) {
 	assert.EqualError(t, err, "boom", "Error message is wrong")
 	assert.Empty(t, actualToken, "Token must be empty")
 	mockUserAuthenticator.AssertExpectations(t)
+}
+
+func TestUsecasefacade_GetUsers_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	mockUserCreator := &mocks.DriverCreator{}
+	mockUserAuthenticator := &mocks.UserAuthenticator{}
+	mockUserGetter := &mocks.DriversGetter{}
+	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	ctx := context.Background()
+	expectedUsers := []entities.User{
+		{Username: "user1", Email: "user1@example.com"},
+		{Username: "user2", Email: "user2@example.com"},
+	}
+	mockUserGetter.EXPECT().Execute(ctx).Return(expectedUsers, nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	users, err := facade.GetAllDriverUsers(ctx)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.Equal(t, expectedUsers, users, "User slices must be the same")
+	mockUserGetter.AssertExpectations(t)
+}
+
+func TestUsecasefacade_GetUsers_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	mockUserCreator := &mocks.DriverCreator{}
+	mockUserAuthenticator := &mocks.UserAuthenticator{}
+	mockUserGetter := &mocks.DriversGetter{}
+	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	ctx := context.Background()
+	testError := errors.New("boom")
+
+	mockUserGetter.EXPECT().Execute(ctx).Return([]entities.User{}, testError).Once()
+
+	// --------
+	// ACT
+	// --------
+	users, err := facade.GetAllDriverUsers(ctx)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.Equal(t, testError, err, "Errors must equal")
+	assert.Empty(t, users, "User slice must be empty")
+	mockUserGetter.AssertExpectations(t)
 }

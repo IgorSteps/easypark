@@ -12,8 +12,9 @@ import (
 
 // HandlerFactory defines an interface for creating different REST handlers.
 type HandlerFactory interface {
-	UserCreate() http.Handler
+	DriverCreate() http.Handler
 	UserAuthorise() http.Handler
+	GetAllDrivers() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -31,7 +32,7 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 	router.Use(lgr.Logger("router", logger))
 
 	// Public routes
-	router.Method(http.MethodPost, "/register", handlerFactory.UserCreate())
+	router.Method(http.MethodPost, "/register", handlerFactory.DriverCreate())
 	router.Method(http.MethodPost, "/login", handlerFactory.UserAuthorise())
 
 	// Driver routes
@@ -46,10 +47,7 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 	// Admin routes
 	router.Group(func(r chi.Router) {
 		r.Use(requestAuthoriser.Authorise, requestAuthoriser.RequireRole(entities.RoleAdmin))
-		// Placeholder:
-		r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Welcome, Admin!"))
-		})
+		r.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
 	})
 
 	return router

@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"gorm.io/gorm"
 )
 
@@ -28,7 +29,7 @@ func TestUserRepository_CreateUser_HappyPath(t *testing.T) {
 	testUser := CreateTestUser()
 
 	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
-	mockDatastore.EXPECT().Create(&testUser).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Create(testUser).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().Error().Return(nil).Once()
 
 	// --------
@@ -59,7 +60,7 @@ func Test_UserRepository_CreateUser_UnhappyPath(t *testing.T) {
 	testUser := CreateTestUser()
 
 	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
-	mockDatastore.EXPECT().Create(&testUser).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Create(testUser).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().Error().Return(testError).Once()
 
 	// --------
@@ -148,7 +149,7 @@ func Test_UserRepository_CheckUserExists_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	testLogger, _ := test.NewNullLogger()
+	testLogger, hook := test.NewNullLogger()
 	mockDatastore := &mocks.Datastore{}
 	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
 	ctx := context.Background()
@@ -174,6 +175,16 @@ func Test_UserRepository_CheckUserExists_UnhappyPath(t *testing.T) {
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.False(t, exist, "Must not exist")
 	assert.Equal(t, testError, err, "Errors don't match")
+
+	// Assert logger.
+	assert.Equal(t, 1, len(hook.Entries))
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	assert.Equal(t, "failed to query for user in the database", hook.LastEntry().Message, "Messages are not equal")
+	assert.Equal(t, "username", hook.LastEntry().Data["username"])
+	assert.Equal(t, "email", hook.LastEntry().Data["email"])
+	hook.Reset()
+	assert.Nil(t, hook.LastEntry())
+
 	mockDatastore.AssertExpectations(t)
 }
 
@@ -267,6 +278,85 @@ func Test_UserRepository_FindByUsername_UnhappyPath_FailedToQuery(t *testing.T) 
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.EqualError(t, err, "Internal error: failed to query for user in the database")
 	assert.Empty(t, user, "User must be empty")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_GetAllDriverUsers_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	var usersParam []entities.User
+	expectedUsers := []entities.User{
+		{Username: "user1", Email: "user1@example.com"},
+		{Username: "user2", Email: "user2@example.com"},
+	}
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where("role <> ?", entities.RoleAdmin).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().FindAll(&usersParam).Return(mockDatastore).Once().Run(func(args mock.Arguments) {
+		arg := args.Get(0).(*[]entities.User) // Get the argument passed to FindAll
+		*arg = expectedUsers                  // Set it to the expected users
+	})
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	users, err := repository.GetAllDriverUsers(ctx)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must not be nil")
+	assert.NotEmpty(t, users, "Users slice must not be empty")
+	assert.Equal(t, expectedUsers, users, "Users slices must be equal")
+	mockDatastore.AssertExpectations(t)
+}
+
+func Test_UserRepository_GetAllDriverUsers_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	testErrror := errors.New("boom")
+	var usersParam []entities.User
+	expectedUsers := []entities.User{}
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Where("role <> ?", entities.RoleAdmin).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().FindAll(&usersParam).Return(mockDatastore).Once().Run(func(args mock.Arguments) {
+		arg := args.Get(0).(*[]entities.User) // Get the argument passed to FindAll
+		*arg = expectedUsers                  // Set it to the expected users
+	})
+	mockDatastore.EXPECT().Error().Return(testErrror).Once()
+
+	// --------
+	// ACT
+	// --------
+	users, err := repository.GetAllDriverUsers(ctx)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.IsType(t, &repositories.InternalError{}, err, "Error returned is of wrong type")
+	assert.Equal(t, "Internal error: failed to query for all drivers in the database", err.Error(), "Errors must be equal")
+	assert.Empty(t, users, "Users slice must be empty")
+
+	// Assert logger
+	assert.Equal(t, 1, len(hook.Entries))
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	assert.Equal(t, "failed to query for all drivers in the database", hook.LastEntry().Message, "Messages are not equal")
+	hook.Reset()
+	assert.Nil(t, hook.LastEntry())
+
 	mockDatastore.AssertExpectations(t)
 }
 

@@ -93,7 +93,6 @@ func parseLogLevel(level string) logger.LogLevel {
 	case "info":
 		return logger.Info
 	default:
-		// info if unknown
 		return logger.Info
 	}
 }

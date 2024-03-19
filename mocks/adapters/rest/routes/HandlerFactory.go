@@ -21,6 +21,100 @@ func (_m *HandlerFactory) EXPECT() *HandlerFactory_Expecter {
 	return &HandlerFactory_Expecter{mock: &_m.Mock}
 }
 
+// DriverCreate provides a mock function with given fields:
+func (_m *HandlerFactory) DriverCreate() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for DriverCreate")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_DriverCreate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DriverCreate'
+type HandlerFactory_DriverCreate_Call struct {
+	*mock.Call
+}
+
+// DriverCreate is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) DriverCreate() *HandlerFactory_DriverCreate_Call {
+	return &HandlerFactory_DriverCreate_Call{Call: _e.mock.On("DriverCreate")}
+}
+
+func (_c *HandlerFactory_DriverCreate_Call) Run(run func()) *HandlerFactory_DriverCreate_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_DriverCreate_Call) Return(_a0 http.Handler) *HandlerFactory_DriverCreate_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_DriverCreate_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_DriverCreate_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetAllDrivers provides a mock function with given fields:
+func (_m *HandlerFactory) GetAllDrivers() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAllDrivers")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_GetAllDrivers_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllDrivers'
+type HandlerFactory_GetAllDrivers_Call struct {
+	*mock.Call
+}
+
+// GetAllDrivers is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) GetAllDrivers() *HandlerFactory_GetAllDrivers_Call {
+	return &HandlerFactory_GetAllDrivers_Call{Call: _e.mock.On("GetAllDrivers")}
+}
+
+func (_c *HandlerFactory_GetAllDrivers_Call) Run(run func()) *HandlerFactory_GetAllDrivers_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_GetAllDrivers_Call) Return(_a0 http.Handler) *HandlerFactory_GetAllDrivers_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_GetAllDrivers_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_GetAllDrivers_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UserAuthorise provides a mock function with given fields:
 func (_m *HandlerFactory) UserAuthorise() http.Handler {
 	ret := _m.Called()
@@ -64,53 +158,6 @@ func (_c *HandlerFactory_UserAuthorise_Call) Return(_a0 http.Handler) *HandlerFa
 }
 
 func (_c *HandlerFactory_UserAuthorise_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_UserAuthorise_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// UserCreate provides a mock function with given fields:
-func (_m *HandlerFactory) UserCreate() http.Handler {
-	ret := _m.Called()
-
-	if len(ret) == 0 {
-		panic("no return value specified for UserCreate")
-	}
-
-	var r0 http.Handler
-	if rf, ok := ret.Get(0).(func() http.Handler); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(http.Handler)
-		}
-	}
-
-	return r0
-}
-
-// HandlerFactory_UserCreate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UserCreate'
-type HandlerFactory_UserCreate_Call struct {
-	*mock.Call
-}
-
-// UserCreate is a helper method to define mock.On call
-func (_e *HandlerFactory_Expecter) UserCreate() *HandlerFactory_UserCreate_Call {
-	return &HandlerFactory_UserCreate_Call{Call: _e.mock.On("UserCreate")}
-}
-
-func (_c *HandlerFactory_UserCreate_Call) Run(run func()) *HandlerFactory_UserCreate_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run()
-	})
-	return _c
-}
-
-func (_c *HandlerFactory_UserCreate_Call) Return(_a0 http.Handler) *HandlerFactory_UserCreate_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *HandlerFactory_UserCreate_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_UserCreate_Call {
 	_c.Call.Return(run)
 	return _c
 }

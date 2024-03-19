@@ -55,9 +55,9 @@ func (s *RestClientSuite) PlaceholderDriverRoute(ctx context.Context, token stri
 	return s.sendRequestWithToken(ctx, "GET", "/driver", nil, token)
 }
 
-// PlaceholderADminRoute interacts with the REST API to a placeholder for admin routrs.
-func (s *RestClientSuite) PlaceholderAdminRoute(ctx context.Context, token string) ([]byte, int, error) {
-	return s.sendRequestWithToken(ctx, "GET", "/admin", nil, token)
+// GetAllDrivers interacts with the REST API to get get all drivers.
+func (s *RestClientSuite) GetAllDrivers(ctx context.Context, token string) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, "GET", "/drivers", nil, token)
 }
 
 // sendRequest sends a HTTP request via provided method and path.

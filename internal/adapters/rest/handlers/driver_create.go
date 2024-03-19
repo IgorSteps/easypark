@@ -9,23 +9,23 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// UserCreateHandler provides a REST Handler implementation to create users and
+// DriverCreateHandler provides a REST Handler implementation to create driver users and
 // implements http.Handler interface.
-type UserCreateHandler struct {
+type DriverCreateHandler struct {
 	logger *logrus.Logger
 	facade UserFacade
 }
 
-// NewUserCreateHandler creates new instance of UserCreateHandler.
-func NewUserCreateHandler(f UserFacade, l *logrus.Logger) *UserCreateHandler {
-	return &UserCreateHandler{
+// NewDriverCreateHandler creates new instance of DriverCreateHandler.
+func NewDriverCreateHandler(f UserFacade, l *logrus.Logger) *DriverCreateHandler {
+	return &DriverCreateHandler{
 		logger: l,
 		facade: f,
 	}
 }
 
-// ServeHTTP handles incoming HTTP request to create users.
-func (s *UserCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+// ServeHTTP handles incoming HTTP request to create users. Method name matches the http.Handler interface.
+func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var request models.UserCreationRequest
 
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -36,7 +36,7 @@ func (s *UserCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	domainUser := request.ToDomain()
-	err = s.facade.CreateUser(r.Context(), domainUser)
+	err = s.facade.CreateDriver(r.Context(), domainUser)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to create user")
 

@@ -24,7 +24,7 @@ func NewUserLoginHandler(f UserFacade, l *logrus.Logger) *UserLoginHandler {
 	}
 }
 
-// ServeHTTP handles incoming HTTP request to login users.
+// ServeHTTP handles incoming HTTP request to login users. Method name matches the http.Handler interface.
 func (s *UserLoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var request models.LoginUserRequest
 

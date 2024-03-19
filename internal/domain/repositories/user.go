@@ -16,4 +16,7 @@ type UserRepository interface {
 
 	// FindByUsername gets the user(if it exists) from the database using their username.
 	FindByUsername(ctx context.Context, username string) (*entities.User, error)
+
+	// GetAllDriverUsers gets all the driver users from the database.
+	GetAllDriverUsers(ctx context.Context) ([]entities.User, error)
 }
