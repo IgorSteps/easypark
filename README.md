@@ -148,11 +148,7 @@ Run `make clean-db` to truncate existing tables. Note, you need to add new table
 
 ### Creating admin user
 
-Run the follwoing psql command in the database container:
-
-```bash
-psql -U devUser -d easypark -c "INSERT INTO users (id, username, email, password, first_name, last_name, role) VALUES ('a131a9a0-8d09-4166-b6fc-f8a08ba549e9', 'adminUsername', 'admin@example.com', 'securePassword', 'Admin', 'User', 'admin');"
-```
+Run the `createadmin.sh` script, to create a user with admin role in the database.
 
 To get JWT for this admin, run:
 
