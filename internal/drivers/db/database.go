@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/drivers/config"
@@ -10,21 +9,23 @@ import (
 	"gorm.io/gorm"
 )
 
-// NewDatabaseFromConfig creates our databse from config.
+// NewDatabaseFromConfig creates our database from config.
 func NewDatabaseFromConfig(config config.DatabaseConfig, logger *GormLogrusLogger) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=UTC",
 		config.Host, config.User, config.Password, config.DBName, config.Port, config.SSLMode,
 	)
 
+	// Init db session and configure GORM to use our logger.
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger,
 	})
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		logger.Logrus.WithError(err).Error("failed to connect to the database")
 		return nil, err
 	}
 
+	// Create/Migrate our db tables.
 	db.AutoMigrate(&entities.User{})
 
 	return db, nil

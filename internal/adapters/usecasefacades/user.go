@@ -21,7 +21,7 @@ type DriversGetter interface {
 	Execute(ctx context.Context) ([]entities.User, error)
 }
 
-// UserFacade uses facade pattern to wrap user' usecases to allow for managing other things such as DB transactions if neeeded.
+// UserFacade uses facade pattern to wrap user' usecases to allow for managing other things such as DB transactions if needed.
 type UserFacade struct {
 	driverCreator     DriverCreator
 	userAuthenticator UserAuthenticator

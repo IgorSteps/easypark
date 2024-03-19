@@ -347,13 +347,13 @@ func Test_UserRepository_GetAllDriverUsers_UnhappyPath(t *testing.T) {
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.IsType(t, &repositories.InternalError{}, err, "Error returned is of wrong type")
-	assert.Equal(t, "Internal error: failed to query for all users in the database", err.Error(), "Errors must be equal")
+	assert.Equal(t, "Internal error: failed to query for all drivers in the database", err.Error(), "Errors must be equal")
 	assert.Empty(t, users, "Users slice must be empty")
 
 	// Assert logger
 	assert.Equal(t, 1, len(hook.Entries))
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-	assert.Equal(t, "failed to query for all users in the database", hook.LastEntry().Message, "Messages are not equal")
+	assert.Equal(t, "failed to query for all drivers in the database", hook.LastEntry().Message, "Messages are not equal")
 	hook.Reset()
 	assert.Nil(t, hook.LastEntry())
 

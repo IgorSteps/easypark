@@ -24,7 +24,7 @@ func NewDriverCreateHandler(f UserFacade, l *logrus.Logger) *DriverCreateHandler
 	}
 }
 
-// ServeHTTP handles incoming HTTP request to create users.
+// ServeHTTP handles incoming HTTP request to create users. Method name matches the http.Handler interface.
 func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var request models.UserCreationRequest
 

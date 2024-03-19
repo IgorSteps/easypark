@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// HandlerFactory implements HandlerFactory interface and helps provide implementation for
+// HandlerFactory implements HandlerFactory interface and helps provide dependencies for
 // creating different REST Handlers.
 type HandlerFactory struct {
 	logger *logrus.Logger
@@ -31,6 +31,7 @@ func (s *HandlerFactory) UserAuthorise() http.Handler {
 	return NewUserLoginHandler(s.facade, s.logger)
 }
 
+// GetAllDrivers returns new REST handler for getting all driver users.
 func (s *HandlerFactory) GetAllDrivers() http.Handler {
 	return NewDriverUsersGetHandler(s.logger, s.facade)
 }

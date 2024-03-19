@@ -16,6 +16,7 @@ type GetDrivers struct {
 	repo   repositories.UserRepository
 }
 
+// NewGetDrivers returns a new instance of GetDrivers.
 func NewGetDrivers(l *logrus.Logger, r repositories.UserRepository) *GetDrivers {
 	return &GetDrivers{
 		logger: l,

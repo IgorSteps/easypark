@@ -23,12 +23,12 @@ func NewUserPostgresRepository(db Datastore, lgr *logrus.Logger) *UserPostgresRe
 	}
 }
 
+// CreateUser creates a record in the database with a given user.
 func (s *UserPostgresRepository) CreateUser(ctx context.Context, user *entities.User) error {
 	result := s.DB.WithContext(ctx).Create(user)
 	err := result.Error()
 	if err != nil {
 		s.Logger.WithError(err).Error("failed to insert user into the database")
-
 		return repositories.NewInternalError("failed to insert user into the database")
 	}
 
@@ -79,11 +79,12 @@ func (s *UserPostgresRepository) FindByUsername(ctx context.Context, username st
 func (s *UserPostgresRepository) GetAllDriverUsers(ctx context.Context) ([]entities.User, error) {
 	var users []entities.User
 
+	// Get all users with driver role.
 	result := s.DB.WithContext(ctx).Where("role <> ?", entities.RoleAdmin).FindAll(&users)
 	err := result.Error()
 	if err != nil {
-		s.Logger.WithError(err).Error("failed to query for all users in the database")
-		return users, repositories.NewInternalError("failed to query for all users in the database")
+		s.Logger.WithError(err).Error("failed to query for all drivers in the database")
+		return users, repositories.NewInternalError("failed to query for all drivers in the database")
 	}
 
 	return users, nil
