@@ -213,7 +213,7 @@ func TestAuthMiddlware_CheckStatus_UnhappyPath(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusForbidden, recorder.Code, "Must return 403")
-	assert.Equal(t, "Account is banned. \n", recorder.Body.String(), "Response body doesn't match")
+	assert.Equal(t, "Account is banned.\n", recorder.Body.String(), "Response body doesn't match")
 }
 
 func TestAuthMiddlware_CheckStatus_InternalError(t *testing.T) {
