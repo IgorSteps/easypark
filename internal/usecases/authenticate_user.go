@@ -25,7 +25,7 @@ func NewAuthenticateUser(l *logrus.Logger, repo repositories.UserRepository, tSe
 
 // Execute runs business logic to authenticate users. Returns auth token.
 func (s *AuthenticateUser) Execute(ctx context.Context, username, password string) (string, error) {
-	user, err := s.userRepository.FindByUsername(ctx, username)
+	user, err := s.userRepository.GetDriverByUsername(ctx, username)
 	if err != nil {
 		return "", err
 	}

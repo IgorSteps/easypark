@@ -15,19 +15,20 @@ type HandlerFactory interface {
 	DriverCreate() http.Handler
 	UserAuthorise() http.Handler
 	GetAllDrivers() http.Handler
+	DriverBan() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
 //
-// This could be a factory similar to handlers, but we aren't using many middlewares
-// that require same dependencies.
-type RequestAuthoriser interface {
+// TODO: This could be a factory similar to handlers, but we aren't using too many middlewares
+type Middleware interface {
 	Authorise(next http.Handler) http.Handler
 	RequireRole(requiredRole entities.UserRole) func(next http.Handler) http.Handler
+	CheckStatus(next http.Handler) http.Handler
 }
 
 // NewRouter constructs routes for our REST API.
-func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthoriser, logger *logrus.Logger) chi.Router {
+func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *logrus.Logger) chi.Router {
 	router := chi.NewRouter()
 	router.Use(lgr.Logger("router", logger))
 
@@ -37,7 +38,7 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 
 	// Driver routes
 	router.Group(func(r chi.Router) {
-		r.Use(requestAuthoriser.Authorise, requestAuthoriser.RequireRole(entities.RoleDriver))
+		r.Use(middleware.Authorise, middleware.RequireRole(entities.RoleDriver), middleware.CheckStatus)
 		// Placeholder:
 		r.Get("/driver", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Welcome, Driver!"))
@@ -46,8 +47,9 @@ func NewRouter(handlerFactory HandlerFactory, requestAuthoriser RequestAuthorise
 
 	// Admin routes
 	router.Group(func(r chi.Router) {
-		r.Use(requestAuthoriser.Authorise, requestAuthoriser.RequireRole(entities.RoleAdmin))
+		r.Use(middleware.Authorise, middleware.RequireRole(entities.RoleAdmin))
 		r.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
+		r.Method(http.MethodPatch, "/drivers/{id}/status", handlerFactory.DriverBan())
 	})
 
 	return router

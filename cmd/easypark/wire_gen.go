@@ -45,10 +45,12 @@ func BuildDIForApp() (*App, error) {
 	}
 	authenticateUser := usecases.NewAuthenticateUser(logrusLogger, userPostgresRepository, jwtTokenService)
 	getDrivers := usecases.NewGetDrivers(logrusLogger, userPostgresRepository)
-	userFacade := usecasefacades.NewUserFacade(registerDriver, authenticateUser, getDrivers)
+	banDriver := usecases.NewBanDriver(logrusLogger, userPostgresRepository)
+	userFacade := usecasefacades.NewUserFacade(registerDriver, authenticateUser, getDrivers, banDriver)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, userFacade)
-	authMiddleware := middleware.NewAuthMiddleware(jwtTokenService, logrusLogger)
-	router := routes.NewRouter(handlerFactory, authMiddleware, logrusLogger)
+	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
+	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)
+	router := routes.NewRouter(handlerFactory, middlewareMiddleware, logrusLogger)
 	httpConfig := configConfig.HTTP
 	server := httpserver.NewServerFromConfig(router, httpConfig)
 	app := NewApp(server, logrusLogger)

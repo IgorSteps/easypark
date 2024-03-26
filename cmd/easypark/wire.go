@@ -56,14 +56,18 @@ func BuildDIForApp() (*App, error) {
 		wire.Bind(new(usecasefacades.UserAuthenticator), new(*usecases.AuthenticateUser)),
 		usecases.NewGetDrivers,
 		wire.Bind(new(usecasefacades.DriversGetter), new(*usecases.GetDrivers)),
+		usecases.NewBanDriver,
+		wire.Bind(new(usecasefacades.DriverBanner), new(*usecases.BanDriver)),
+		usecases.NewCheckDriverStatus,
+		wire.Bind(new(middleware.StatusChecker), new(*usecases.CheckDriverStatus)),
 
 		// facades
 		usecasefacades.NewUserFacade,
 		wire.Bind(new(handlers.UserFacade), new(*usecasefacades.UserFacade)),
 
-		// rest handlers
-		middleware.NewAuthMiddleware,
-		wire.Bind(new(routes.RequestAuthoriser), new(*middleware.AuthMiddleware)),
+		// rest handlers and middleware
+		middleware.NewMiddleware,
+		wire.Bind(new(routes.Middleware), new(*middleware.Middleware)),
 		handlers.NewHandlerFactory,
 		wire.Bind(new(routes.HandlerFactory), new(*handlers.HandlerFactory)),
 

@@ -35,3 +35,7 @@ func (s *HandlerFactory) UserAuthorise() http.Handler {
 func (s *HandlerFactory) GetAllDrivers() http.Handler {
 	return NewDriverUsersGetHandler(s.logger, s.facade)
 }
+
+func (s *HandlerFactory) DriverBan() http.Handler {
+	return NewDriverStatusHandler(s.facade, s.logger)
+}

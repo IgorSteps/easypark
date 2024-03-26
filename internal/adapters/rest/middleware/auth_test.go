@@ -9,18 +9,21 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/middleware"
 	"github.com/IgorSteps/easypark/internal/domain/entities"
-	mocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
+	mocksMiddleware "github.com/IgorSteps/easypark/mocks/adapters/rest/middleware"
+	mocksRepo "github.com/IgorSteps/easypark/mocks/domain/repositories"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMiddlewareAuthorise_ValidToken(t *testing.T) {
+func TestMiddleware_Authorise(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
 	testLogger, _ := test.NewNullLogger()
-	mockTokenRepo := &mocks.TokenRepository{}
-	middleware := middleware.NewAuthMiddleware(mockTokenRepo, testLogger)
+	mockTokenRepo := &mocksRepo.TokenRepository{}
+	mockChecker := &mocksMiddleware.StatusChecker{}
+	middleware := middleware.NewMiddleware(mockTokenRepo, testLogger, mockChecker)
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// This assertion will be triggered at the ACT stage.
@@ -75,13 +78,15 @@ func TestMiddlewareAuthorise_ValidToken(t *testing.T) {
 	}
 }
 
-func TestAuthMiddleware_RequireRole(t *testing.T) {
+func TestMiddleware_RequireRole(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	logger, _ := test.NewNullLogger()
+	testLogger, _ := test.NewNullLogger()
+	mockTokenRepo := &mocksRepo.TokenRepository{}
+	mockChecker := &mocksMiddleware.StatusChecker{}
+	middleware := middleware.NewMiddleware(mockTokenRepo, testLogger, mockChecker)
 
-	midleware := middleware.NewAuthMiddleware(nil, logger)
 	nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
@@ -129,7 +134,7 @@ func TestAuthMiddleware_RequireRole(t *testing.T) {
 			// -----
 			// ACT
 			// -----
-			execute := midleware.RequireRole(tt.requiredRole)
+			execute := middleware.RequireRole(tt.requiredRole)
 			execute(nextHandler).ServeHTTP(recorder, req)
 
 			// ------
@@ -144,4 +149,103 @@ func TestAuthMiddleware_RequireRole(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAuthMiddlware_CheckStatus(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockTokenRepo := &mocksRepo.TokenRepository{}
+	mockChecker := &mocksMiddleware.StatusChecker{}
+	middleware := middleware.NewMiddleware(mockTokenRepo, testLogger, mockChecker)
+
+	testUserID := uuid.New()
+	req, _ := http.NewRequest("GET", "/", nil)
+	ctx := context.WithValue(req.Context(), "claims", &entities.Claims{UserID: testUserID})
+	req = req.WithContext(ctx)
+	recorder := httptest.NewRecorder()
+
+	mockChecker.EXPECT().Execute(ctx, testUserID).Return(false, nil).Once()
+
+	nextTestHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	// --------
+	// ACT
+	// --------
+	middleware.CheckStatus(nextTestHandler).ServeHTTP(recorder, req)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Equal(t, http.StatusOK, recorder.Code, "Must return 200")
+}
+
+func TestAuthMiddlware_CheckStatus_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockTokenRepo := &mocksRepo.TokenRepository{}
+	mockChecker := &mocksMiddleware.StatusChecker{}
+	middleware := middleware.NewMiddleware(mockTokenRepo, testLogger, mockChecker)
+
+	testUserID := uuid.New()
+	req, _ := http.NewRequest("GET", "/", nil)
+	ctx := context.WithValue(req.Context(), "claims", &entities.Claims{UserID: testUserID})
+	req = req.WithContext(ctx)
+	recorder := httptest.NewRecorder()
+
+	mockChecker.EXPECT().Execute(ctx, testUserID).Return(true, nil).Once()
+
+	nextTestHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	// --------
+	// ACT
+	// --------
+	middleware.CheckStatus(nextTestHandler).ServeHTTP(recorder, req)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Equal(t, http.StatusForbidden, recorder.Code, "Must return 403")
+	assert.Equal(t, "Account is banned. \n", recorder.Body.String(), "Response body doesn't match")
+}
+
+func TestAuthMiddlware_CheckStatus_InternalError(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockTokenRepo := &mocksRepo.TokenRepository{}
+	mockChecker := &mocksMiddleware.StatusChecker{}
+	middleware := middleware.NewMiddleware(mockTokenRepo, testLogger, mockChecker)
+
+	testUserID := uuid.New()
+	req, _ := http.NewRequest("GET", "/", nil)
+	ctx := context.WithValue(req.Context(), "claims", &entities.Claims{UserID: testUserID})
+	req = req.WithContext(ctx)
+	recorder := httptest.NewRecorder()
+	testError := errors.New("boom")
+
+	mockChecker.EXPECT().Execute(ctx, testUserID).Return(false, testError).Once()
+
+	nextTestHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	// --------
+	// ACT
+	// --------
+	middleware.CheckStatus(nextTestHandler).ServeHTTP(recorder, req)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Equal(t, http.StatusInternalServerError, recorder.Code, "Must return 500")
+	assert.Equal(t, "boom\n", recorder.Body.String(), "Response body doesn't match")
 }

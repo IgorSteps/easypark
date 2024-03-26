@@ -17,7 +17,7 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	mockHandlerFactory := &mocks.HandlerFactory{}
-	mockMiddleware := &mocks.RequestAuthoriser{}
+	mockMiddleware := &mocks.Middleware{}
 	logger := logrus.New()
 	// Test handler to return from the factory.
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +34,11 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().DriverCreate().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().UserAuthorise().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllDrivers().Return(testHandler).Once()
-	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Twice()
+	mockHandlerFactory.EXPECT().DriverBan().Return(testHandler).Once()
+
+	// This middlware will get executed for very route invocation.
+	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(3)
+	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
 
@@ -48,4 +52,5 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	// --------
 	assert.NotNil(t, r, "Router must not be nil")
 	mockHandlerFactory.AssertExpectations(t)
+	mockMiddleware.AssertExpectations(t)
 }

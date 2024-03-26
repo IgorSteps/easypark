@@ -5,7 +5,6 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
-	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -30,10 +29,7 @@ func (s *RegisterDriver) Execute(ctx context.Context, user *entities.User) error
 		return err
 	}
 
-	// TODO: Move to the user entity
-	user.ID = uuid.New()
-	user.Role = entities.RoleDriver
-
+	user.SetOnCreate()
 	err = s.UserRepository.CreateUser(ctx, user)
 	if err != nil {
 		return err

@@ -37,7 +37,7 @@ func TestAuthenticateUser_HappyPath(t *testing.T) {
 		Role:      entities.RoleDriver,
 	}
 
-	mockRepo.EXPECT().FindByUsername(ctx, testUsername).Return(user, nil).Once()
+	mockRepo.EXPECT().GetDriverByUsername(ctx, testUsername).Return(user, nil).Once()
 	mockTokenService.EXPECT().GenerateToken(user).Return(testToken, nil).Once()
 
 	// --------
@@ -54,7 +54,7 @@ func TestAuthenticateUser_HappyPath(t *testing.T) {
 	mockTokenService.AssertExpectations(t)
 }
 
-func TestAuthenticateUser_UnhappyPath_FindByUsername(t *testing.T) {
+func TestAuthenticateUser_UnhappyPath_GetDriverByUsername(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -68,7 +68,7 @@ func TestAuthenticateUser_UnhappyPath_FindByUsername(t *testing.T) {
 	user := &entities.User{}
 	testError := errors.New("boom")
 
-	mockRepo.EXPECT().FindByUsername(ctx, testUsername).Return(user, testError).Once()
+	mockRepo.EXPECT().GetDriverByUsername(ctx, testUsername).Return(user, testError).Once()
 
 	// --------
 	// ACT
@@ -106,7 +106,7 @@ func TestAuthenticateUser_UnhappyPath_Credentials(t *testing.T) {
 	}
 	testError := errors.New("Invalid password provided")
 
-	mockRepo.EXPECT().FindByUsername(ctx, testUsername).Return(user, nil).Once()
+	mockRepo.EXPECT().GetDriverByUsername(ctx, testUsername).Return(user, nil).Once()
 
 	// --------
 	// ACT
@@ -153,7 +153,7 @@ func TestAuthenticateUser_UnhappyPath_Token(t *testing.T) {
 	}
 	testError := errors.New("Internal error: failed to generate auth token")
 
-	mockRepo.EXPECT().FindByUsername(ctx, testUsername).Return(user, nil).Once()
+	mockRepo.EXPECT().GetDriverByUsername(ctx, testUsername).Return(user, nil).Once()
 	mockTokenService.EXPECT().GenerateToken(user).Return("", testError).Once()
 
 	// --------

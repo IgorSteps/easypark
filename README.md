@@ -18,7 +18,7 @@ Easpark is a REST API built with Clean Architecture. It provides a set of endpoi
 curl -X POST http://localhost:8080/login \
 -H "Content-Type: application/json" \
 -d '{
-    "Username": "johndoe",
+    "Username": "user",
     "Password": "securepassword"
 }'
 ```
@@ -122,14 +122,17 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
     ```json
     [
-      {"ID":"910e78c8-d2eb-41e8-aec6-c70a33b692df","Username":"user1",
-      "Email":"user1@example.com",
-      "Password":"securepassword",
-      "FirstName":"test",
-      "LastName":"user1",
-      "Role":"driver"
+      {
+        "ID":"910e78c8-d2eb-41e8-aec6-c70a33b692df",
+        "Username":"user1",
+        "Email":"user1@example.com",
+        "Password":"securepassword",
+        "FirstName":"test",
+        "LastName":"user1",
+        "Role":"driver",
+        "Status":"active",
       },
-      other users...
+      {"other users..."}
     ]
     ```
 
@@ -140,6 +143,35 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
       "error": "An unexpected error occurred"
     }
     ```
+
+### 4. Update Driver Status API Endpoint
+
+**Endpoint**: `PATCH /drivers/{id}/status`
+
+**Description**: Updates driver status in the system.
+
+**Request Body**:
+
+- Banning:
+  
+  ```bash
+  curl -X PATCH http://localhost:8080/drivers/{id}/status \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer <ADMIN_TOKEN>" \
+      -d '{"status":"ban"}'
+  ```
+
+- Unbanning: TODO
+
+**Responses**:
+
+- **200 OK***
+
+  ```json
+  {
+    "message":"successfully updated user status"
+  }
+  ```
 
 ## Running locally
 

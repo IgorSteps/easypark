@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/google/uuid"
 )
 
 // UserFacade is provides an interface implemented by usecasefacades.UserFacade.
@@ -16,4 +17,7 @@ type UserFacade interface {
 
 	// GetAllDriverUsers is implemented by the usecasefacades.Userfacade that wraps getting all driver users usecase.
 	GetAllDriverUsers(ctx context.Context) ([]entities.User, error)
+
+	// BanDriver is implemented by the usecasefacades.Userfacade that wraps banning a driver usecase.
+	BanDriver(ctx context.Context, id uuid.UUID) error
 }

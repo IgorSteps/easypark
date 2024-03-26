@@ -47,17 +47,22 @@ func (s *RestClientSuite) CreateUser(ctx context.Context, req *models.UserCreati
 
 // LoginUser interacts with the REST API to login a user.
 func (s *RestClientSuite) LoginUser(ctx context.Context, req *models.LoginUserRequest) ([]byte, int, error) {
-	return s.sendRequest(ctx, "POST", "/login", req)
+	return s.sendRequest(ctx, http.MethodPost, "/login", req)
 }
 
 // PlaceholderDriverRoute interacts with the REST API to a placeholder for driver routrs.
 func (s *RestClientSuite) PlaceholderDriverRoute(ctx context.Context, token string) ([]byte, int, error) {
-	return s.sendRequestWithToken(ctx, "GET", "/driver", nil, token)
+	return s.sendRequestWithToken(ctx, http.MethodGet, "/driver", nil, token)
 }
 
 // GetAllDrivers interacts with the REST API to get get all drivers.
 func (s *RestClientSuite) GetAllDrivers(ctx context.Context, token string) ([]byte, int, error) {
-	return s.sendRequestWithToken(ctx, "GET", "/drivers", nil, token)
+	return s.sendRequestWithToken(ctx, http.MethodGet, "/drivers", nil, token)
+}
+
+// BanDriver interacts with the REST API to ban a driver with the given ID.
+func (s *RestClientSuite) BanDriver(ctx context.Context, token, id string, req *models.UpdateStatusRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPatch, "/drivers/"+id+"/status", req, token)
 }
 
 // sendRequest sends a HTTP request via provided method and path.
@@ -88,7 +93,7 @@ func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, 
 	return responseBody, resp.StatusCode, nil
 }
 
-// sendRequest sends a HTTP request via provided method and path.
+// sendRequestWithToken sends a HTTP request via provided method and path with an auth token.
 func (s *RestClientSuite) sendRequestWithToken(ctx context.Context, method, path string, body interface{}, token string) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)
 	if err != nil {
