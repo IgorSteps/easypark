@@ -5,6 +5,7 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -56,8 +57,8 @@ func (s *UserPostgresRepository) CheckUserExists(ctx context.Context, email, una
 	return true, nil // User found
 }
 
-// FindByUsername queries DB to find user with given username.
-func (s *UserPostgresRepository) FindByUsername(ctx context.Context, username string) (*entities.User, error) {
+// GetDriverByUsername queries DB to find user with given username.
+func (s *UserPostgresRepository) GetDriverByUsername(ctx context.Context, username string) (*entities.User, error) {
 	var user entities.User
 
 	result := s.DB.WithContext(ctx).Where("username = ?", username).First(&user)
@@ -88,4 +89,33 @@ func (s *UserPostgresRepository) GetAllDriverUsers(ctx context.Context) ([]entit
 	}
 
 	return users, nil
+}
+
+// GetDriverByID queries the DB to find a user by their ID.
+func (s *UserPostgresRepository) GetDriverByID(ctx context.Context, id uuid.UUID, user *entities.User) error {
+	result := s.DB.WithContext(ctx).First(user, "id = ?", id)
+	err := result.Error()
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			s.Logger.WithField("id", id).Error("failed to find driver with given id in the database")
+			return repositories.NewUserNotFoundError(id.String())
+		}
+
+		s.Logger.WithError(err).Error("failed to query for user in the database")
+		return repositories.NewInternalError("failed to query for user in the database")
+	}
+
+	return nil
+}
+
+// Save saves updated user into the DB.
+func (s *UserPostgresRepository) Save(ctx context.Context, user *entities.User) error {
+	result := s.DB.WithContext(ctx).Save(user)
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).Error("failed to save updated user in the database")
+		return repositories.NewInternalError("failed to save updated user in the database")
+	}
+
+	return nil
 }

@@ -33,13 +33,18 @@ func (s *GormWrapper) Where(query interface{}, args ...interface{}) datastore.Da
 }
 
 // First gets the first record matching the query.
-func (s *GormWrapper) First(value interface{}) datastore.Datastore {
-	return &GormWrapper{DB: s.DB.First(value)}
+func (s *GormWrapper) First(value interface{}, args ...interface{}) datastore.Datastore {
+	return &GormWrapper{DB: s.DB.First(value, args...)}
 }
 
 // FindAll gets all records.
 func (s *GormWrapper) FindAll(value interface{}) datastore.Datastore {
 	return &GormWrapper{DB: s.DB.Find(value)}
+}
+
+// Save saves the updated record.
+func (s *GormWrapper) Save(value interface{}) datastore.Datastore {
+	return &GormWrapper{DB: s.DB.Save(value)}
 }
 
 // Error returns any errors encountered.

@@ -21,6 +21,53 @@ func (_m *HandlerFactory) EXPECT() *HandlerFactory_Expecter {
 	return &HandlerFactory_Expecter{mock: &_m.Mock}
 }
 
+// DriverBan provides a mock function with given fields:
+func (_m *HandlerFactory) DriverBan() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for DriverBan")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_DriverBan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DriverBan'
+type HandlerFactory_DriverBan_Call struct {
+	*mock.Call
+}
+
+// DriverBan is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) DriverBan() *HandlerFactory_DriverBan_Call {
+	return &HandlerFactory_DriverBan_Call{Call: _e.mock.On("DriverBan")}
+}
+
+func (_c *HandlerFactory_DriverBan_Call) Run(run func()) *HandlerFactory_DriverBan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_DriverBan_Call) Return(_a0 http.Handler) *HandlerFactory_DriverBan_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_DriverBan_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_DriverBan_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DriverCreate provides a mock function with given fields:
 func (_m *HandlerFactory) DriverCreate() http.Handler {
 	ret := _m.Called()

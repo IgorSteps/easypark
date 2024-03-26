@@ -12,14 +12,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUsecaseFacade_CreateUser_HappyPath(t *testing.T) {
+type UsecaseFacadeTestSuite struct {
+	mockDriverCreator  *mocks.DriverCreator
+	mockUserAuthoriser *mocks.UserAuthenticator
+	mockDriversGetter  *mocks.DriversGetter
+	mockDriverBanner   *mocks.DriverBanner
+}
+
+func NewUsecaseFacadeTestSuite() *UsecaseFacadeTestSuite {
+	return &UsecaseFacadeTestSuite{
+		mockDriverCreator:  &mocks.DriverCreator{},
+		mockUserAuthoriser: &mocks.UserAuthenticator{},
+		mockDriversGetter:  &mocks.DriversGetter{},
+		mockDriverBanner:   &mocks.DriverBanner{},
+	}
+}
+
+func TestUsecaseFacade_CreateDriver_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.DriverCreator{}
-	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	mockUserGetter := &mocks.DriversGetter{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
 	ctx := context.Background()
 	testUser := &entities.User{
 		ID:        uuid.New(),
@@ -30,7 +49,7 @@ func TestUsecaseFacade_CreateUser_HappyPath(t *testing.T) {
 		LastName:  "smith",
 	}
 
-	mockUserCreator.EXPECT().Execute(ctx, testUser).Return(nil).Once()
+	s.mockDriverCreator.EXPECT().Execute(ctx, testUser).Return(nil).Once()
 
 	// --------
 	// ACT
@@ -41,17 +60,20 @@ func TestUsecaseFacade_CreateUser_HappyPath(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.Nil(t, err, "Error must be nil")
-	mockUserCreator.AssertExpectations(t)
+	s.mockDriverCreator.AssertExpectations(t)
 }
 
-func TestUsecasefacade_CreateUser_UnhappyPath(t *testing.T) {
+func TestUsecasefacade_CreateDriver_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.DriverCreator{}
-	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	mockUserGetter := &mocks.DriversGetter{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
 	ctx := context.Background()
 	testUser := &entities.User{
 		ID:        uuid.New(),
@@ -63,7 +85,7 @@ func TestUsecasefacade_CreateUser_UnhappyPath(t *testing.T) {
 	}
 	testError := errors.New("boom")
 
-	mockUserCreator.EXPECT().Execute(ctx, testUser).Return(testError).Once()
+	s.mockDriverCreator.EXPECT().Execute(ctx, testUser).Return(testError).Once()
 
 	// --------
 	// ACT
@@ -75,23 +97,26 @@ func TestUsecasefacade_CreateUser_UnhappyPath(t *testing.T) {
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.Equal(t, testError, err, "Expected and actual errors don't match")
-	mockUserCreator.AssertExpectations(t)
+	s.mockDriverCreator.AssertExpectations(t)
 }
 
 func TestUsecasefacade_AuthoriseUser_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.DriverCreator{}
-	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	mockUserGetter := &mocks.DriversGetter{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
 	ctx := context.Background()
 	testEmail := "tmail"
 	testPwd := "tpwd"
 	token := "token"
 
-	mockUserAuthenticator.EXPECT().Execute(ctx, testEmail, testPwd).Return(token, nil).Once()
+	s.mockUserAuthoriser.EXPECT().Execute(ctx, testEmail, testPwd).Return(token, nil).Once()
 
 	// --------
 	// ACT
@@ -103,23 +128,26 @@ func TestUsecasefacade_AuthoriseUser_HappyPath(t *testing.T) {
 	// --------
 	assert.Nil(t, err, "Error must be nil")
 	assert.Equal(t, token, actualToken, "Expected and actual tokens don't match")
-	mockUserAuthenticator.AssertExpectations(t)
+	s.mockUserAuthoriser.AssertExpectations(t)
 }
 
 func TestUsecasefacade_AuthoriseUser_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.DriverCreator{}
-	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	mockUserGetter := &mocks.DriversGetter{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
 	ctx := context.Background()
 	testEmail := "tmail"
 	testPwd := "tpwd"
 	emptyToken := ""
 	testErr := errors.New("boom")
-	mockUserAuthenticator.EXPECT().Execute(ctx, testEmail, testPwd).Return(emptyToken, testErr).Once()
+	s.mockUserAuthoriser.EXPECT().Execute(ctx, testEmail, testPwd).Return(emptyToken, testErr).Once()
 
 	// --------
 	// ACT
@@ -132,23 +160,26 @@ func TestUsecasefacade_AuthoriseUser_UnhappyPath(t *testing.T) {
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.EqualError(t, err, "boom", "Error message is wrong")
 	assert.Empty(t, actualToken, "Token must be empty")
-	mockUserAuthenticator.AssertExpectations(t)
+	s.mockUserAuthoriser.AssertExpectations(t)
 }
 
-func TestUsecasefacade_GetUsers_HappyPath(t *testing.T) {
+func TestUsecasefacade_GetAllDriverUsers_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.DriverCreator{}
-	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	mockUserGetter := &mocks.DriversGetter{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
 	ctx := context.Background()
 	expectedUsers := []entities.User{
 		{Username: "user1", Email: "user1@example.com"},
 		{Username: "user2", Email: "user2@example.com"},
 	}
-	mockUserGetter.EXPECT().Execute(ctx).Return(expectedUsers, nil).Once()
+	s.mockDriversGetter.EXPECT().Execute(ctx).Return(expectedUsers, nil).Once()
 
 	// --------
 	// ACT
@@ -160,21 +191,24 @@ func TestUsecasefacade_GetUsers_HappyPath(t *testing.T) {
 	// --------
 	assert.Nil(t, err, "Error must be nil")
 	assert.Equal(t, expectedUsers, users, "User slices must be the same")
-	mockUserGetter.AssertExpectations(t)
+	s.mockDriversGetter.AssertExpectations(t)
 }
 
-func TestUsecasefacade_GetUsers_UnhappyPath(t *testing.T) {
+func TestUsecasefacade_GetAllDriverUsers_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	mockUserCreator := &mocks.DriverCreator{}
-	mockUserAuthenticator := &mocks.UserAuthenticator{}
-	mockUserGetter := &mocks.DriversGetter{}
-	facade := usecasefacades.NewUserFacade(mockUserCreator, mockUserAuthenticator, mockUserGetter)
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
 	ctx := context.Background()
 	testError := errors.New("boom")
 
-	mockUserGetter.EXPECT().Execute(ctx).Return([]entities.User{}, testError).Once()
+	s.mockDriversGetter.EXPECT().Execute(ctx).Return([]entities.User{}, testError).Once()
 
 	// --------
 	// ACT
@@ -187,5 +221,63 @@ func TestUsecasefacade_GetUsers_UnhappyPath(t *testing.T) {
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.Equal(t, testError, err, "Errors must equal")
 	assert.Empty(t, users, "User slice must be empty")
-	mockUserGetter.AssertExpectations(t)
+	s.mockDriversGetter.AssertExpectations(t)
+}
+
+func TestUsecasefacade_BanDriver_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
+	ctx := context.Background()
+	testID := uuid.New()
+
+	s.mockDriverBanner.EXPECT().Execute(ctx, testID).Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := facade.BanDriver(ctx, testID)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	s.mockDriverBanner.AssertExpectations(t)
+}
+
+func TestUsecasefacade_BanDriver_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	s := NewUsecaseFacadeTestSuite()
+	facade := usecasefacades.NewUserFacade(
+		s.mockDriverCreator,
+		s.mockUserAuthoriser,
+		s.mockDriversGetter,
+		s.mockDriverBanner,
+	)
+	testError := errors.New("boom")
+	ctx := context.Background()
+	testID := uuid.New()
+
+	s.mockDriverBanner.EXPECT().Execute(ctx, testID).Return(testError).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := facade.BanDriver(ctx, testID)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must be nil")
+	assert.EqualError(t, err, testError.Error())
+	s.mockDriverBanner.AssertExpectations(t)
 }

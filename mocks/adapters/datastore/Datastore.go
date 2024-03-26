@@ -163,17 +163,20 @@ func (_c *Datastore_FindAll_Call) RunAndReturn(run func(interface{}) datastore.D
 	return _c
 }
 
-// First provides a mock function with given fields: value
-func (_m *Datastore) First(value interface{}) datastore.Datastore {
-	ret := _m.Called(value)
+// First provides a mock function with given fields: value, args
+func (_m *Datastore) First(value interface{}, args ...interface{}) datastore.Datastore {
+	var _ca []interface{}
+	_ca = append(_ca, value)
+	_ca = append(_ca, args...)
+	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
 		panic("no return value specified for First")
 	}
 
 	var r0 datastore.Datastore
-	if rf, ok := ret.Get(0).(func(interface{}) datastore.Datastore); ok {
-		r0 = rf(value)
+	if rf, ok := ret.Get(0).(func(interface{}, ...interface{}) datastore.Datastore); ok {
+		r0 = rf(value, args...)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(datastore.Datastore)
@@ -190,13 +193,21 @@ type Datastore_First_Call struct {
 
 // First is a helper method to define mock.On call
 //   - value interface{}
-func (_e *Datastore_Expecter) First(value interface{}) *Datastore_First_Call {
-	return &Datastore_First_Call{Call: _e.mock.On("First", value)}
+//   - args ...interface{}
+func (_e *Datastore_Expecter) First(value interface{}, args ...interface{}) *Datastore_First_Call {
+	return &Datastore_First_Call{Call: _e.mock.On("First",
+		append([]interface{}{value}, args...)...)}
 }
 
-func (_c *Datastore_First_Call) Run(run func(value interface{})) *Datastore_First_Call {
+func (_c *Datastore_First_Call) Run(run func(value interface{}, args ...interface{})) *Datastore_First_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(interface{}))
+		variadicArgs := make([]interface{}, len(args)-1)
+		for i, a := range args[1:] {
+			if a != nil {
+				variadicArgs[i] = a.(interface{})
+			}
+		}
+		run(args[0].(interface{}), variadicArgs...)
 	})
 	return _c
 }
@@ -206,7 +217,55 @@ func (_c *Datastore_First_Call) Return(_a0 datastore.Datastore) *Datastore_First
 	return _c
 }
 
-func (_c *Datastore_First_Call) RunAndReturn(run func(interface{}) datastore.Datastore) *Datastore_First_Call {
+func (_c *Datastore_First_Call) RunAndReturn(run func(interface{}, ...interface{}) datastore.Datastore) *Datastore_First_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// Save provides a mock function with given fields: value
+func (_m *Datastore) Save(value interface{}) datastore.Datastore {
+	ret := _m.Called(value)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Save")
+	}
+
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(interface{}) datastore.Datastore); ok {
+		r0 = rf(value)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(datastore.Datastore)
+		}
+	}
+
+	return r0
+}
+
+// Datastore_Save_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Save'
+type Datastore_Save_Call struct {
+	*mock.Call
+}
+
+// Save is a helper method to define mock.On call
+//   - value interface{}
+func (_e *Datastore_Expecter) Save(value interface{}) *Datastore_Save_Call {
+	return &Datastore_Save_Call{Call: _e.mock.On("Save", value)}
+}
+
+func (_c *Datastore_Save_Call) Run(run func(value interface{})) *Datastore_Save_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(interface{}))
+	})
+	return _c
+}
+
+func (_c *Datastore_Save_Call) Return(_a0 datastore.Datastore) *Datastore_Save_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_Save_Call) RunAndReturn(run func(interface{}) datastore.Datastore) *Datastore_Save_Call {
 	_c.Call.Return(run)
 	return _c
 }

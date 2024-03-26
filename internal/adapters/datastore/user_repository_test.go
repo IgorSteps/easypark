@@ -208,7 +208,7 @@ func Test_UserRepository_FindByUsername_HappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	user, err := repository.FindByUsername(ctx, testUsername)
+	user, err := repository.GetDriverByUsername(ctx, testUsername)
 
 	// --------
 	// ASSERT
@@ -238,7 +238,7 @@ func Test_UserRepository_FindByUsername_UnhappyPath_NotFound(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	user, err := repository.FindByUsername(ctx, testUsername)
+	user, err := repository.GetDriverByUsername(ctx, testUsername)
 
 	// --------
 	// ASSERT
@@ -270,7 +270,7 @@ func Test_UserRepository_FindByUsername_UnhappyPath_FailedToQuery(t *testing.T) 
 	// --------
 	// ACT
 	// --------
-	user, err := repository.FindByUsername(ctx, testUsername)
+	user, err := repository.GetDriverByUsername(ctx, testUsername)
 
 	// --------
 	// ASSERT
@@ -360,6 +360,169 @@ func Test_UserRepository_GetAllDriverUsers_UnhappyPath(t *testing.T) {
 	mockDatastore.AssertExpectations(t)
 }
 
+func Test_UserRepository_GetDriverByID_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	var user entities.User
+	testID := uuid.New()
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&user, "id = ?", testID).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.GetDriverByID(ctx, testID, &user)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	mockDatastore.AssertExpectations(t)
+
+	// Assert logger
+	assert.Equal(t, 0, len(hook.Entries))
+}
+
+func Test_UserRepository_GetDriverByID_UnhappyPath_NotFound(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	var user entities.User
+	testID := uuid.New()
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&user, "id = ?", testID).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(gorm.ErrRecordNotFound).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.GetDriverByID(ctx, testID, &user)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.IsType(t, &repositories.UserNotFoundError{}, err, "Wrong error type")
+	mockDatastore.AssertExpectations(t)
+
+	// Assert logger
+	assert.Equal(t, 1, len(hook.Entries))
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	assert.Equal(t, "failed to find driver with given id in the database", hook.LastEntry().Message, "Messages are not equal")
+	assert.Equal(t, testID, hook.LastEntry().Data["id"], "ID field is incorrect")
+}
+
+func Test_UserRepository_GetDriverByID_UnhappyPath_InternalError(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+	testErr := errors.New("boom")
+
+	var user entities.User
+	testID := uuid.New()
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().First(&user, "id = ?", testID).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(testErr).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.GetDriverByID(ctx, testID, &user)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.IsType(t, &repositories.InternalError{}, err, "Wrong error type")
+	mockDatastore.AssertExpectations(t)
+
+	// Assert logger
+	assert.Equal(t, 1, len(hook.Entries))
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	assert.Equal(t, "failed to query for user in the database", hook.LastEntry().Message, "Messages are not equal")
+	assert.Equal(t, testErr, hook.LastEntry().Data["error"], "Error field is incorrect")
+}
+
+func Test_UserRepository_Save_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	var user entities.User
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Save(&user).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.Save(ctx, &user)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	mockDatastore.AssertExpectations(t)
+
+	// Assert logger
+	assert.Equal(t, 0, len(hook.Entries))
+}
+
+func Test_UserRepository_Save_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewUserPostgresRepository(mockDatastore, testLogger)
+	ctx := context.Background()
+
+	testErr := errors.New("boom")
+	var user entities.User
+	mockDatastore.EXPECT().WithContext(ctx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Save(&user).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(testErr).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.Save(ctx, &user)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NotNil(t, err, "Error must not be nil")
+	assert.IsType(t, &repositories.InternalError{}, err, "Wrong error type")
+	mockDatastore.AssertExpectations(t)
+
+	// Assert logger
+	assert.Equal(t, 1, len(hook.Entries))
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	assert.Equal(t, "failed to save updated user in the database", hook.LastEntry().Message, "Messages are not equal")
+	assert.Equal(t, testErr, hook.LastEntry().Data["error"], "Error field is incorrect")
+}
+
+// Utility function to create a test user instance.
 func CreateTestUser() *entities.User {
 	return &entities.User{
 		ID:        uuid.New(),
