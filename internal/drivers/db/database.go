@@ -26,7 +26,7 @@ func NewDatabaseFromConfig(config config.DatabaseConfig, logger *GormLogrusLogge
 	}
 
 	// Create/Migrate our db tables.
-	db.AutoMigrate(&entities.User{})
+	db.AutoMigrate(&entities.User{}, &entities.ParkingLot{}, &entities.ParkingSpace{})
 
 	return db, nil
 }

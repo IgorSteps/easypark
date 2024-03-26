@@ -16,11 +16,11 @@ const (
 )
 
 type ParkingSpace struct {
-	ID          uuid.UUID
-	LotID       uuid.UUID
-	Number      string
-	Status      ParkingSpaceStatus
-	ReservedFor *time.Time
-	OccupiedAt  *time.Time
-	UserID      uuid.UUID // Reference to the User who has reserved or occupied the space
+	ID           uuid.UUID `gorm:"primary_key"`
+	ParkingLotID uuid.UUID
+	Number       string
+	Status       ParkingSpaceStatus
+	ReservedFor  *time.Time
+	OccupiedAt   *time.Time
+	UserID       *uuid.UUID
 }
