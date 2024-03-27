@@ -18,9 +18,15 @@ const (
 type ParkingSpace struct {
 	ID           uuid.UUID `gorm:"primary_key"`
 	ParkingLotID uuid.UUID
-	Number       string
+	Name         string
 	Status       ParkingSpaceStatus
 	ReservedFor  *time.Time
 	OccupiedAt   *time.Time
 	UserID       *uuid.UUID
+}
+
+func (s *ParkingSpace) OnCreate(name string, parkingLotID uuid.UUID) {
+	s.ID = uuid.New()
+	s.Status = StatusAvailable
+	s.Name = name
 }
