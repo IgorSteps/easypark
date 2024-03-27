@@ -27,6 +27,7 @@ type ParkingSpace struct {
 
 func (s *ParkingSpace) OnCreate(name string, parkingLotID uuid.UUID) {
 	s.ID = uuid.New()
+	s.ParkingLotID = parkingLotID
 	s.Status = StatusAvailable
 	s.Name = name
 }
