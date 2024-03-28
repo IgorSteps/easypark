@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # DB credentials, same as in docker-compose.
 DB_USER="devUser"
@@ -7,7 +7,7 @@ DB_NAME="easypark"
 DB_HOST="localhost"
 DB_PORT="5432"
 
-TABLES="users"
+TABLES="users,parking_spaces,parking_lots"
 
 for TABLE in $TABLES; do
     PGPASSWORD=$DB_PASSWORD psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "TRUNCATE TABLE $TABLE;"
