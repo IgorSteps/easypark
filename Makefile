@@ -62,4 +62,4 @@ functional:
 checks:
 	make wire
 	make mocks
-	make vendor
+	
