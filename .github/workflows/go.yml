@@ -37,9 +37,8 @@ jobs:
       with:
         go-version: '1.22.1'
 
-    - name: Install Wire and Mockery
+    - name: Install Mockery
       run:  |
-        go install github.com/google/wire/cmd/wire@latest
         go install github.com/vektra/mockery/v2@v2.42.0
 
     - name: Cache Go modules
