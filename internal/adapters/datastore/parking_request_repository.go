@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// ParkingRequestPostgresRepository implements ParkingRequestPostgresRepository interface to provide database operation on Parking Lots.
+// ParkingRequestPostgresRepository implements ParkingRequestPostgresRepository interface to provide database operation on Parking Requests.
 type ParkingRequestPostgresRepository struct {
 	Logger *logrus.Logger
 	DB     Datastore
@@ -24,6 +24,7 @@ func NewParkingRequestPostgresRepository(db Datastore, lgr *logrus.Logger) *Park
 	}
 }
 
+// CreateParkingRequest inserts a parking request into the database.
 func (s *ParkingRequestPostgresRepository) CreateParkingRequest(ctx context.Context, parkReq *entities.ParkingRequest) error {
 	result := s.DB.WithContext(ctx).Create(parkReq)
 	err := result.Error()
@@ -35,6 +36,7 @@ func (s *ParkingRequestPostgresRepository) CreateParkingRequest(ctx context.Cont
 	return nil
 }
 
+// GetAllParkingRequests gets all parking requests from the database.
 func (s *ParkingRequestPostgresRepository) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
 	var requests []entities.ParkingRequest
 
@@ -48,6 +50,7 @@ func (s *ParkingRequestPostgresRepository) GetAllParkingRequests(ctx context.Con
 	return requests, nil
 }
 
+// GetAllParkingRequestsForUser gets all parking requests from the database for a particular user.
 func (s *ParkingRequestPostgresRepository) GetAllParkingRequestsForUser(ctx context.Context, userID uuid.UUID) ([]entities.ParkingRequest, error) {
 	var requests []entities.ParkingRequest
 
@@ -61,6 +64,7 @@ func (s *ParkingRequestPostgresRepository) GetAllParkingRequestsForUser(ctx cont
 	return requests, nil
 }
 
+// GetParkingRequestByID gets a single parking request using its ID.
 func (s *ParkingRequestPostgresRepository) GetParkingRequestByID(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error) {
 	var parkingRequest entities.ParkingRequest
 
