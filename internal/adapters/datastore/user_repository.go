@@ -66,7 +66,7 @@ func (s *UserPostgresRepository) GetDriverByUsername(ctx context.Context, userna
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			s.Logger.WithField("username", username).Warn("failed to find user with given username in the database")
-			return nil, repositories.NewUserNotFoundError(username)
+			return nil, repositories.NewNotFoundError(username)
 		}
 
 		s.Logger.WithError(err).Error("failed to query for user in the database")
@@ -98,7 +98,7 @@ func (s *UserPostgresRepository) GetDriverByID(ctx context.Context, id uuid.UUID
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			s.Logger.WithField("id", id).Error("failed to find driver with given id in the database")
-			return repositories.NewUserNotFoundError(id.String())
+			return repositories.NewNotFoundError(id.String())
 		}
 
 		s.Logger.WithError(err).Error("failed to query for user in the database")

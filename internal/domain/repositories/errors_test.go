@@ -13,7 +13,7 @@ func TestUserNotFoundError(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	username := "testuser"
-	err := repositories.NewUserNotFoundError(username)
+	err := repositories.NewNotFoundError(username)
 	expectedMsg := fmt.Sprintf("User '%s' not found", username)
 
 	// ----

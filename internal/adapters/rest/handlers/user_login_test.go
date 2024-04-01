@@ -95,7 +95,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.T) 
 		Username: "testuser",
 		Password: "password",
 	}
-	testError := repositories.NewUserNotFoundError(testUserReq.Username)
+	testError := repositories.NewNotFoundError(testUserReq.Username)
 
 	requestBody, _ := json.Marshal(testUserReq)
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))

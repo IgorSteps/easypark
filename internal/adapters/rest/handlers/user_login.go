@@ -42,7 +42,7 @@ func (s *UserLoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		case *repositories.InvalidCredentialsError:
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
-		case *repositories.UserNotFoundError:
+		case *repositories.NotFoundError:
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		case *repositories.InternalError:

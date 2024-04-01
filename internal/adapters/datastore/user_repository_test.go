@@ -244,7 +244,7 @@ func Test_UserRepository_FindByUsername_UnhappyPath_NotFound(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
-	assert.EqualError(t, err, "User 'username' not found")
+	assert.EqualError(t, err, "Resource 'username' not found")
 	assert.Empty(t, user, "User must be empty")
 	mockDatastore.AssertExpectations(t)
 }
@@ -414,7 +414,7 @@ func Test_UserRepository_GetDriverByID_UnhappyPath_NotFound(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
-	assert.IsType(t, &repositories.UserNotFoundError{}, err, "Wrong error type")
+	assert.IsType(t, &repositories.NotFoundError{}, err, "Wrong error type")
 	mockDatastore.AssertExpectations(t)
 
 	// Assert logger

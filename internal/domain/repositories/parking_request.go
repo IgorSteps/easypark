@@ -15,9 +15,8 @@ type ParkingRequestRepository interface {
 	// GetAllParkingRequests gets all parking requests.
 	GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error)
 
+	GetParkingRequestByID(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error)
+
 	// GetAllParkingRequests gets all parking requests for a particular user.
 	GetAllParkingRequestsForUser(ctx context.Context, userID uuid.UUID) ([]entities.ParkingRequest, error)
-
-	// UpdateParkingRequest updates a parking request.
-	UpdateParkingRequest(ctx context.Context, parkingRequestToUpdateID uuid.UUID, updatedRequest *entities.ParkingRequest) error
 }

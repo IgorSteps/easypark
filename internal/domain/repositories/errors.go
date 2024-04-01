@@ -12,15 +12,15 @@ func (e *baseError) Error() string {
 	return e.msg
 }
 
-// UserNotFoundError represents an error for not finding user.
-type UserNotFoundError struct {
+// NotFoundError represents an error for not finding a resource.
+type NotFoundError struct {
 	baseError
 }
 
-// NewUserNotFoundError creates a new UserNotFoundError.
-func NewUserNotFoundError(username string) *UserNotFoundError {
-	return &UserNotFoundError{
-		baseError: baseError{msg: fmt.Sprintf("User '%s' not found", username)},
+// NewNotFoundError creates a new NotFoundError.
+func NewNotFoundError(id string) *NotFoundError {
+	return &NotFoundError{
+		baseError: baseError{msg: fmt.Sprintf("Resource '%s' not found", id)},
 	}
 }
 

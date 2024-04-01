@@ -51,7 +51,7 @@ func (s *DriverStatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			s.logger.WithError(err).Error("failed to ban user")
 
 			switch err.(type) {
-			case *repositories.UserNotFoundError:
+			case *repositories.NotFoundError:
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			case *repositories.InternalError:
