@@ -7,7 +7,7 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
-	"github.com/IgorSteps/easypark/internal/usecases"
+	usecases "github.com/IgorSteps/easypark/internal/usecases/user"
 	repositoriesMocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -104,7 +104,7 @@ func TestAuthenticateUser_UnhappyPath_Credentials(t *testing.T) {
 		LastName:  "smith",
 		Role:      entities.RoleDriver,
 	}
-	testError := errors.New("Invalid password provided")
+	testError := errors.New("invalid password")
 
 	mockRepo.EXPECT().GetDriverByUsername(ctx, testUsername).Return(user, nil).Once()
 
@@ -118,7 +118,7 @@ func TestAuthenticateUser_UnhappyPath_Credentials(t *testing.T) {
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.Empty(t, token, "Token must be empty")
-	assert.IsType(t, &repositories.InvalidCredentialsError{}, err, "Error returned is of wrong type")
+	assert.IsType(t, &repositories.InvalidInputError{}, err, "Error returned is of wrong type")
 	assert.Equal(t, err.Error(), testError.Error(), "Error's don't match")
 
 	assert.Equal(t, 1, len(hook.Entries))

@@ -14,7 +14,9 @@ func TestHandlers_UserCreate_HappyPath(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	testLogger := logrus.New()
-	mockFacade := &mocks.UserFacade{}
+	mockUserFacade := &mocks.UserFacade{}
+	mockParkingRequestFacade := &mocks.ParkingRequestFacade{}
+	mockFacade := handlers.NewFacade(mockUserFacade, mockParkingRequestFacade)
 
 	handlerFactory := handlers.NewHandlerFactory(testLogger, mockFacade)
 
@@ -34,7 +36,9 @@ func TestHandlers_UserLogin_HappyPath(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	testLogger := logrus.New()
-	mockFacade := &mocks.UserFacade{}
+	mockUserFacade := &mocks.UserFacade{}
+	mockParkingRequestFacade := &mocks.ParkingRequestFacade{}
+	mockFacade := handlers.NewFacade(mockUserFacade, mockParkingRequestFacade)
 
 	handlerFactory := handlers.NewHandlerFactory(testLogger, mockFacade)
 

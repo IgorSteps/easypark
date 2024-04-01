@@ -173,6 +173,27 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
   }
   ```
 
+### 5. Create Parking Request API Endpoint
+
+**Endpoint**: `POST /drivers/{id}/parking-requests`
+
+**Description**: Creates a parkign request for the driver.
+
+**Request Body**:
+
+Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
+
+```bash
+curl -X POST http://localhost:8080/drivers/0918c572-3364-41bc-826d-cc690a3a1816/parking-requests \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiIwOTE4YzU3Mi0zMzY0LTQxYmMtODI2ZC1jYzY5MGEzYTE4MTYiLCJ1c2VybmFtZSI6InVzZXIxIiwicm9sZSI6ImRyaXZlciIsImV4cCI6MTcxMTk5MzAzNH0.rvIblv38KJgDIltqXRCQoN7YcaCpMmCdTlr7TrCI2EY" \
+-d '{
+    "destination": "comp",
+    "startTime": "2024-05-01T09:00:00Z",
+    "endTime": "2024-05-01T17:00:00Z"
+}'
+```
+
 ## Running locally
 
 ### Prerequisites

@@ -33,7 +33,7 @@ func (s *AuthenticateUser) Execute(ctx context.Context, username, password strin
 	// Not how it should be done in real world.
 	if user.Password != password {
 		s.logger.WithField("username", username).Warn("provided invalid credentials")
-		return "", repositories.NewInvalidCredentialsError()
+		return "", repositories.NewInvalidInputError("invalid password")
 	}
 
 	token, err := s.tokenService.GenerateToken(user)

@@ -36,15 +36,15 @@ func NewUserAlreadyExistsError(username, email string) *UserAlreadyExistsError {
 	}
 }
 
-// InvalidCredentialsError represents an error for invalid credentials.
-type InvalidCredentialsError struct {
+// InvalidInputError represents an error for invalid user input.
+type InvalidInputError struct {
 	baseError
 }
 
-// NewInvalidCredentialsError creates a new InvalidCredentialsError.
-func NewInvalidCredentialsError() *InvalidCredentialsError {
-	return &InvalidCredentialsError{
-		baseError: baseError{msg: "Invalid password provided"},
+// NewInvalidInputError creates a new instance of InvalidInputError.
+func NewInvalidInputError(msg string) *InvalidInputError {
+	return &InvalidInputError{
+		baseError: baseError{msg: msg},
 	}
 }
 

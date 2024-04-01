@@ -57,7 +57,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_InvalidCredentials(t *testing.T)
 	handler := handlers.NewUserLoginHandler(mockFacade, testLogger)
 
 	emptyToken := ""
-	testError := repositories.NewInvalidCredentialsError()
+	testError := repositories.NewInvalidInputError("invalid password")
 	testUserReq := models.LoginUserRequest{
 		Username: "testuser",
 		Password: "password",
@@ -78,7 +78,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_InvalidCredentials(t *testing.T)
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusUnauthorized, rr.Code, "Response codes don't match, should be 401")
-	assert.Contains(t, rr.Body.String(), "Invalid password provided", "Reponse bodies don't match")
+	assert.Contains(t, rr.Body.String(), "invalid password", "Reponse bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
 

@@ -51,8 +51,8 @@ func TestInvalidCredentialsError(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	err := repositories.NewInvalidCredentialsError()
-	expectedMsg := "Invalid password provided"
+	errorMsg := "boom"
+	err := repositories.NewInvalidInputError(errorMsg)
 
 	// ----
 	// ACT
@@ -62,7 +62,7 @@ func TestInvalidCredentialsError(t *testing.T) {
 	// ------
 	// ASSERT
 	// ------
-	assert.Equal(t, expectedMsg, errString, "Expected message to be: %s, got: %s", expectedMsg, err.Error())
+	assert.Equal(t, errorMsg, errString, "Expected message to be: %s, got: %s", errorMsg, err.Error())
 }
 
 func TestInternalError(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
-	"github.com/IgorSteps/easypark/internal/usecases"
+	usecases "github.com/IgorSteps/easypark/internal/usecases/user"
 	mocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"

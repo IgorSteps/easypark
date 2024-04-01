@@ -21,3 +21,26 @@ type UserFacade interface {
 	// BanDriver is implemented by the usecasefacades.Userfacade that wraps banning a driver usecase.
 	BanDriver(ctx context.Context, id uuid.UUID) error
 }
+
+// ParkingRequestFacade is provides an interface implemented by usecasefacades.ParkingRequestFacade.
+type ParkingRequestFacade interface {
+	// CreateParkingRequest is implemented by usecasefacades.ParkingRequestFacade that wraps parking request creation usecase.
+	CreateParkingRequest(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error)
+}
+
+// Facade acts as a single entry point to access functionalities provided by all usecase facades.
+type Facade struct {
+	userFacade           UserFacade
+	parkingRequestFacade ParkingRequestFacade
+}
+
+// NewFacade returns new instance of Facade.
+func NewFacade(
+	uFacade UserFacade,
+	prFacade ParkingRequestFacade,
+) *Facade {
+	return &Facade{
+		userFacade:           uFacade,
+		parkingRequestFacade: prFacade,
+	}
+}
