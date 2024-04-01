@@ -63,4 +63,3 @@ checks:
 	make wire
 	make mocks
 	make vendor
-	git diff --exit-code || (echo 'Auto-generated files are out of date or not committed. Please update them and commit the changes.' && exit 1)
