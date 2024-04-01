@@ -22,7 +22,8 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
-	"github.com/IgorSteps/easypark/internal/usecases"
+	parkingRequestUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
+	userUsecases "github.com/IgorSteps/easypark/internal/usecases/user"
 	"github.com/google/wire"
 )
 
@@ -39,6 +40,8 @@ func BuildDIForApp() (*App, error) {
 		// repositories
 		datastore.NewUserPostgresRepository,
 		wire.Bind(new(repositories.UserRepository), new(*datastore.UserPostgresRepository)),
+		datastore.NewParkingRequestPostgresRepository,
+		wire.Bind(new(repositories.ParkingRequestRepository), new(*datastore.ParkingRequestPostgresRepository)),
 
 		// db
 		db.NewDatabaseFromConfig,
@@ -50,20 +53,25 @@ func BuildDIForApp() (*App, error) {
 		wire.Bind(new(repositories.TokenRepository), new(*auth.JWTTokenService)),
 
 		// usecase
-		usecases.NewRegisterDriver,
-		wire.Bind(new(usecasefacades.DriverCreator), new(*usecases.RegisterDriver)),
-		usecases.NewAuthenticateUser,
-		wire.Bind(new(usecasefacades.UserAuthenticator), new(*usecases.AuthenticateUser)),
-		usecases.NewGetDrivers,
-		wire.Bind(new(usecasefacades.DriversGetter), new(*usecases.GetDrivers)),
-		usecases.NewBanDriver,
-		wire.Bind(new(usecasefacades.DriverBanner), new(*usecases.BanDriver)),
-		usecases.NewCheckDriverStatus,
-		wire.Bind(new(middleware.StatusChecker), new(*usecases.CheckDriverStatus)),
+		userUsecases.NewRegisterDriver,
+		wire.Bind(new(usecasefacades.DriverCreator), new(*userUsecases.RegisterDriver)),
+		userUsecases.NewAuthenticateUser,
+		wire.Bind(new(usecasefacades.UserAuthenticator), new(*userUsecases.AuthenticateUser)),
+		userUsecases.NewGetDrivers,
+		wire.Bind(new(usecasefacades.DriversGetter), new(*userUsecases.GetDrivers)),
+		userUsecases.NewBanDriver,
+		wire.Bind(new(usecasefacades.DriverBanner), new(*userUsecases.BanDriver)),
+		userUsecases.NewCheckDriverStatus,
+		wire.Bind(new(middleware.StatusChecker), new(*userUsecases.CheckDriverStatus)),
+		parkingRequestUsecases.NewCreateParkingRequest,
+		wire.Bind(new(usecasefacades.ParkingRequestCreator), new(*parkingRequestUsecases.CreateParkingRequest)),
 
 		// facades
 		usecasefacades.NewUserFacade,
+		usecasefacades.NewParkingRequestFacade,
 		wire.Bind(new(handlers.UserFacade), new(*usecasefacades.UserFacade)),
+		wire.Bind(new(handlers.ParkingRequestFacade), new(*usecasefacades.ParkingRequestFacade)),
+		handlers.NewFacade,
 
 		// rest handlers and middleware
 		middleware.NewMiddleware,

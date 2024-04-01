@@ -16,6 +16,8 @@ type HandlerFactory interface {
 	UserAuthorise() http.Handler
 	GetAllDrivers() http.Handler
 	DriverBan() http.Handler
+
+	ParkingRequestCreate() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -43,6 +45,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Get("/driver", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("Welcome, Driver!"))
 		})
+		r.Method(http.MethodPost, "/drivers/{id}/parking-requests", handlerFactory.ParkingRequestCreate())
 	})
 
 	// Admin routes

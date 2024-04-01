@@ -73,7 +73,7 @@ func TestDriverStatusHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.
 
 	requestBody, _ := json.Marshal(testStatusRequest)
 	testID := uuid.New()
-	testErr := repositories.NewUserNotFoundError("no")
+	testErr := repositories.NewNotFoundError("no")
 
 	// Because we are directly calling the handler in the test without going through a router that parses the URL parameters,
 	// we have to manually insert the URL parameters into the request context.
@@ -96,7 +96,7 @@ func TestDriverStatusHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusBadRequest, rr.Code, "Response codes don't match, should be 400")
-	assert.Contains(t, rr.Body.String(), "User 'no' not found\n", "Response bodies don't match")
+	assert.Contains(t, rr.Body.String(), "Resource 'no' not found\n", "Response bodies don't match")
 	mockFacade.AssertExpectations(t)
 
 	// Assert logger

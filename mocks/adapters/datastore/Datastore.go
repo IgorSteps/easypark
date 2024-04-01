@@ -222,6 +222,65 @@ func (_c *Datastore_First_Call) RunAndReturn(run func(interface{}, ...interface{
 	return _c
 }
 
+// Preload provides a mock function with given fields: column, conditions
+func (_m *Datastore) Preload(column string, conditions ...interface{}) datastore.Datastore {
+	var _ca []interface{}
+	_ca = append(_ca, column)
+	_ca = append(_ca, conditions...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Preload")
+	}
+
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(string, ...interface{}) datastore.Datastore); ok {
+		r0 = rf(column, conditions...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(datastore.Datastore)
+		}
+	}
+
+	return r0
+}
+
+// Datastore_Preload_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Preload'
+type Datastore_Preload_Call struct {
+	*mock.Call
+}
+
+// Preload is a helper method to define mock.On call
+//   - column string
+//   - conditions ...interface{}
+func (_e *Datastore_Expecter) Preload(column interface{}, conditions ...interface{}) *Datastore_Preload_Call {
+	return &Datastore_Preload_Call{Call: _e.mock.On("Preload",
+		append([]interface{}{column}, conditions...)...)}
+}
+
+func (_c *Datastore_Preload_Call) Run(run func(column string, conditions ...interface{})) *Datastore_Preload_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]interface{}, len(args)-1)
+		for i, a := range args[1:] {
+			if a != nil {
+				variadicArgs[i] = a.(interface{})
+			}
+		}
+		run(args[0].(string), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Datastore_Preload_Call) Return(_a0 datastore.Datastore) *Datastore_Preload_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_Preload_Call) RunAndReturn(run func(string, ...interface{}) datastore.Datastore) *Datastore_Preload_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Save provides a mock function with given fields: value
 func (_m *Datastore) Save(value interface{}) datastore.Datastore {
 	ret := _m.Called(value)

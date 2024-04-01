@@ -39,10 +39,10 @@ func (s *UserLoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		s.logger.WithError(err).Error("failed to login user")
 		switch err.(type) {
-		case *repositories.InvalidCredentialsError:
+		case *repositories.InvalidInputError:
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
-		case *repositories.UserNotFoundError:
+		case *repositories.NotFoundError:
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		case *repositories.InternalError:

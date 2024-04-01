@@ -35,10 +35,11 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().UserAuthorise().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllDrivers().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().DriverBan().Return(testHandler).Once()
+	mockHandlerFactory.EXPECT().ParkingRequestCreate().Return(testHandler).Once()
 
 	// This middlware will get executed for very route invocation.
-	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(3)
-	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Once()
+	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(4)
+	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Twice()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
 

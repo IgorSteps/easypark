@@ -57,7 +57,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_InvalidCredentials(t *testing.T)
 	handler := handlers.NewUserLoginHandler(mockFacade, testLogger)
 
 	emptyToken := ""
-	testError := repositories.NewInvalidCredentialsError()
+	testError := repositories.NewInvalidInputError("invalid password")
 	testUserReq := models.LoginUserRequest{
 		Username: "testuser",
 		Password: "password",
@@ -78,7 +78,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_InvalidCredentials(t *testing.T)
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusUnauthorized, rr.Code, "Response codes don't match, should be 401")
-	assert.Contains(t, rr.Body.String(), "Invalid password provided", "Reponse bodies don't match")
+	assert.Contains(t, rr.Body.String(), "invalid password", "Reponse bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
 
@@ -95,7 +95,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.T) 
 		Username: "testuser",
 		Password: "password",
 	}
-	testError := repositories.NewUserNotFoundError(testUserReq.Username)
+	testError := repositories.NewNotFoundError(testUserReq.Username)
 
 	requestBody, _ := json.Marshal(testUserReq)
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
@@ -112,7 +112,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.T) 
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusUnauthorized, rr.Code, "Response codes don't match, should be 401")
-	assert.Contains(t, rr.Body.String(), "User 'testuser' not found", "Reponse bodies don't match")
+	assert.Contains(t, rr.Body.String(), "Resource 'testuser' not found", "Reponse bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
 

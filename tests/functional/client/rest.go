@@ -65,6 +65,10 @@ func (s *RestClientSuite) BanDriver(ctx context.Context, token, id string, req *
 	return s.sendRequestWithToken(ctx, http.MethodPatch, "/drivers/"+id+"/status", req, token)
 }
 
+func (s *RestClientSuite) CreateParkingRequest(ctx context.Context, token, id string, req *models.CreateParkingRequestRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+id+"/parking-requests", req, token)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)

@@ -95,7 +95,7 @@ func (s *TestLoginUserSuite) TestLoginUser_UnhappyPath_InvalidCredentials() {
 	// ASSERT
 	// --------
 	s.Require().Equal(http.StatusUnauthorized, responseCode, "Login request should return 400 code")
-	s.Require().Equal("Invalid password provided\n", string(responseBody), "Response messages don't match")
+	s.Require().Equal("invalid password\n", string(responseBody), "Response messages don't match")
 }
 
 func (s *TestLoginUserSuite) TestLoginUser_UnhappyPath_UserNotFound() {
@@ -134,7 +134,7 @@ func (s *TestLoginUserSuite) TestLoginUser_UnhappyPath_UserNotFound() {
 	// ASSERT
 	// --------
 	s.Require().Equal(http.StatusUnauthorized, responseCode, "Login request should return 400 code")
-	s.Require().Equal(fmt.Sprintf("User '%s' not found\n", diffUsername), string(responseBody), "Response messages don't match")
+	s.Require().Equal(fmt.Sprintf("Resource '%s' not found\n", diffUsername), string(responseBody), "Response messages don't match")
 }
 
 func TestLoginInit(t *testing.T) {

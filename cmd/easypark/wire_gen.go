@@ -17,7 +17,8 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
-	"github.com/IgorSteps/easypark/internal/usecases"
+	usecases2 "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
+	"github.com/IgorSteps/easypark/internal/usecases/user"
 )
 
 // Injectors from wire.go:
@@ -47,7 +48,11 @@ func BuildDIForApp() (*App, error) {
 	getDrivers := usecases.NewGetDrivers(logrusLogger, userPostgresRepository)
 	banDriver := usecases.NewBanDriver(logrusLogger, userPostgresRepository)
 	userFacade := usecasefacades.NewUserFacade(registerDriver, authenticateUser, getDrivers, banDriver)
-	handlerFactory := handlers.NewHandlerFactory(logrusLogger, userFacade)
+	parkingRequestPostgresRepository := datastore.NewParkingRequestPostgresRepository(gormWrapper, logrusLogger)
+	createParkingRequest := usecases2.NewCreateParkingRequest(logrusLogger, parkingRequestPostgresRepository)
+	parkingRequestFacade := usecasefacades.NewParkingRequestFacade(createParkingRequest)
+	facade := handlers.NewFacade(userFacade, parkingRequestFacade)
+	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
 	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)
 	router := routes.NewRouter(handlerFactory, middlewareMiddleware, logrusLogger)
