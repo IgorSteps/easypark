@@ -7,7 +7,9 @@ import (
 	"os/exec"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -67,4 +69,49 @@ func CreateAdmin(ctx context.Context, s *client.RestClientSuite) string {
 
 	s.T().Log("Got admin token")
 	return targetModel.Token
+}
+
+func GetUserIDAndToken(ctx context.Context, s *client.RestClientSuite) (uuid.UUID, string) {
+	// Create admin and get their auth token:
+	token := CreateAdmin(ctx, s)
+
+	// Get all drivers.
+	respBody, respCode, err := s.GetAllDrivers(ctx, token)
+	s.Require().NoError(err, "Getting all driver's must not return an error")
+	s.Require().Equal(http.StatusOK, respCode, "Response codemust be 200")
+
+	// Unmarshall response to get driver users.
+	var users []entities.User
+	err = s.UnmarshalHTTPResponse(respBody, &users)
+	if err != nil {
+		s.T().Fail()
+	}
+
+	// Extract one of the users ids.
+	userID := users[0].ID
+
+	// Extract user's uname and pword
+	uname := users[0].Username
+	pwod := users[0].Password
+
+	// Get the auth token for them
+	loginReq := models.LoginUserRequest{
+		Username: uname,
+		Password: pwod,
+	}
+	respBody, respCode, err = s.LoginUser(ctx, &loginReq)
+
+	// Assert everything went okay.
+	s.Require().NoError(err, "Login in user shouldn't error")
+	s.Require().Equal(http.StatusOK, respCode, "Response code must be OK")
+
+	var targetModel models.LoginUserResponse
+	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
+	if err != nil {
+		s.T().Fail()
+	}
+
+	userToken := targetModel.Token
+
+	return userID, userToken
 }

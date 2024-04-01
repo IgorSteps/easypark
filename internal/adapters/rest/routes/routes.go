@@ -41,6 +41,10 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 	// Driver routes
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.Authorise, middleware.RequireRole(entities.RoleDriver), middleware.CheckStatus)
+		// Placeholder:
+		r.Get("/driver", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("Welcome, Driver!"))
+		})
 		r.Method(http.MethodPost, "/drivers/{id}/parking-requests", handlerFactory.ParkingRequestCreate())
 	})
 
