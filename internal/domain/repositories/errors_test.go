@@ -14,7 +14,7 @@ func TestUserNotFoundError(t *testing.T) {
 	// --------
 	username := "testuser"
 	err := repositories.NewNotFoundError(username)
-	expectedMsg := fmt.Sprintf("User '%s' not found", username)
+	expectedMsg := fmt.Sprintf("Resource '%s' not found", username)
 
 	// ----
 	// ACT

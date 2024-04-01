@@ -112,7 +112,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.T) 
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusUnauthorized, rr.Code, "Response codes don't match, should be 401")
-	assert.Contains(t, rr.Body.String(), "User 'testuser' not found", "Reponse bodies don't match")
+	assert.Contains(t, rr.Body.String(), "Resource 'testuser' not found", "Reponse bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
 

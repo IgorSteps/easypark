@@ -96,7 +96,7 @@ func TestDriverStatusHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusBadRequest, rr.Code, "Response codes don't match, should be 400")
-	assert.Contains(t, rr.Body.String(), "User 'no' not found\n", "Response bodies don't match")
+	assert.Contains(t, rr.Body.String(), "Resource 'no' not found\n", "Response bodies don't match")
 	mockFacade.AssertExpectations(t)
 
 	// Assert logger
