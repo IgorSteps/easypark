@@ -64,6 +64,8 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 
 	// Create a response from the created parking request to be able to comapre with the response body
 	expectedResponse := models.CreateParkingRequestResponse{
+		ID:          createdParkingRequest.ID,
+		UserID:      createdParkingRequest.UserID,
 		Destination: createdParkingRequest.Destination,
 		StartTime:   createdParkingRequest.StartTime,
 		EndTime:     createdParkingRequest.EndTime,
