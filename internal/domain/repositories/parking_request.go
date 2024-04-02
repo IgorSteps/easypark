@@ -20,4 +20,7 @@ type ParkingRequestRepository interface {
 
 	// GetAllParkingRequests gets all parking requests for a particular user.
 	GetAllParkingRequestsForUser(ctx context.Context, userID uuid.UUID) ([]entities.ParkingRequest, error)
+
+	// Save saves the parking request when performing any updating.
+	Save(ctx context.Context, request *entities.ParkingRequest) error
 }

@@ -245,6 +245,53 @@ func (_c *ParkingRequestRepository_GetParkingRequestByID_Call) RunAndReturn(run 
 	return _c
 }
 
+// Save provides a mock function with given fields: ctx, request
+func (_m *ParkingRequestRepository) Save(ctx context.Context, request *entities.ParkingRequest) error {
+	ret := _m.Called(ctx, request)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Save")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.ParkingRequest) error); ok {
+		r0 = rf(ctx, request)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ParkingRequestRepository_Save_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Save'
+type ParkingRequestRepository_Save_Call struct {
+	*mock.Call
+}
+
+// Save is a helper method to define mock.On call
+//   - ctx context.Context
+//   - request *entities.ParkingRequest
+func (_e *ParkingRequestRepository_Expecter) Save(ctx interface{}, request interface{}) *ParkingRequestRepository_Save_Call {
+	return &ParkingRequestRepository_Save_Call{Call: _e.mock.On("Save", ctx, request)}
+}
+
+func (_c *ParkingRequestRepository_Save_Call) Run(run func(ctx context.Context, request *entities.ParkingRequest)) *ParkingRequestRepository_Save_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(*entities.ParkingRequest))
+	})
+	return _c
+}
+
+func (_c *ParkingRequestRepository_Save_Call) Return(_a0 error) *ParkingRequestRepository_Save_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *ParkingRequestRepository_Save_Call) RunAndReturn(run func(context.Context, *entities.ParkingRequest) error) *ParkingRequestRepository_Save_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewParkingRequestRepository creates a new instance of ParkingRequestRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewParkingRequestRepository(t interface {
