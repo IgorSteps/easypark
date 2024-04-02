@@ -23,7 +23,7 @@ import (
 
 // Injectors from wire.go:
 
-func BuildDIForApp() (*App, error) {
+func SetupApp() (*App, error) {
 	configConfig, err := config.LoadConfig()
 	if err != nil {
 		return nil, err
@@ -50,7 +50,8 @@ func BuildDIForApp() (*App, error) {
 	userFacade := usecasefacades.NewUserFacade(registerDriver, authenticateUser, getDrivers, banDriver)
 	parkingRequestPostgresRepository := datastore.NewParkingRequestPostgresRepository(gormWrapper, logrusLogger)
 	createParkingRequest := usecases2.NewCreateParkingRequest(logrusLogger, parkingRequestPostgresRepository)
-	parkingRequestFacade := usecasefacades.NewParkingRequestFacade(createParkingRequest)
+	updateParkingRequestStatus := usecases2.NewUpdateParkingRequestStatus(logrusLogger, parkingRequestPostgresRepository)
+	parkingRequestFacade := usecasefacades.NewParkingRequestFacade(createParkingRequest, updateParkingRequestStatus)
 	facade := handlers.NewFacade(userFacade, parkingRequestFacade)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)

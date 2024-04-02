@@ -45,3 +45,8 @@ func (s *HandlerFactory) DriverBan() http.Handler {
 func (s *HandlerFactory) ParkingRequestCreate() http.Handler {
 	return NewParkingRequestCreateHandler(s.facade.parkingRequestFacade, s.logger)
 }
+
+// ParkingRequestStatusUpdate returns new REST handler to update parking request status.
+func (s *HandlerFactory) ParkingRequestStatusUpdate() http.Handler {
+	return NewParkingRequestStatusHandler(s.facade.parkingRequestFacade, s.logger)
+}

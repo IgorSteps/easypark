@@ -65,8 +65,14 @@ func (s *RestClientSuite) BanDriver(ctx context.Context, token, id string, req *
 	return s.sendRequestWithToken(ctx, http.MethodPatch, "/drivers/"+id+"/status", req, token)
 }
 
-func (s *RestClientSuite) CreateParkingRequest(ctx context.Context, token, id string, req *models.CreateParkingRequestRequest) ([]byte, int, error) {
-	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+id+"/parking-requests", req, token)
+// CreateParkingRequest interacts with the REST API to create a parkig request for the given userID.
+func (s *RestClientSuite) CreateParkingRequest(ctx context.Context, token, userID string, req *models.CreateParkingRequestRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+userID+"/parking-requests", req, token)
+}
+
+// UpdateParkingRequestStatus interacts with the REST API to update a parkig request with the given requestID.
+func (s *RestClientSuite) UpdateParkingRequestStatus(ctx context.Context, token, requestID string, req *models.UpdateParkingRequestStatusRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-requests/"+requestID+"/status", req, token)
 }
 
 // sendRequest sends a HTTP request via provided method and path.

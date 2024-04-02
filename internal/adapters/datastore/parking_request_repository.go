@@ -82,3 +82,15 @@ func (s *ParkingRequestPostgresRepository) GetParkingRequestByID(ctx context.Con
 
 	return parkingRequest, nil
 }
+
+// Save saves updated parking request into the DB.
+func (s *ParkingRequestPostgresRepository) Save(ctx context.Context, request *entities.ParkingRequest) error {
+	result := s.DB.WithContext(ctx).Save(request)
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).Error("failed to save updated parking request in the database")
+		return repositories.NewInternalError("failed to save updated uparking request in the database")
+	}
+
+	return nil
+}
