@@ -196,7 +196,7 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 
 **Responses**:
 
-- **201 CREATED***
+- **201 CREATED**
 
   ```json
   {
@@ -212,6 +212,51 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
   ```json
   {
    "start time cannot be after the end time"
+  }
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {
+    "Intenal error: some error message"
+  }
+  ```
+
+### 6. Update Parking Request Status API Endpoint
+
+**Endpoint**: `PATCH /parking-requests/{id}/status`
+
+**Description**: Updated a parking request status.
+
+**Request Body**:
+
+Ensure that the status is one of the following: `approved, rejected, pending`.
+
+```bash
+curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "status": "approved"
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+  {
+    "message": "successfully updated the parking request status"
+  }
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {
+   "meaningful message"
   }
   ```
 
