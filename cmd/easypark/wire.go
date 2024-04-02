@@ -27,7 +27,7 @@ import (
 	"github.com/google/wire"
 )
 
-func BuildDIForApp() (*App, error) {
+func SetupApp() (*App, error) {
 	wire.Build(
 		// config
 		config.LoadConfig,
@@ -52,7 +52,8 @@ func BuildDIForApp() (*App, error) {
 		auth.NewJWTTokenServiceFromConfig,
 		wire.Bind(new(repositories.TokenRepository), new(*auth.JWTTokenService)),
 
-		// usecase
+		// usecases
+		// user
 		userUsecases.NewRegisterDriver,
 		wire.Bind(new(usecasefacades.DriverCreator), new(*userUsecases.RegisterDriver)),
 		userUsecases.NewAuthenticateUser,
@@ -63,8 +64,12 @@ func BuildDIForApp() (*App, error) {
 		wire.Bind(new(usecasefacades.DriverBanner), new(*userUsecases.BanDriver)),
 		userUsecases.NewCheckDriverStatus,
 		wire.Bind(new(middleware.StatusChecker), new(*userUsecases.CheckDriverStatus)),
+
+		// parking request
 		parkingRequestUsecases.NewCreateParkingRequest,
 		wire.Bind(new(usecasefacades.ParkingRequestCreator), new(*parkingRequestUsecases.CreateParkingRequest)),
+		parkingRequestUsecases.NewUpdateParkingRequestStatus,
+		wire.Bind(new(usecasefacades.ParkingRequestStatusUpdater), new(*parkingRequestUsecases.UpdateParkingRequestStatus)),
 
 		// facades
 		usecasefacades.NewUserFacade,
@@ -83,7 +88,7 @@ func BuildDIForApp() (*App, error) {
 		routes.NewRouter,
 		httpserver.NewServerFromConfig,
 
-		// service
+		// app
 		NewApp,
 	)
 

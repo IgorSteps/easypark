@@ -26,6 +26,9 @@ type UserFacade interface {
 type ParkingRequestFacade interface {
 	// CreateParkingRequest is implemented by usecasefacades.ParkingRequestFacade that wraps parking request creation usecase.
 	CreateParkingRequest(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error)
+
+	// UpdateParkingRequestStatus is implemented  by usecasefacades.ParkingRequestFacade that wraps parking request update usecase.
+	UpdateParkingRequestStatus(ctx context.Context, id uuid.UUID, status string) error
 }
 
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.

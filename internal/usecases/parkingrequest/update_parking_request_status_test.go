@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	usecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	mocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
 	"github.com/google/uuid"
@@ -17,6 +18,7 @@ func TestUpdateParkingRequestStatus_Execute_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
+	testStatus := "approved"
 	testCtx := context.Background()
 	testID := uuid.New()
 	testLogger, _ := test.NewNullLogger()
@@ -35,7 +37,7 @@ func TestUpdateParkingRequestStatus_Execute_HappyPath(t *testing.T) {
 	// ----
 	// ACT
 	// ----
-	err := usecase.Execute(testCtx, testID, entities.RequestStatusApproved)
+	err := usecase.Execute(testCtx, testID, testStatus)
 
 	// ------
 	// ASSERT
@@ -49,6 +51,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_GetParkingRequestByIDErr
 	// --------
 	// ASSEMBLE
 	// --------
+	testStatus := "approved"
 	testCtx := context.Background()
 	testID := uuid.New()
 	testLogger, _ := test.NewNullLogger()
@@ -62,7 +65,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_GetParkingRequestByIDErr
 	// ----
 	// ACT
 	// ----
-	err := usecase.Execute(testCtx, testID, entities.RequestStatusApproved)
+	err := usecase.Execute(testCtx, testID, testStatus)
 
 	// ------
 	// ASSERT
@@ -76,6 +79,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_SaveError(t *testing.T) 
 	// --------
 	// ASSEMBLE
 	// --------
+	testStatus := "approved"
 	testCtx := context.Background()
 	testID := uuid.New()
 	testLogger, _ := test.NewNullLogger()
@@ -92,11 +96,41 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_SaveError(t *testing.T) 
 	// ----
 	// ACT
 	// ----
-	err := usecase.Execute(testCtx, testID, entities.RequestStatusApproved)
+	err := usecase.Execute(testCtx, testID, testStatus)
 
 	// ------
 	// ASSERT
 	// ------
 	assert.EqualError(t, err, testError.Error(), "Must return the error")
 	mockRepo.AssertExpectations(t)
+}
+
+func TestUpdateParkingRequestStatus_Execute_UnhappyPath_InvalidStatus(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testStatus := "boom"
+	testCtx := context.Background()
+	testID := uuid.New()
+	testLogger, hook := test.NewNullLogger()
+	mockRepo := &mocks.ParkingRequestRepository{}
+	usecase := usecases.NewUpdateParkingRequestStatus(testLogger, mockRepo)
+
+	// ----
+	// ACT
+	// ----
+	err := usecase.Execute(testCtx, testID, testStatus)
+
+	// ------
+	// ASSERT
+	// ------
+	assert.IsType(t, &repositories.InvalidInputError{}, err, "Error type is wrong")
+	assert.EqualError(t, err, "unknown parking request status", "Errors are not equal")
+	mockRepo.AssertExpectations(t)
+
+	// Assert logger
+	assert.Equal(t, 1, len(hook.Entries), "Must be 1 log entry in the logger")
+	assert.Equal(t, "unknown parking request status", hook.LastEntry().Message, "Log message is wrong")
+	assert.Equal(t, testStatus, hook.LastEntry().Data["status"], "ID field is incorrect")
+	assert.Equal(t, err, hook.LastEntry().Data["error"], "Error field is incorrect")
 }

@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	app, err := BuildDIForApp()
+	app, err := SetupApp()
 	if err != nil {
 		log.Fatalf("failed to build DI for easpark app: %v", err)
 	}

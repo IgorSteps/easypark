@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
+	"github.com/google/uuid"
 )
 
 // CreateParkingRequestRequest represent the data in an incoming HTTP request to create a parking request.
@@ -24,6 +25,8 @@ func (s *CreateParkingRequestRequest) ToDomain() *entities.ParkingRequest {
 
 // CreateParkingRequestResponse represent the data in an outgoing HTTP response toa  create parking request request.
 type CreateParkingRequestResponse struct {
+	ID          uuid.UUID                     `json:"id"`
+	UserID      uuid.UUID                     `json:"userId"`
 	Destination string                        `json:"destination"`
 	StartTime   time.Time                     `json:"starttime"`
 	EndTime     time.Time                     `json:"endtime"`

@@ -21,13 +21,19 @@ func NewUpdateParkingRequestStatus(lgr *logrus.Logger, r repositories.ParkingReq
 	}
 }
 
-func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, status entities.ParkingRequestStatus) error {
+func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, status string) error {
+	domainStatus, err := parkingRequestFromString(status)
+	if err != nil {
+		s.logger.WithField("status", status).WithError(err).Error("unknown parking request status")
+		return err
+	}
+
 	parkingRequest, err := s.repo.GetParkingRequestByID(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	parkingRequest.Status = status
+	parkingRequest.Status = domainStatus
 
 	err = s.repo.Save(ctx, &parkingRequest)
 	if err != nil {
@@ -35,4 +41,18 @@ func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, 
 	}
 
 	return nil
+}
+
+// TODO: Move to domain?
+func parkingRequestFromString(status string) (entities.ParkingRequestStatus, error) {
+	switch status {
+	case "approved":
+		return entities.RequestStatusApproved, nil
+	case "rejected":
+		return entities.RequestStatusRejected, nil
+	case "pending":
+		return entities.RequestStatusRejected, nil
+	default:
+		return "", repositories.NewInvalidInputError("unknown parking request status")
+	}
 }

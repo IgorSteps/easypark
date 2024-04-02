@@ -26,7 +26,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_HappyPath() {
 	// Populate db with mock data.
 	err := PopulateUsers(ctx, &s.RestClientSuite)
 	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	userID, _, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
 
 	testRequest := &models.CreateParkingRequestRequest{
 		Destination: "science",
@@ -64,7 +64,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidI
 	// Populate db with mock data.
 	err := PopulateUsers(ctx, &s.RestClientSuite)
 	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	userID, _, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
 
 	testRequest := &models.CreateParkingRequestRequest{
 		Destination: "science",

@@ -71,12 +71,12 @@ func CreateAdmin(ctx context.Context, s *client.RestClientSuite) string {
 	return targetModel.Token
 }
 
-func GetUserIDAndToken(ctx context.Context, s *client.RestClientSuite) (uuid.UUID, string) {
+func GetUserIDAndToken(ctx context.Context, s *client.RestClientSuite) (uuid.UUID, string, string) {
 	// Create admin and get their auth token:
-	token := CreateAdmin(ctx, s)
+	adminToken := CreateAdmin(ctx, s)
 
 	// Get all drivers.
-	respBody, respCode, err := s.GetAllDrivers(ctx, token)
+	respBody, respCode, err := s.GetAllDrivers(ctx, adminToken)
 	s.Require().NoError(err, "Getting all driver's must not return an error")
 	s.Require().Equal(http.StatusOK, respCode, "Response codemust be 200")
 
@@ -113,5 +113,5 @@ func GetUserIDAndToken(ctx context.Context, s *client.RestClientSuite) (uuid.UUI
 
 	userToken := targetModel.Token
 
-	return userID, userToken
+	return userID, adminToken, userToken
 }
