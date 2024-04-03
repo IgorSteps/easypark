@@ -10,24 +10,32 @@ import (
 // DriverCreator provides an interface implemented by the RegisterDriver usecase.
 type DriverCreator interface {
 	Execute(ctx context.Context, user *entities.User) error
+	CreateDriver(ctx context.Context, driver *entities.User) error
+	AddDriver(ctx context.Context, driver *entities.User) error
+	UpdateDriver(ctx context.Context, driver *entities.User) error
 }
 
 // UserAuthenticator provides an interface implemented by the AuthenticateUser usecase.
 type UserAuthenticator interface {
 	Execute(ctx context.Context, username, password string) (string, error)
+	AuthenticateUser(ctx context.Context, username, password string) (string, error)
+	GetAllUsers(ctx context.Context) ([]entities.User, error)
 }
 
 // DriversGetter provides an interface implemented by the GetDrivers usecase.
 type DriversGetter interface {
 	Execute(ctx context.Context) ([]entities.User, error)
+	GetDrivers(ctx context.Context) ([]entities.User, error)
 }
 
 // DriverBanner provides an interface implemented by the BanDriver usecase.
 type DriverBanner interface {
 	Execute(ctx context.Context, id uuid.UUID) error
+	BanDriver(ctx context.Context, id uuid.UUID) error
+	RemoveDriver(ctx context.Context, id uuid.UUID) error
 }
 
-// UserFacade uses facade pattern to wrap user' usecases to allow for managing other things such as DB transactions if needed.
+// UserFacade uses facade pattern to wrap user usecases to allow for managing other things such as DB transactions if needed.
 type UserFacade struct {
 	driverCreator     DriverCreator
 	userAuthenticator UserAuthenticator

@@ -76,7 +76,7 @@ func (s *Middleware) RequireRole(requiredRole entities.UserRole) func(next http.
 	}
 }
 
-// CheckStatus checks whether user sending the request is banned is banned.
+// CheckStatus checks whether user sending the request is banned.
 func (s *Middleware) CheckStatus(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Ignore "ok" flag, becasue we assume it was converted in the previous handler with no errors.
