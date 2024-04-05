@@ -184,9 +184,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
 
 ```bash
-curl -X POST http://localhost:8080/drivers/f4f6b2c5-30ee-47a5-9ce8-61394e7a3945/parking-requests \
+curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJmNGY2YjJjNS0zMGVlLTQ3YTUtOWNlOC02MTM5NGU3YTM5NDUiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJyb2xlIjoiZHJpdmVyIiwiZXhwIjoxNzEyMTczOTY5fQ.Cuvj7rvY5Fnfbj4qzBHVMLwR514FBNoOYRea8UpQMqQ" \
+-H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
     "destination": "science",
     "startTime": "2024-05-01T09:00:00Z",
