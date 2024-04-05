@@ -21,6 +21,53 @@ func (_m *HandlerFactory) EXPECT() *HandlerFactory_Expecter {
 	return &HandlerFactory_Expecter{mock: &_m.Mock}
 }
 
+// AssignParkingSpace provides a mock function with given fields:
+func (_m *HandlerFactory) AssignParkingSpace() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for AssignParkingSpace")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_AssignParkingSpace_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AssignParkingSpace'
+type HandlerFactory_AssignParkingSpace_Call struct {
+	*mock.Call
+}
+
+// AssignParkingSpace is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) AssignParkingSpace() *HandlerFactory_AssignParkingSpace_Call {
+	return &HandlerFactory_AssignParkingSpace_Call{Call: _e.mock.On("AssignParkingSpace")}
+}
+
+func (_c *HandlerFactory_AssignParkingSpace_Call) Run(run func()) *HandlerFactory_AssignParkingSpace_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_AssignParkingSpace_Call) Return(_a0 http.Handler) *HandlerFactory_AssignParkingSpace_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_AssignParkingSpace_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_AssignParkingSpace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DriverBan provides a mock function with given fields:
 func (_m *HandlerFactory) DriverBan() http.Handler {
 	ret := _m.Called()
@@ -158,6 +205,53 @@ func (_c *HandlerFactory_GetAllDrivers_Call) Return(_a0 http.Handler) *HandlerFa
 }
 
 func (_c *HandlerFactory_GetAllDrivers_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_GetAllDrivers_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ParkingLotCreate provides a mock function with given fields:
+func (_m *HandlerFactory) ParkingLotCreate() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for ParkingLotCreate")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_ParkingLotCreate_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ParkingLotCreate'
+type HandlerFactory_ParkingLotCreate_Call struct {
+	*mock.Call
+}
+
+// ParkingLotCreate is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) ParkingLotCreate() *HandlerFactory_ParkingLotCreate_Call {
+	return &HandlerFactory_ParkingLotCreate_Call{Call: _e.mock.On("ParkingLotCreate")}
+}
+
+func (_c *HandlerFactory_ParkingLotCreate_Call) Run(run func()) *HandlerFactory_ParkingLotCreate_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_ParkingLotCreate_Call) Return(_a0 http.Handler) *HandlerFactory_ParkingLotCreate_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_ParkingLotCreate_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_ParkingLotCreate_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -24,15 +24,15 @@ func NewNotFoundError(id string) *NotFoundError {
 	}
 }
 
-// UserAlreadyExistsError represents an error when user already exists.
-type UserAlreadyExistsError struct {
+// ResourceAlreadyExistsError represents an error when user already exists.
+type ResourceAlreadyExistsError struct {
 	baseError
 }
 
-// NewUserAlreadyExistsError creates a new UserAlreadyExistsError.
-func NewUserAlreadyExistsError(username, email string) *UserAlreadyExistsError {
-	return &UserAlreadyExistsError{
-		baseError: baseError{msg: fmt.Sprintf("User '%s'/'%s' already exists", username, email)},
+// NewResourceAlreadyExistsError creates a new ResourceAlreadyExistsError.
+func NewResourceAlreadyExistsError(name string) *ResourceAlreadyExistsError {
+	return &ResourceAlreadyExistsError{
+		baseError: baseError{msg: fmt.Sprintf("Resource '%s' already exists", name)},
 	}
 }
 

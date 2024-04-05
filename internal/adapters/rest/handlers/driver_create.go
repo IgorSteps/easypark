@@ -41,7 +41,7 @@ func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		s.logger.WithError(err).Error("failed to create user")
 
 		switch err.(type) {
-		case *repositories.UserAlreadyExistsError:
+		case *repositories.ResourceAlreadyExistsError:
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		case *repositories.InternalError:

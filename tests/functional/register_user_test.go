@@ -89,7 +89,7 @@ func (s *TestCreateUserSuite) TestCreateUser_UnhappyPath_UserAlreadyExists() {
 	s.Require().Equal(http.StatusCreated, responseCode, "Response code 1 is wrong")
 
 	s.Require().NoError(err2, "Creating user 2 should not return an error")
-	s.Require().Equal("User 'gloom'/'boom@example.com' already exists\n", string(responseBody2), "Response body 2 message is wrong")
+	s.Require().Equal("Resource 'gloom' already exists\n", string(responseBody2), "Response body 2 message is wrong")
 	s.Require().Equal(http.StatusBadRequest, responseCode2, "Response code 2 is wrong")
 }
 

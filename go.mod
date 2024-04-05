@@ -44,6 +44,7 @@ require (
 require (
 	github.com/chi-middleware/logrus-logger v0.3.0
 	github.com/google/wire v0.6.0
+	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sys v0.16.0 // indirect
 	gorm.io/gorm v1.25.7

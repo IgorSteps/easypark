@@ -8,8 +8,7 @@ import (
 
 type ParkingLot struct {
 	ID            uuid.UUID `gorm:"primary_key"`
-	Name          string
-	Location      string // We can make it a more complex type with latitude and longitude, but I don't think it matters for this prototype
+	Name          string    `gorm:"unique"`
 	Capacity      int
 	ParkingSpaces []ParkingSpace
 	// Below are the stats we require for monitoring, they are not persisted.
@@ -19,10 +18,9 @@ type ParkingLot struct {
 	Blocked   int `gorm:"-"`
 }
 
-func (s *ParkingLot) OnCreate(name, location string, capacity int) {
+func (s *ParkingLot) OnCreate(name string, capacity int) {
 	s.ID = uuid.New()
 	s.Name = name
-	s.Location = location
 	s.Capacity = capacity
 
 	s.ParkingSpaces = make([]ParkingSpace, 0, capacity)

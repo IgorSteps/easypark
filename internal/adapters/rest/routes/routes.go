@@ -19,11 +19,13 @@ type HandlerFactory interface {
 
 	ParkingRequestCreate() http.Handler
 	ParkingRequestStatusUpdate() http.Handler
+	AssignParkingSpace() http.Handler
+	ParkingLotCreate() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
 //
-// TODO: This could be a factory similar to handlers, but we aren't using too many middlewares
+// TODO: This should be split up and it could be a factory similar to handlers?
 type Middleware interface {
 	Authorise(next http.Handler) http.Handler
 	RequireRole(requiredRole entities.UserRole) func(next http.Handler) http.Handler
@@ -55,6 +57,8 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
 		r.Method(http.MethodPatch, "/drivers/{id}/status", handlerFactory.DriverBan())
 		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
+		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
+		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
 	})
 
 	return router

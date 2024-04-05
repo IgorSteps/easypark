@@ -70,7 +70,7 @@ func (s *ParkingRequestCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 	response := models.CreateParkingRequestResponse{
 		ID:          createdParkingRequest.ID,
 		UserID:      createdParkingRequest.UserID,
-		Destination: createdParkingRequest.Destination,
+		Destination: createdParkingRequest.DestinationParkingLotID,
 		StartTime:   createdParkingRequest.StartTime,
 		EndTime:     createdParkingRequest.EndTime,
 		Status:      createdParkingRequest.Status,

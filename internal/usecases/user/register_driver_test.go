@@ -72,7 +72,7 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
-	assert.Equal(t, err.Error(), "User 'what'/'mail' already exists")
+	assert.Equal(t, err.Error(), "Resource 'what' already exists")
 
 	// Assert logger.
 	assert.Equal(t, 1, len(hook.Entries))

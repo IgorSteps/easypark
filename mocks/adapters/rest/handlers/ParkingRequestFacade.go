@@ -25,6 +25,54 @@ func (_m *ParkingRequestFacade) EXPECT() *ParkingRequestFacade_Expecter {
 	return &ParkingRequestFacade_Expecter{mock: &_m.Mock}
 }
 
+// AssignParkingSpace provides a mock function with given fields: ctx, requestID, spaceID
+func (_m *ParkingRequestFacade) AssignParkingSpace(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error {
+	ret := _m.Called(ctx, requestID, spaceID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for AssignParkingSpace")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, uuid.UUID) error); ok {
+		r0 = rf(ctx, requestID, spaceID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ParkingRequestFacade_AssignParkingSpace_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AssignParkingSpace'
+type ParkingRequestFacade_AssignParkingSpace_Call struct {
+	*mock.Call
+}
+
+// AssignParkingSpace is a helper method to define mock.On call
+//   - ctx context.Context
+//   - requestID uuid.UUID
+//   - spaceID uuid.UUID
+func (_e *ParkingRequestFacade_Expecter) AssignParkingSpace(ctx interface{}, requestID interface{}, spaceID interface{}) *ParkingRequestFacade_AssignParkingSpace_Call {
+	return &ParkingRequestFacade_AssignParkingSpace_Call{Call: _e.mock.On("AssignParkingSpace", ctx, requestID, spaceID)}
+}
+
+func (_c *ParkingRequestFacade_AssignParkingSpace_Call) Run(run func(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID)) *ParkingRequestFacade_AssignParkingSpace_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(uuid.UUID))
+	})
+	return _c
+}
+
+func (_c *ParkingRequestFacade_AssignParkingSpace_Call) Return(_a0 error) *ParkingRequestFacade_AssignParkingSpace_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *ParkingRequestFacade_AssignParkingSpace_Call) RunAndReturn(run func(context.Context, uuid.UUID, uuid.UUID) error) *ParkingRequestFacade_AssignParkingSpace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateParkingRequest provides a mock function with given fields: ctx, parkingRequest
 func (_m *ParkingRequestFacade) CreateParkingRequest(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error) {
 	ret := _m.Called(ctx, parkingRequest)

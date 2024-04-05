@@ -30,9 +30,9 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	handler := handlers.NewParkingRequestCreateHandler(mockFacade, testLogger)
 
 	testCreateParkingRequestRequest := models.CreateParkingRequestRequest{
-		Destination: "science",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(5),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
 	}
 
 	requestBody, err := json.Marshal(testCreateParkingRequestRequest)
@@ -51,14 +51,13 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	createdParkingRequest := &entities.ParkingRequest{
-		ID:               uuid.New(),
-		UserID:           uuid.New(),
-		ParkingSpaceID:   nil,
-		ParkingSpaceName: nil,
-		Destination:      "goom",
-		StartTime:        time.Now(),
-		EndTime:          time.Now().Add(5),
-		Status:           entities.RequestStatusPending,
+		ID:                      uuid.New(),
+		UserID:                  uuid.New(),
+		ParkingSpaceID:          nil,
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
+		Status:                  entities.RequestStatusPending,
 	}
 	mockFacade.EXPECT().CreateParkingRequest(req.Context(), mock.Anything).Return(createdParkingRequest, nil).Once()
 
@@ -66,7 +65,7 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	expectedResponse := models.CreateParkingRequestResponse{
 		ID:          createdParkingRequest.ID,
 		UserID:      createdParkingRequest.UserID,
-		Destination: createdParkingRequest.Destination,
+		Destination: createdParkingRequest.DestinationParkingLotID,
 		StartTime:   createdParkingRequest.StartTime,
 		EndTime:     createdParkingRequest.EndTime,
 		Status:      createdParkingRequest.Status,
@@ -95,9 +94,9 @@ func TestParkingRequestCreateHandler_ServeHTTP_UnhappyPath_InternalError(t *test
 	handler := handlers.NewParkingRequestCreateHandler(mockFacade, testLogger)
 
 	testCreateParkingRequestRequest := models.CreateParkingRequestRequest{
-		Destination: "science",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(5),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
 	}
 
 	requestBody, err := json.Marshal(testCreateParkingRequestRequest)

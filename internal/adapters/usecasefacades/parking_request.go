@@ -17,17 +17,28 @@ type ParkingRequestStatusUpdater interface {
 	Execute(ctx context.Context, id uuid.UUID, status string) error
 }
 
+// ParkingRequestSpaceAssigner provides an interface implemented by UpdateParkingRequestSpace usecase.
+type ParkingRequestSpaceAssigner interface {
+	Execute(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error
+}
+
 // ParkingRequestFacade uses facade pattern to wrap parking request' usecases to allow for managing other things such as DB transactions if needed.
 type ParkingRequestFacade struct {
 	parkingRequestCreator        ParkingRequestCreator
 	parkgingRequestStatusUpdater ParkingRequestStatusUpdater
+	parkingRequestSpaceAssigner  ParkingRequestSpaceAssigner
 }
 
 // NewParkingRequestFacade creates a new instance of ParkingRequestFacade.
-func NewParkingRequestFacade(creator ParkingRequestCreator, updater ParkingRequestStatusUpdater) *ParkingRequestFacade {
+func NewParkingRequestFacade(
+	creator ParkingRequestCreator,
+	updater ParkingRequestStatusUpdater,
+	assigner ParkingRequestSpaceAssigner,
+) *ParkingRequestFacade {
 	return &ParkingRequestFacade{
 		parkingRequestCreator:        creator,
 		parkgingRequestStatusUpdater: updater,
+		parkingRequestSpaceAssigner:  assigner,
 	}
 }
 
@@ -39,4 +50,9 @@ func (s *ParkingRequestFacade) CreateParkingRequest(ctx context.Context, parking
 // UpdateParkingRequestStatus wraps the UpdateParkingRequestStatus usecase.
 func (s *ParkingRequestFacade) UpdateParkingRequestStatus(ctx context.Context, id uuid.UUID, status string) error {
 	return s.parkgingRequestStatusUpdater.Execute(ctx, id, status)
+}
+
+// AssignParkingSpace wraps the UpdateParkingRequestSpace usecase.
+func (s *ParkingRequestFacade) AssignParkingSpace(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error {
+	return s.parkingRequestSpaceAssigner.Execute(ctx, requestID, spaceID)
 }

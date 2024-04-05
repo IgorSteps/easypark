@@ -40,6 +40,7 @@ func (s *CreateParkingRequest) Execute(ctx context.Context, parkingRequest *enti
 }
 
 // validate validates the parking request.
+// TODO: check if the desired parking lot exists.
 func (s *CreateParkingRequest) validate(parkingRequest *entities.ParkingRequest) error {
 	if parkingRequest.StartTime.After(parkingRequest.EndTime) {
 		s.logger.WithFields(logrus.Fields{

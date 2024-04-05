@@ -9,17 +9,17 @@ import (
 
 // CreateParkingRequestRequest represent the data in an incoming HTTP request to create a parking request.
 type CreateParkingRequestRequest struct {
-	Destination string    `json:"destination"`
-	StartTime   time.Time `json:"startTime"`
-	EndTime     time.Time `json:"endTime"`
+	DestinationParkingLotID uuid.UUID `json:"destination"`
+	StartTime               time.Time `json:"startTime"`
+	EndTime                 time.Time `json:"endTime"`
 }
 
 // ToDomain converts CreateParkingRequestRequest into our domain type.
 func (s *CreateParkingRequestRequest) ToDomain() *entities.ParkingRequest {
 	return &entities.ParkingRequest{
-		Destination: s.Destination,
-		StartTime:   s.StartTime,
-		EndTime:     s.EndTime,
+		DestinationParkingLotID: s.DestinationParkingLotID,
+		StartTime:               s.StartTime,
+		EndTime:                 s.EndTime,
 	}
 }
 
@@ -27,7 +27,7 @@ func (s *CreateParkingRequestRequest) ToDomain() *entities.ParkingRequest {
 type CreateParkingRequestResponse struct {
 	ID          uuid.UUID                     `json:"id"`
 	UserID      uuid.UUID                     `json:"userId"`
-	Destination string                        `json:"destination"`
+	Destination uuid.UUID                     `json:"destination"`
 	StartTime   time.Time                     `json:"starttime"`
 	EndTime     time.Time                     `json:"endtime"`
 	Status      entities.ParkingRequestStatus `json:"status"`
