@@ -50,3 +50,13 @@ func (s *HandlerFactory) ParkingRequestCreate() http.Handler {
 func (s *HandlerFactory) ParkingRequestStatusUpdate() http.Handler {
 	return NewParkingRequestStatusHandler(s.facade.parkingRequestFacade, s.logger)
 }
+
+// AssignParkingSpace returns a new REST handler to assign a space to a parking request.
+func (s *HandlerFactory) AssignParkingSpace() http.Handler {
+	return NewParkingRequestSpaceHandler(s.facade.parkingRequestFacade, s.logger)
+}
+
+// ParkingLotCreate returns a new REST handler to create parking lots.
+func (s *HandlerFactory) ParkingLotCreate() http.Handler {
+	return NewParkingLotCreateHandler(s.logger, s.facade.parkingLotFacade)
+}

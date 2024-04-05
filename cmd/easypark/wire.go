@@ -22,6 +22,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	parkingLotUsecases "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	parkingRequestUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	userUsecases "github.com/IgorSteps/easypark/internal/usecases/user"
 	"github.com/google/wire"
@@ -42,6 +43,10 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(repositories.UserRepository), new(*datastore.UserPostgresRepository)),
 		datastore.NewParkingRequestPostgresRepository,
 		wire.Bind(new(repositories.ParkingRequestRepository), new(*datastore.ParkingRequestPostgresRepository)),
+		datastore.NewParkingSpacePostgresRepository,
+		wire.Bind(new(repositories.ParkingSpaceRepository), new(*datastore.ParkingSpacePostgresRepository)),
+		datastore.NewParkingParkingLotPostgresRepository,
+		wire.Bind(new(repositories.ParkingLotRepository), new(*datastore.ParkingLotPostgresRepository)),
 
 		// db
 		db.NewDatabaseFromConfig,
@@ -70,12 +75,20 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(usecasefacades.ParkingRequestCreator), new(*parkingRequestUsecases.CreateParkingRequest)),
 		parkingRequestUsecases.NewUpdateParkingRequestStatus,
 		wire.Bind(new(usecasefacades.ParkingRequestStatusUpdater), new(*parkingRequestUsecases.UpdateParkingRequestStatus)),
+		parkingRequestUsecases.NewUpdateParkingRequestSpace,
+		wire.Bind(new(usecasefacades.ParkingRequestSpaceAssigner), new(*parkingRequestUsecases.UpdateParkingRequestSpace)),
+
+		// parking lot
+		parkingLotUsecases.NewCreateParkingLot,
+		wire.Bind(new(usecasefacades.ParkingLotCreator), new(*parkingLotUsecases.CreateParkingLot)),
 
 		// facades
 		usecasefacades.NewUserFacade,
-		usecasefacades.NewParkingRequestFacade,
 		wire.Bind(new(handlers.UserFacade), new(*usecasefacades.UserFacade)),
+		usecasefacades.NewParkingRequestFacade,
 		wire.Bind(new(handlers.ParkingRequestFacade), new(*usecasefacades.ParkingRequestFacade)),
+		usecasefacades.NewParkingLotFacade,
+		wire.Bind(new(handlers.ParkingLotFacade), new(*usecasefacades.ParkingLotFacade)),
 		handlers.NewFacade,
 
 		// rest handlers and middleware

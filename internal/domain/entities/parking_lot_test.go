@@ -14,19 +14,17 @@ func TestParkingLot_OnCreate(t *testing.T) {
 	// --------
 	lot := entities.ParkingLot{}
 	testName := "cool name"
-	testLocation := "comp"
 	testCapacity := 10
 
 	// --------
 	// ACT
 	// --------
-	lot.OnCreate(testName, testLocation, testCapacity)
+	lot.OnCreate(testName, testCapacity)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.Equal(t, testName, lot.Name, "Parking lot names must match")
-	assert.Equal(t, testLocation, lot.Location, "Parking lot locations must match")
 	assert.Equal(t, testCapacity, lot.Capacity, "Parking lot capacities must match")
 
 	// Assert parking spaces were created correctly:

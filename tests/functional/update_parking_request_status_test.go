@@ -8,6 +8,7 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -28,9 +29,9 @@ func (s *TestApproveParkingRequestSuite) TestApproveParkingRequest_HappyPath() {
 	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
 
 	testRequest := &models.CreateParkingRequestRequest{
-		Destination: "science",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(555),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(555),
 	}
 
 	// Creating a parking request.
@@ -83,9 +84,9 @@ func (s *TestApproveParkingRequestSuite) TestRejectParkingRequest_HappyPath() {
 	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
 
 	testRequest := &models.CreateParkingRequestRequest{
-		Destination: "science",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(555),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(555),
 	}
 
 	// Creating a parking request.
@@ -138,9 +139,9 @@ func (s *TestApproveParkingRequestSuite) TestUpdateParkingRequest_UnhappyPath_Un
 	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
 
 	testRequest := &models.CreateParkingRequestRequest{
-		Destination: "science",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(555),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(555),
 	}
 
 	// Creating a parking request.

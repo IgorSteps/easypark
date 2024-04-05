@@ -10,6 +10,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	usecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	mocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,9 +21,9 @@ func TestCreateParkingRequest_HappyPath(t *testing.T) {
 	// --------
 	testContext := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
-		Destination: "comp",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(5),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
 	}
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingRequestRepository{}
@@ -50,9 +51,9 @@ func TestCreateParkingRequest_UnhappyPath_Invalid(t *testing.T) {
 	// --------
 	testContext := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
-		Destination: "comp",
-		StartTime:   time.Now().Add(50000), // make start time after end time to fail validation.
-		EndTime:     time.Now(),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now().Add(50000), // make start time after end time to fail validation.
+		EndTime:                 time.Now(),
 	}
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingRequestRepository{}
@@ -78,9 +79,9 @@ func TestCreateParkingRequest_UnhappyPath_RepositoryError(t *testing.T) {
 	// --------
 	testContext := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
-		Destination: "comp",
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(50),
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(50),
 	}
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingRequestRepository{}

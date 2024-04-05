@@ -22,28 +22,38 @@ type UserFacade interface {
 	BanDriver(ctx context.Context, id uuid.UUID) error
 }
 
+type ParkingLotFacade interface {
+	CreateParkingLot(ctx context.Context, name string, capacity int) (entities.ParkingLot, error)
+}
+
 // ParkingRequestFacade is provides an interface implemented by usecasefacades.ParkingRequestFacade.
 type ParkingRequestFacade interface {
 	// CreateParkingRequest is implemented by usecasefacades.ParkingRequestFacade that wraps parking request creation usecase.
 	CreateParkingRequest(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error)
 
-	// UpdateParkingRequestStatus is implemented  by usecasefacades.ParkingRequestFacade that wraps parking request update usecase.
+	// UpdateParkingRequestStatus is implemented by usecasefacades.ParkingRequestFacade that wraps parking request update usecase.
 	UpdateParkingRequestStatus(ctx context.Context, id uuid.UUID, status string) error
+
+	// AssignParkingSpace is implemented by usecasefacades.ParkingRequestFacade that wraps parking space assigment usecase.
+	AssignParkingSpace(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error
 }
 
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.
 type Facade struct {
 	userFacade           UserFacade
 	parkingRequestFacade ParkingRequestFacade
+	parkingLotFacade     ParkingLotFacade
 }
 
 // NewFacade returns new instance of Facade.
 func NewFacade(
 	uFacade UserFacade,
 	prFacade ParkingRequestFacade,
+	plFacade ParkingLotFacade,
 ) *Facade {
 	return &Facade{
 		userFacade:           uFacade,
 		parkingRequestFacade: prFacade,
+		parkingLotFacade:     plFacade,
 	}
 }

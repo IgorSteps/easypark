@@ -17,6 +17,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	usecases3 "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	usecases2 "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	"github.com/IgorSteps/easypark/internal/usecases/user"
 )
@@ -51,8 +52,13 @@ func SetupApp() (*App, error) {
 	parkingRequestPostgresRepository := datastore.NewParkingRequestPostgresRepository(gormWrapper, logrusLogger)
 	createParkingRequest := usecases2.NewCreateParkingRequest(logrusLogger, parkingRequestPostgresRepository)
 	updateParkingRequestStatus := usecases2.NewUpdateParkingRequestStatus(logrusLogger, parkingRequestPostgresRepository)
-	parkingRequestFacade := usecasefacades.NewParkingRequestFacade(createParkingRequest, updateParkingRequestStatus)
-	facade := handlers.NewFacade(userFacade, parkingRequestFacade)
+	parkingSpacePostgresRepository := datastore.NewParkingSpacePostgresRepository(logrusLogger, gormWrapper)
+	updateParkingRequestSpace := usecases2.NewUpdateParkingRequestSpace(logrusLogger, parkingRequestPostgresRepository, parkingSpacePostgresRepository)
+	parkingRequestFacade := usecasefacades.NewParkingRequestFacade(createParkingRequest, updateParkingRequestStatus, updateParkingRequestSpace)
+	parkingLotPostgresRepository := datastore.NewParkingParkingLotPostgresRepository(logrusLogger, gormWrapper)
+	createParkingLot := usecases3.NewCreateParkingLot(logrusLogger, parkingLotPostgresRepository)
+	parkingLotFacade := usecasefacades.NewParkingLotFacade(createParkingLot)
+	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
 	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)

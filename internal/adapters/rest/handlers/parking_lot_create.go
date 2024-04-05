@@ -9,36 +9,32 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// DriverCreateHandler provides a REST Handler implementation to create driver users and
-// implements http.Handler interface.
-type DriverCreateHandler struct {
+type ParkingLotCreateHandler struct {
 	logger *logrus.Logger
-	facade UserFacade
+	facade ParkingLotFacade
 }
 
-// NewDriverCreateHandler creates new instance of DriverCreateHandler.
-func NewDriverCreateHandler(f UserFacade, l *logrus.Logger) *DriverCreateHandler {
-	return &DriverCreateHandler{
+func NewParkingLotCreateHandler(l *logrus.Logger, f ParkingLotFacade) *ParkingLotCreateHandler {
+	return &ParkingLotCreateHandler{
 		logger: l,
 		facade: f,
 	}
 }
 
-// ServeHTTP handles incoming HTTP request to create users.
-func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var request models.UserCreationRequest
+// ServeHTTP handles incoming HTTP request to create a parking lot.
+func (s *ParkingLotCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var request models.CreateParkingLotRequest
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		s.logger.Error("failed to decode user creation request: ", err)
+		s.logger.Error("failed to decode parking lot creation request: ", err)
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	domainUser := request.ToDomain()
-	err = s.facade.CreateDriver(r.Context(), domainUser)
+	lot, err := s.facade.CreateParkingLot(r.Context(), request.Name, request.Capacity)
 	if err != nil {
-		s.logger.WithError(err).Error("failed to create user")
+		s.logger.WithError(err).Error("failed to create parking lot")
 
 		switch err.(type) {
 		case *repositories.ResourceAlreadyExistsError:
@@ -55,6 +51,11 @@ func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	resp := models.CreateUserResponse{Message: "user created successfully"}
+	resp := models.CreateParkingLotResponse{
+		ID:            lot.ID,
+		Name:          lot.Name,
+		Capacity:      lot.Capacity,
+		PakringSpaces: lot.ParkingSpaces,
+	}
 	json.NewEncoder(w).Encode(resp)
 }

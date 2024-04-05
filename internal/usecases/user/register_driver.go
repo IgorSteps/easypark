@@ -51,7 +51,7 @@ func (s *RegisterDriver) validate(ctx context.Context, user *entities.User) erro
 			"email":    user.Email,
 		}).Warn("user already exists")
 
-		return repositories.NewUserAlreadyExistsError(user.Username, user.Email)
+		return repositories.NewResourceAlreadyExistsError(user.Username)
 	}
 
 	return nil

@@ -32,9 +32,8 @@ func TestUserAlreadyExistsError(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	username := "testuser"
-	email := "testemail"
-	err := repositories.NewUserAlreadyExistsError(username, email)
-	expectedMsg := fmt.Sprintf("User '%s'/'%s' already exists", username, email)
+	err := repositories.NewResourceAlreadyExistsError(username)
+	expectedMsg := fmt.Sprintf("Resource '%s' already exists", username)
 
 	// ----
 	// ACT

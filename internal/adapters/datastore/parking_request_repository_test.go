@@ -28,13 +28,13 @@ func TestParkingRequestPostgresRepository_CreateParkingRequest_HappyPath(t *test
 	repository := datastore.NewParkingRequestPostgresRepository(mockDatastore, testLogger)
 	testCtx := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
-		ID:             uuid.New(),
-		UserID:         uuid.New(),
-		ParkingSpaceID: nil,
-		Destination:    "goom",
-		StartTime:      time.Now(),
-		EndTime:        time.Now().Add(5),
-		Status:         entities.RequestStatusPending,
+		ID:                      uuid.New(),
+		UserID:                  uuid.New(),
+		ParkingSpaceID:          nil,
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
+		Status:                  entities.RequestStatusPending,
 	}
 
 	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
@@ -63,13 +63,13 @@ func TestParkingRequestPostgresRepository_CreateParkingRequest_UnhappyPath(t *te
 	repository := datastore.NewParkingRequestPostgresRepository(mockDatastore, testLogger)
 	testCtx := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
-		ID:             uuid.New(),
-		UserID:         uuid.New(),
-		ParkingSpaceID: nil,
-		Destination:    "goom",
-		StartTime:      time.Now(),
-		EndTime:        time.Now().Add(5),
-		Status:         entities.RequestStatusPending,
+		ID:                      uuid.New(),
+		UserID:                  uuid.New(),
+		ParkingSpaceID:          nil,
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
+		Status:                  entities.RequestStatusPending,
 	}
 	testError := errors.New("boom")
 	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
@@ -104,22 +104,22 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequests_HappyPath(t *tes
 	testCtx := context.Background()
 	testParkingRequests := []entities.ParkingRequest{
 		{
-			ID:             uuid.New(),
-			UserID:         uuid.New(),
-			ParkingSpaceID: nil,
-			Destination:    "foo",
-			StartTime:      time.Now(),
-			EndTime:        time.Now().Add(5),
-			Status:         entities.RequestStatusPending,
+			ID:                      uuid.New(),
+			UserID:                  uuid.New(),
+			ParkingSpaceID:          nil,
+			DestinationParkingLotID: uuid.New(),
+			StartTime:               time.Now(),
+			EndTime:                 time.Now().Add(5),
+			Status:                  entities.RequestStatusPending,
 		},
 		{
-			ID:             uuid.New(),
-			UserID:         uuid.New(),
-			ParkingSpaceID: nil,
-			Destination:    "boo",
-			StartTime:      time.Now(),
-			EndTime:        time.Now().Add(5),
-			Status:         entities.RequestStatusPending,
+			ID:                      uuid.New(),
+			UserID:                  uuid.New(),
+			ParkingSpaceID:          nil,
+			DestinationParkingLotID: uuid.New(),
+			StartTime:               time.Now(),
+			EndTime:                 time.Now().Add(5),
+			Status:                  entities.RequestStatusPending,
 		},
 	}
 
@@ -192,22 +192,22 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequestsForUser_HappyPath
 	testUserID := uuid.New()
 	testParkingRequests := []entities.ParkingRequest{
 		{
-			ID:             uuid.New(),
-			UserID:         testUserID,
-			ParkingSpaceID: nil,
-			Destination:    "foo",
-			StartTime:      time.Now(),
-			EndTime:        time.Now().Add(5),
-			Status:         entities.RequestStatusPending,
+			ID:                      uuid.New(),
+			UserID:                  testUserID,
+			ParkingSpaceID:          nil,
+			DestinationParkingLotID: uuid.New(),
+			StartTime:               time.Now(),
+			EndTime:                 time.Now().Add(5),
+			Status:                  entities.RequestStatusPending,
 		},
 		{
-			ID:             uuid.New(),
-			UserID:         testUserID,
-			ParkingSpaceID: nil,
-			Destination:    "boo",
-			StartTime:      time.Now(),
-			EndTime:        time.Now().Add(5),
-			Status:         entities.RequestStatusPending,
+			ID:                      uuid.New(),
+			UserID:                  testUserID,
+			ParkingSpaceID:          nil,
+			DestinationParkingLotID: uuid.New(),
+			StartTime:               time.Now(),
+			EndTime:                 time.Now().Add(5),
+			Status:                  entities.RequestStatusPending,
 		},
 	}
 
@@ -282,13 +282,13 @@ func TestParkingRequestPostgresRepository_GetParkingRequestByID_HappyPath(t *tes
 	testCtx := context.Background()
 	testParkingRequestID := uuid.New()
 	testParkingRequest := entities.ParkingRequest{
-		ID:             testParkingRequestID,
-		UserID:         uuid.New(),
-		ParkingSpaceID: nil,
-		Destination:    "foo",
-		StartTime:      time.Now(),
-		EndTime:        time.Now().Add(5),
-		Status:         entities.RequestStatusPending,
+		ID:                      testParkingRequestID,
+		UserID:                  uuid.New(),
+		ParkingSpaceID:          nil,
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(5),
+		Status:                  entities.RequestStatusPending,
 	}
 
 	var request entities.ParkingRequest

@@ -18,7 +18,7 @@ Easpark is a REST API built with Clean Architecture. It provides a set of endpoi
 curl -X POST http://localhost:8080/login \
 -H "Content-Type: application/json" \
 -d '{
-    "Username": "user",
+    "Username": "johndoe",
     "Password": "securepassword"
 }'
 ```
@@ -184,9 +184,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
 
 ```bash
-curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
+curl -X POST http://localhost:8080/drivers/f4f6b2c5-30ee-47a5-9ce8-61394e7a3945/parking-requests \
 -H "Content-Type: application/json" \
--H "Authorization: Bearer <DRIVER_TOKEN>" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJmNGY2YjJjNS0zMGVlLTQ3YTUtOWNlOC02MTM5NGU3YTM5NDUiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJyb2xlIjoiZHJpdmVyIiwiZXhwIjoxNzEyMTczOTY5fQ.Cuvj7rvY5Fnfbj4qzBHVMLwR514FBNoOYRea8UpQMqQ" \
 -d '{
     "destination": "science",
     "startTime": "2024-05-01T09:00:00Z",
@@ -267,6 +267,64 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
     "Intenal error: some error message"
   }
   ```
+
+### 7. Update Parking Request Space API Endpoint
+
+**Endpoint**: `PATCH /parking-requests/{id}/space`
+
+**Description**: Update a parking request with a parking space.
+
+**Request Body**:
+
+```bash
+curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "parkingSpaceID": "desired parking space id"
+}'
+```
+
+### 8. Create Parking Lot API Endpoint
+
+**Endpoint**: `POST /parking-lots`
+
+**Description**: Create a parking lot.
+
+**Request Body**:
+
+```bash
+curl -X POST http://localhost:8080/parking-lots \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "name": "boom",
+    "capacity": 10
+}'
+```
+
+**Responses**:
+
+- **201 CREATED**
+
+```json
+  {
+    "id":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
+    "name":"science",
+    "capacity":10,
+    "parkingSpaces":[
+        {
+          "ID":"a2856678-3bfb-4ce2-a041-b5d0048d8993","ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054","Name":"science-1",
+          "Status":"available",
+          "FreeAt":"0001-01-01T00:00:00Z","OccupiedAt":"0001-01-01T00:00:00Z",
+          "UserID":null,
+          "ParkingRequests":null
+        },
+        {"other spaces..."}
+      ]
+  }
+```
+
 
 ## Running locally
 

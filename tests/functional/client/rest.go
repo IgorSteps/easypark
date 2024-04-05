@@ -10,6 +10,7 @@ import (
 	"os/exec"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -70,9 +71,19 @@ func (s *RestClientSuite) CreateParkingRequest(ctx context.Context, token, userI
 	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+userID+"/parking-requests", req, token)
 }
 
-// UpdateParkingRequestStatus interacts with the REST API to update a parkig request with the given requestID.
+// UpdateParkingRequestStatus interacts with the REST API to update a parking request with the given requestID.
 func (s *RestClientSuite) UpdateParkingRequestStatus(ctx context.Context, token, requestID string, req *models.UpdateParkingRequestStatusRequest) ([]byte, int, error) {
 	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-requests/"+requestID+"/status", req, token)
+}
+
+// CreateParkingLot interacts with the REST API to create a parking lot.
+func (s *RestClientSuite) CreateParkingLot(ctx context.Context, token string, req *models.CreateParkingLotRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/parking-lots", req, token)
+}
+
+// UpdateParkingRequestSpace interacts with the REST API to update a parking request with a parking space.
+func (s *RestClientSuite) UpdateParkingRequestSpace(ctx context.Context, token string, parkingReqID uuid.UUID, req *models.ParkingRequestSpaceUpdateRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-requests/"+parkingReqID.String()+"/space", req, token)
 }
 
 // sendRequest sends a HTTP request via provided method and path.

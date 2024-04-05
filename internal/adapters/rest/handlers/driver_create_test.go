@@ -109,7 +109,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_UserAlreadyExistsError(t *testi
 		Password:  "password",
 		Email:     testEmail,
 	}
-	testError := repositories.NewUserAlreadyExistsError(testUsername, testEmail)
+	testError := repositories.NewResourceAlreadyExistsError(testUsername)
 	testDomainUser := testUserReq.ToDomain()
 
 	requestBody, _ := json.Marshal(testUserReq)
@@ -127,7 +127,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_UserAlreadyExistsError(t *testi
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusBadRequest, rr.Code, "Response codes don't match, should be 400")
-	assert.Contains(t, rr.Body.String(), fmt.Sprintf("User '%s'/'%s' already exists", testUsername, testEmail), "Reponse bodies don't match")
+	assert.Contains(t, rr.Body.String(), fmt.Sprintf("Resource '%s' already exists", testUsername), "Reponse bodies don't match")
 
 	// Assert logger.
 	assert.Equal(t, 1, len(hook.Entries))
