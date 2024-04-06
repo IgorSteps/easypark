@@ -52,6 +52,11 @@ wire:
 coverage-report:
 	$(GO) tool cover -func=unit-test-coverage.out
 
+## coverage-interactive: opens interactive browser window to inspect unit test coverage report.
+.PHONY: coverage-interactive
+coverage-interactive:
+	$(GO) tool cover -html=unit-test-coverage.out
+
 ## functional: runs functional tests
 .PHONY: functional
 functional:
@@ -61,3 +66,8 @@ functional:
 .PHONY: checks
 checks:
 	make mocks
+
+## create-admin: creates an admin direcrly in the database.
+.PHONY: create-admin
+create-admin:
+	./build/createadmin.sh

@@ -57,13 +57,28 @@ Will be edited once problems appear.
 
 ## Testing
 
-To regenerate mocks for unit tests, run `make mocks`.
+- To regenerate mocks for unit tests, run `make mocks`.
 
-To run unit tests, run `make unit`.
+- To run unit tests, run `make unit`.
+  - To see unit test coverage, run `make coverage-report`. This will output a `unit-test-coverage.out` report that can be viewed in the browser using `make coverage-interactive`.
 
-To run functional tests, run `make functional`.
+- To run functional tests, run `make functional`.
 
 ## Useful things
+
+### CI pipeline (GitHub Actions)
+
+For every commit you make to your PRs, a GitHub [actions workflow](.github/workflows/go.yml) will get triggered that automatically runs tasks such as:
+
+- Building and running the app.
+- Unit and functionally testing the app.
+- Testing unit test coverage is above 70%.
+
+If any of the steps fail, the checks will fail and you will not be able to merge your PR unti you fix the issue.
+
+### Config Management
+
+Config values are specified in [here](./config.yaml). If edit it to include new key-value pairs, you must mirror that as respective struct fields in [here](/internal/drivers/config/config.go). Note that the keys in the yaml must match struct field names.
 
 ### Cleaning database tables
 
@@ -71,7 +86,7 @@ Run `make clean-db` to truncate existing tables. Note, you need to add new table
 
 ### Creating admin user
 
-Run the `./build/createadmin.sh` script to create a user with admin role in the database. This creates an admin with the following details:
+Run the `make create-admin` to create an admin directly in the database. This creates an admin with the following details:
 
 ```json
 {
