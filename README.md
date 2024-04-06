@@ -177,18 +177,18 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 **Endpoint**: `POST /drivers/{id}/parking-requests`
 
-**Description**: Creates a parkign request for the driver.
+**Description**: Creates a parking request for the driver.
 
 **Request Body**:
 
 Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
 
 ```bash
-curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
+curl -X POST http://localhost:8080/drivers/192ef0ce-5b65-4bd5-9ae5-ff1d6d46cf19/parking-requests \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "destination": "science",
+    "destination": "desired parking lot id",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z"
 }'
@@ -223,7 +223,23 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
   }
   ```
 
-### 6. Update Parking Request Status API Endpoint
+### 6. Get All Parking Request API Endpoint
+
+**Endpoint**: `GET /parking-requests`
+
+**Description**: Gets all parking requests.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-requests
+```
+
+**Responses**:
+
+- **200 OK**
+
+### 7. Update Parking Request Status API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
 
@@ -268,7 +284,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
   }
   ```
 
-### 7. Update Parking Request Space API Endpoint
+### 8. Update Parking Request Space API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/space`
 
@@ -285,7 +301,33 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
 }'
 ```
 
-### 8. Create Parking Lot API Endpoint
+**Responses**:
+
+- **400 BAD REQUEST**
+
+  ```json
+  {
+   "meaningful error message"
+  }
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {
+   "Interal error: meaningful error message"
+  }
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {
+   "start time cannot be after the end time"
+  }
+  ```
+
+### 9. Create Parking Lot API Endpoint
 
 **Endpoint**: `POST /parking-lots`
 

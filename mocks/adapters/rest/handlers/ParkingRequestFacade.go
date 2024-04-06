@@ -132,6 +132,64 @@ func (_c *ParkingRequestFacade_CreateParkingRequest_Call) RunAndReturn(run func(
 	return _c
 }
 
+// GetAllParkingRequests provides a mock function with given fields: ctx
+func (_m *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAllParkingRequests")
+	}
+
+	var r0 []entities.ParkingRequest
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]entities.ParkingRequest, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []entities.ParkingRequest); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.ParkingRequest)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ParkingRequestFacade_GetAllParkingRequests_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllParkingRequests'
+type ParkingRequestFacade_GetAllParkingRequests_Call struct {
+	*mock.Call
+}
+
+// GetAllParkingRequests is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *ParkingRequestFacade_Expecter) GetAllParkingRequests(ctx interface{}) *ParkingRequestFacade_GetAllParkingRequests_Call {
+	return &ParkingRequestFacade_GetAllParkingRequests_Call{Call: _e.mock.On("GetAllParkingRequests", ctx)}
+}
+
+func (_c *ParkingRequestFacade_GetAllParkingRequests_Call) Run(run func(ctx context.Context)) *ParkingRequestFacade_GetAllParkingRequests_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *ParkingRequestFacade_GetAllParkingRequests_Call) Return(_a0 []entities.ParkingRequest, _a1 error) *ParkingRequestFacade_GetAllParkingRequests_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ParkingRequestFacade_GetAllParkingRequests_Call) RunAndReturn(run func(context.Context) ([]entities.ParkingRequest, error)) *ParkingRequestFacade_GetAllParkingRequests_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateParkingRequestStatus provides a mock function with given fields: ctx, id, status
 func (_m *ParkingRequestFacade) UpdateParkingRequestStatus(ctx context.Context, id uuid.UUID, status string) error {
 	ret := _m.Called(ctx, id, status)

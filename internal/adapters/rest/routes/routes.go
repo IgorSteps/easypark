@@ -20,6 +20,8 @@ type HandlerFactory interface {
 	ParkingRequestCreate() http.Handler
 	ParkingRequestStatusUpdate() http.Handler
 	AssignParkingSpace() http.Handler
+	GetAllParkingRequests() http.Handler
+
 	ParkingLotCreate() http.Handler
 }
 
@@ -59,6 +61,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
 		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
 		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
+		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
 	})
 
 	return router
