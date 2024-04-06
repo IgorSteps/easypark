@@ -23,21 +23,33 @@ func (_m *DriverCreator) EXPECT() *DriverCreator_Expecter {
 }
 
 // Execute provides a mock function with given fields: ctx, user
-func (_m *DriverCreator) Execute(ctx context.Context, user *entities.User) error {
+func (_m *DriverCreator) Execute(ctx context.Context, user *entities.User) (*entities.User, error) {
 	ret := _m.Called(ctx, user)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Execute")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *entities.User) error); ok {
+	var r0 *entities.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.User) (*entities.User, error)); ok {
+		return rf(ctx, user)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.User) *entities.User); ok {
 		r0 = rf(ctx, user)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(context.Context, *entities.User) error); ok {
+		r1 = rf(ctx, user)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // DriverCreator_Execute_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Execute'
@@ -59,12 +71,12 @@ func (_c *DriverCreator_Execute_Call) Run(run func(ctx context.Context, user *en
 	return _c
 }
 
-func (_c *DriverCreator_Execute_Call) Return(_a0 error) *DriverCreator_Execute_Call {
-	_c.Call.Return(_a0)
+func (_c *DriverCreator_Execute_Call) Return(_a0 *entities.User, _a1 error) *DriverCreator_Execute_Call {
+	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *DriverCreator_Execute_Call) RunAndReturn(run func(context.Context, *entities.User) error) *DriverCreator_Execute_Call {
+func (_c *DriverCreator_Execute_Call) RunAndReturn(run func(context.Context, *entities.User) (*entities.User, error)) *DriverCreator_Execute_Call {
 	_c.Call.Return(run)
 	return _c
 }

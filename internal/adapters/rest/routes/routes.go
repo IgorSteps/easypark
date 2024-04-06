@@ -21,6 +21,7 @@ type HandlerFactory interface {
 	ParkingRequestStatusUpdate() http.Handler
 	AssignParkingSpace() http.Handler
 	GetAllParkingRequests() http.Handler
+	GetAllParkingRequestsForDriver() http.Handler
 
 	ParkingLotCreate() http.Handler
 }
@@ -51,6 +52,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 			w.Write([]byte("Welcome, Driver!"))
 		})
 		r.Method(http.MethodPost, "/drivers/{id}/parking-requests", handlerFactory.ParkingRequestCreate())
+		r.Method(http.MethodGet, "/drivers/{id}/parking-requests", handlerFactory.GetAllParkingRequestsForDriver())
 	})
 
 	// Admin routes

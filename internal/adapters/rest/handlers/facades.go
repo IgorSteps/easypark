@@ -10,7 +10,7 @@ import (
 // UserFacade is provides an interface implemented by usecasefacades.UserFacade.
 type UserFacade interface {
 	// CreateDriver is implemented by usecasefacades.UserFacade that wraps driver user creation usecase.
-	CreateDriver(ctx context.Context, driver *entities.User) error
+	CreateDriver(ctx context.Context, driver *entities.User) (*entities.User, error)
 
 	// AuthoriseUser is implemented by usecasefacades.UserFacade that wraps user login usecase.
 	AuthoriseUser(ctx context.Context, username, password string) (string, error)

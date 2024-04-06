@@ -9,6 +9,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/IgorSteps/easypark/tests/functional/utils"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
@@ -24,10 +25,8 @@ func (s *TestGetAllParkingRequestsSuite) TestGetAllParkingRequests_HappyPath() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Populate db with mock data.
-	err := PopulateUsers(ctx, &s.RestClientSuite)
-	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
+	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
 	// Create 10 parking requests:
 	for i := 0; i < 10; i++ {
@@ -36,7 +35,7 @@ func (s *TestGetAllParkingRequestsSuite) TestGetAllParkingRequests_HappyPath() {
 			StartTime:               time.Now(),
 			EndTime:                 time.Now().Add(555),
 		}
-		_, respCode, err := s.CreateParkingRequest(ctx, userToken, userID.String(), testRequest)
+		_, respCode, err := s.CreateParkingRequest(ctx, driverToken, driver.ID.String(), testRequest)
 		s.Require().NoError(err, "Creating new parking request must not return an error")
 		s.Require().Equal(http.StatusCreated, respCode, "Response code must be 201 CREATED")
 	}

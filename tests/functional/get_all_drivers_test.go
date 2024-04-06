@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/IgorSteps/easypark/tests/functional/utils"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -20,9 +21,9 @@ func (s *TestGetAllDriversSuite) TestGetAllDrivers_HappyPath() {
 	// --------
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	err := PopulateUsers(ctx, &s.RestClientSuite)
+	err := utils.PopulateUsers(ctx, &s.RestClientSuite)
 	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	token := CreateAdmin(ctx, &s.RestClientSuite)
+	token := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
 	// --------
 	// ACT

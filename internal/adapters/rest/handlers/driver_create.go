@@ -36,7 +36,7 @@ func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	}
 
 	domainUser := request.ToDomain()
-	err = s.facade.CreateDriver(r.Context(), domainUser)
+	driver, err := s.facade.CreateDriver(r.Context(), domainUser)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to create user")
 
@@ -55,6 +55,5 @@ func (s *DriverCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	resp := models.CreateUserResponse{Message: "user created successfully"}
-	json.NewEncoder(w).Encode(resp)
+	json.NewEncoder(w).Encode(driver)
 }

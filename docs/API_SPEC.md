@@ -84,7 +84,14 @@ curl -X POST http://localhost:8080/register \
 
     ```json
     {
-      "message": "user created successfully"
+      "ID":"3149cc94-3f9e-49f3-8dc8-516cdd03852d",
+      "Username":"johndoe",
+      "Email":"john.doe@example.com",
+      "Password":"securepassword",
+      "FirstName":"John",
+      "LastName":"Doe",
+      "Status":"active",
+      "Role":"driver"
     }
     ```
 
@@ -173,7 +180,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 ## Parking request
 
-### 5. Create Parking Request API Endpoint
+### 1. Create Parking Request API Endpoint
 
 **Endpoint**: `POST /drivers/{id}/parking-requests`
 
@@ -184,11 +191,11 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
 
 ```bash
-curl -X POST http://localhost:8080/drivers/{id}parking-requests \
+curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "destination": "desired parking lot id",
+    "destination": "d56541a1-335b-49cb-84bb-672009ecf580",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z"
 }'
@@ -223,7 +230,7 @@ curl -X POST http://localhost:8080/drivers/{id}parking-requests \
   }
   ```
 
-### 6. Get All Parking Request API Endpoint
+### 2. Get All Parking Request API Endpoint
 
 **Endpoint**: `GET /parking-requests`
 
@@ -271,7 +278,55 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
   }
 ```
 
-### 7. Update Parking Request Status API Endpoint
+### 3. Get All Parking Requests for Driver API Endpoint
+
+**Endpoint**: `GET /drivers/{id}/parking-requests`
+
+**Description**: Gets all parking requests for a particular driver.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/drivers/{id}/parking-requests
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+    [
+      {
+        "ID":"8275277b-0ec2-4cbf-9129-79a76194fe2e",
+        "UserID":"drivers id",
+        "ParkingSpaceID":null,
+        "DestinationParkingLotID":"714a2875-d358-423b-83b2-72a701a82492",
+        "StartTime":"2024-04-06T16:59:09.441792+01:00",
+        "EndTime":"2024-04-06T16:59:09.441792+01:00",
+        "Status":"pending"
+      },
+      {
+        "ID":"e071153e-9f5b-409e-8451-457e64dba8a2",
+        "UserID":"drivers id",
+        "ParkingSpaceID":null,
+        "DestinationParkingLotID":"2fa0a013-9d29-451c-9b04-0e65c5c82990",
+        "StartTime":"2024-04-06T16:59:09.443992",
+        "EndTime":"2024-04-06T16:59:09.441792+01:00",
+        "Status":"pending"
+      },
+      {"their others requests..."}
+    ]
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+```json
+  {
+    "meaningful error message"
+  }
+```
+
+### 4. Update Parking Request Status API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
 
@@ -316,7 +371,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
   }
   ```
 
-### 8. Update Parking Request Space API Endpoint
+### 5. Update Parking Request Space API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/space`
 
@@ -361,7 +416,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
 
 ## Parking Lot
 
-### 9. Create Parking Lot API Endpoint
+### 1. Create Parking Lot API Endpoint
 
 **Endpoint**: `POST /parking-lots`
 
