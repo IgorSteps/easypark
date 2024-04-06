@@ -8,6 +8,7 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/IgorSteps/easypark/tests/functional/utils"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
@@ -23,29 +24,11 @@ func (s *TestApproveParkingRequestSuite) TestApproveParkingRequest_HappyPath() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Populate db with mock data.
-	err := PopulateUsers(ctx, &s.RestClientSuite)
-	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
+	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
-	testRequest := &models.CreateParkingRequestRequest{
-		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(555),
-	}
-
-	// Creating a parking request.
-	respBody, respCode, err := s.CreateParkingRequest(ctx, userToken, userID.String(), testRequest)
-	s.Require().NoError(err, "Creating a parking request shouldn't return an error")
-	s.Require().Equal(http.StatusCreated, respCode, "Create parking request should return 201 code")
-
-	// Unmarshall response body.
-	var targetModel models.CreateParkingRequestResponse
-	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
-	if err != nil {
-		s.T().Fail()
-	}
-	parkingRequestID := targetModel.ID
+	// Create parking request.
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
 
 	updateRequst := &models.UpdateParkingRequestStatusRequest{
 		Status: "approved",
@@ -54,7 +37,7 @@ func (s *TestApproveParkingRequestSuite) TestApproveParkingRequest_HappyPath() {
 	// --------
 	// ACT
 	// --------
-	respBody, respCode, err = s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequestID.String(), updateRequst)
+	respBody, respCode, err := s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequest.ID.String(), updateRequst)
 
 	// --------
 	// ASSERT
@@ -78,29 +61,11 @@ func (s *TestApproveParkingRequestSuite) TestRejectParkingRequest_HappyPath() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Populate db with mock data.
-	err := PopulateUsers(ctx, &s.RestClientSuite)
-	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
+	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
-	testRequest := &models.CreateParkingRequestRequest{
-		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(555),
-	}
-
-	// Creating a parking request.
-	respBody, respCode, err := s.CreateParkingRequest(ctx, userToken, userID.String(), testRequest)
-	s.Require().NoError(err, "Creating a parking request shouldn't return an error")
-	s.Require().Equal(http.StatusCreated, respCode, "Create parking request should return 201 code")
-
-	// Unmarshall response body.
-	var targetModel models.CreateParkingRequestResponse
-	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
-	if err != nil {
-		s.T().Fail()
-	}
-	parkingRequestID := targetModel.ID
+	// Create parking request.
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
 
 	updateRequst := &models.UpdateParkingRequestStatusRequest{
 		Status: "rejected",
@@ -109,7 +74,7 @@ func (s *TestApproveParkingRequestSuite) TestRejectParkingRequest_HappyPath() {
 	// --------
 	// ACT
 	// --------
-	respBody, respCode, err = s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequestID.String(), updateRequst)
+	respBody, respCode, err := s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequest.ID.String(), updateRequst)
 
 	// --------
 	// ASSERT
@@ -133,29 +98,11 @@ func (s *TestApproveParkingRequestSuite) TestUpdateParkingRequest_UnhappyPath_Un
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Populate db with mock data.
-	err := PopulateUsers(ctx, &s.RestClientSuite)
-	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, adminToken, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
+	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
-	testRequest := &models.CreateParkingRequestRequest{
-		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(555),
-	}
-
-	// Creating a parking request.
-	respBody, respCode, err := s.CreateParkingRequest(ctx, userToken, userID.String(), testRequest)
-	s.Require().NoError(err, "Creating a parking request shouldn't return an error")
-	s.Require().Equal(http.StatusCreated, respCode, "Create parking request should return 201 code")
-
-	// Unmarshall response body.
-	var targetModel models.CreateParkingRequestResponse
-	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
-	if err != nil {
-		s.T().Fail()
-	}
-	parkingRequestID := targetModel.ID
+	// Create parking request.
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
 
 	updateRequst := &models.UpdateParkingRequestStatusRequest{
 		Status: "boom",
@@ -164,7 +111,7 @@ func (s *TestApproveParkingRequestSuite) TestUpdateParkingRequest_UnhappyPath_Un
 	// --------
 	// ACT
 	// --------
-	respBody, respCode, err = s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequestID.String(), updateRequst)
+	respBody, respCode, err := s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequest.ID.String(), updateRequst)
 
 	// --------
 	// ASSERT

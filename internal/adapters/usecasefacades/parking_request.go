@@ -12,9 +12,14 @@ type ParkingRequestCreator interface {
 	Execute(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error)
 }
 
-// ParkingRequestsGetter provides an interface implemented by the GetAllParkingRequests usecase.
-type ParkingRequestsGetter interface {
+// ParkingRequestsAllGetter provides an interface implemented by the GetAllParkingRequests usecase.
+type ParkingRequestsAllGetter interface {
 	Execute(ctx context.Context) ([]entities.ParkingRequest, error)
+}
+
+// ParkingRequestDriversGetter provides an interface implemented by the GetDriversParkingRequests usecase.
+type ParkingRequestDriversGetter interface {
+	Execute(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error)
 }
 
 // ParkingRequestUpdater provides an interface implemented by UpdateParkingRequest usecase.
@@ -32,7 +37,8 @@ type ParkingRequestFacade struct {
 	parkingRequestCreator        ParkingRequestCreator
 	parkgingRequestStatusUpdater ParkingRequestStatusUpdater
 	parkingRequestSpaceAssigner  ParkingRequestSpaceAssigner
-	parkingRequestGetter         ParkingRequestsGetter
+	parkingRequestAllGetter      ParkingRequestsAllGetter
+	parkingRequestDriversGetter  ParkingRequestDriversGetter
 }
 
 // NewParkingRequestFacade creates a new instance of ParkingRequestFacade.
@@ -40,13 +46,15 @@ func NewParkingRequestFacade(
 	creator ParkingRequestCreator,
 	updater ParkingRequestStatusUpdater,
 	assigner ParkingRequestSpaceAssigner,
-	getter ParkingRequestsGetter,
+	allGetter ParkingRequestsAllGetter,
+	specificGetter ParkingRequestDriversGetter,
 ) *ParkingRequestFacade {
 	return &ParkingRequestFacade{
 		parkingRequestCreator:        creator,
 		parkgingRequestStatusUpdater: updater,
 		parkingRequestSpaceAssigner:  assigner,
-		parkingRequestGetter:         getter,
+		parkingRequestAllGetter:      allGetter,
+		parkingRequestDriversGetter:  specificGetter,
 	}
 }
 
@@ -67,5 +75,10 @@ func (s *ParkingRequestFacade) AssignParkingSpace(ctx context.Context, requestID
 
 // GetAllParkingRequests wraps the GetAllParkingRequests usecase.
 func (s *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
-	return s.parkingRequestGetter.Execute(ctx)
+	return s.parkingRequestAllGetter.Execute(ctx)
+}
+
+// GetDriversParkingRequests wrpas the GetDriversParkingRequests usecase.
+func (s *ParkingRequestFacade) GetDriversParkingRequests(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error) {
+	return s.parkingRequestDriversGetter.Execute(ctx, id)
 }

@@ -10,7 +10,7 @@ import (
 // UserFacade is provides an interface implemented by usecasefacades.UserFacade.
 type UserFacade interface {
 	// CreateDriver is implemented by usecasefacades.UserFacade that wraps driver user creation usecase.
-	CreateDriver(ctx context.Context, driver *entities.User) error
+	CreateDriver(ctx context.Context, driver *entities.User) (*entities.User, error)
 
 	// AuthoriseUser is implemented by usecasefacades.UserFacade that wraps user login usecase.
 	AuthoriseUser(ctx context.Context, username, password string) (string, error)
@@ -39,6 +39,9 @@ type ParkingRequestFacade interface {
 
 	// GetAllParkingRequests is implemented by usecasefacades.ParkingRequestFacade that wraps getting all parking requests.
 	GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error)
+
+	// GetDriversParkingRequests is implemented by usecasefacades.ParkingRequestFacade that wraps getting parking requests for particular driver.
+	GetDriversParkingRequests(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error)
 }
 
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.

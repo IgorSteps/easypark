@@ -91,6 +91,11 @@ func (s *RestClientSuite) GetAllParkingRequests(ctx context.Context, token strin
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/parking-requests", nil, token)
 }
 
+// GetDriversParkingRequests interacts with the REST API to get all parking requests.
+func (s *RestClientSuite) GetDriversParkingRequests(ctx context.Context, driverToken string, driverID uuid.UUID) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodGet, "/drivers/"+driverID.String()+"/parking-requests", nil, driverToken)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)

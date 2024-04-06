@@ -12,12 +12,13 @@ import (
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	mocks "github.com/IgorSteps/easypark/mocks/adapters/rest/handlers"
+	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParkingRequestsGetHandler_ServeHTTP_HappyPath(t *testing.T) {
+func TestDriversParkingRequestsGetHandler_ServeHTTP_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -40,12 +41,20 @@ func TestParkingRequestsGetHandler_ServeHTTP_HappyPath(t *testing.T) {
 		},
 	}
 
-	testCtx := context.Background()
-	handler := handlers.NewParkingRequestsGetHandler(testLogger, mockFacade)
-	mockFacade.EXPECT().GetAllParkingRequests(testCtx).Return(testParkRequests, nil).Once()
+	handler := handlers.NewDriversParkingRequestsGetHandler(testLogger, mockFacade)
+	testID := uuid.New()
 
-	req, _ := http.NewRequest("GET", "/parking-requests", bytes.NewBuffer(nil))
+	// Because we are directly calling the handler in the test without going through a router that parses the URL parameters,
+	// we have to manually insert the URL parameters into the request context.
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", testID.String())
+
+	// Create our request context with the formatted chi context.
+	reqCtx := context.WithValue(context.Background(), chi.RouteCtxKey, rctx)
+	req, _ := http.NewRequestWithContext(reqCtx, "GET", "/drivers/"+testID.String()+"/parking-requests", bytes.NewBuffer(nil))
 	rr := httptest.NewRecorder()
+
+	mockFacade.EXPECT().GetDriversParkingRequests(reqCtx, testID).Return(testParkRequests, nil).Once()
 
 	// --------
 	// ACT
@@ -66,7 +75,7 @@ func TestParkingRequestsGetHandler_ServeHTTP_HappyPath(t *testing.T) {
 	mockFacade.AssertExpectations(t)
 }
 
-func TestParkingRequestsGetHandler_ServeHTTP_UnhappyPath(t *testing.T) {
+func TestDriversParkingRequestsGetHandler_ServeHTTP_UnhappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -76,13 +85,20 @@ func TestParkingRequestsGetHandler_ServeHTTP_UnhappyPath(t *testing.T) {
 	// Don't set times here because they break tests.
 	testParkRequests := []entities.ParkingRequest{}
 
-	testCtx := context.Background()
-	testErr := repositories.NewInvalidInputError("boom")
-	handler := handlers.NewParkingRequestsGetHandler(testLogger, mockFacade)
-	mockFacade.EXPECT().GetAllParkingRequests(testCtx).Return(testParkRequests, testErr).Once()
+	handler := handlers.NewDriversParkingRequestsGetHandler(testLogger, mockFacade)
+	testID := uuid.New()
 
-	req, _ := http.NewRequest("GET", "/parking-requests", bytes.NewBuffer(nil))
+	// Because we are directly calling the handler in the test without going through a router that parses the URL parameters,
+	// we have to manually insert the URL parameters into the request context.
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", testID.String())
+
+	// Create our request context with the formatted chi context.
+	reqCtx := context.WithValue(context.Background(), chi.RouteCtxKey, rctx)
+	req, _ := http.NewRequestWithContext(reqCtx, "GET", "/drivers/"+testID.String()+"/parking-requests", bytes.NewBuffer(nil))
 	rr := httptest.NewRecorder()
+
+	mockFacade.EXPECT().GetDriversParkingRequests(reqCtx, testID).Return(testParkRequests, repositories.NewInternalError("boom")).Once()
 
 	// --------
 	// ACT
@@ -93,6 +109,6 @@ func TestParkingRequestsGetHandler_ServeHTTP_UnhappyPath(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusInternalServerError, rr.Code, "Response codes don't match, should be 500")
-	assert.Equal(t, "boom\n", rr.Body.String(), "Response body is wrong")
+	assert.Equal(t, "Internal error: boom\n", rr.Body.String(), "Response body is wrong")
 	mockFacade.AssertExpectations(t)
 }

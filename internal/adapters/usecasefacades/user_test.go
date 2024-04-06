@@ -49,17 +49,18 @@ func TestUsecaseFacade_CreateDriver_HappyPath(t *testing.T) {
 		LastName:  "smith",
 	}
 
-	s.mockDriverCreator.EXPECT().Execute(ctx, testUser).Return(nil).Once()
+	s.mockDriverCreator.EXPECT().Execute(ctx, testUser).Return(CreateTestUser(), nil).Once()
 
 	// --------
 	// ACT
 	// --------
-	err := facade.CreateDriver(ctx, testUser)
+	driver, err := facade.CreateDriver(ctx, testUser)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.Nil(t, err, "Error must be nil")
+	assert.NotNil(t, driver, "Driver cannot be nil")
 	s.mockDriverCreator.AssertExpectations(t)
 }
 
@@ -85,17 +86,18 @@ func TestUsecasefacade_CreateDriver_UnhappyPath(t *testing.T) {
 	}
 	testError := errors.New("boom")
 
-	s.mockDriverCreator.EXPECT().Execute(ctx, testUser).Return(testError).Once()
+	s.mockDriverCreator.EXPECT().Execute(ctx, testUser).Return(nil, testError).Once()
 
 	// --------
 	// ACT
 	// --------
-	err := facade.CreateDriver(ctx, testUser)
+	driver, err := facade.CreateDriver(ctx, testUser)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
+	assert.Nil(t, driver, "Driver must be nil")
 	assert.Equal(t, testError, err, "Expected and actual errors don't match")
 	s.mockDriverCreator.AssertExpectations(t)
 }
@@ -280,4 +282,16 @@ func TestUsecasefacade_BanDriver_UnhappyPath(t *testing.T) {
 	assert.NotNil(t, err, "Error must be nil")
 	assert.EqualError(t, err, testError.Error())
 	s.mockDriverBanner.AssertExpectations(t)
+}
+
+func CreateTestUser() *entities.User {
+	return &entities.User{
+		ID:        uuid.New(),
+		Username:  "boom",
+		Email:     "bom",
+		Password:  "foo",
+		FirstName: "john",
+		LastName:  "smith",
+		Role:      entities.RoleDriver,
+	}
 }

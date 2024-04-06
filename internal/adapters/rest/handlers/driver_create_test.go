@@ -10,8 +10,10 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/handlers"
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	mocks "github.com/IgorSteps/easypark/mocks/adapters/rest/handlers"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
@@ -39,7 +41,8 @@ func TestUserCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(nil).Once()
+	testUser := CreateTestUser()
+	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(testUser, nil).Once()
 
 	// --------
 	// ACT
@@ -50,7 +53,11 @@ func TestUserCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.Equal(t, http.StatusCreated, rr.Code, "Response codes don't match, should be 201 CREATED")
-	assert.Contains(t, rr.Body.String(), "user created successfully", "Reponse bodies don't match")
+
+	var targetModel entities.User
+	err := json.Unmarshal(rr.Body.Bytes(), &targetModel)
+	assert.NoError(t, err, "Failed to unmarshall response body")
+	assert.Equal(t, testUser, &targetModel, "Reponse bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
 
@@ -116,7 +123,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_UserAlreadyExistsError(t *testi
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(testError).Once()
+	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(nil, testError).Once()
 
 	// --------
 	// ACT
@@ -164,7 +171,7 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_InternalError(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(testError).Once()
+	mockFacade.EXPECT().CreateDriver(req.Context(), testDomainUser).Return(nil, testError).Once()
 
 	// --------
 	// ACT
@@ -187,4 +194,16 @@ func TestUserCreateHandler_ServeHTTP_UnhappyPath_InternalError(t *testing.T) {
 	assert.Nil(t, hook.LastEntry())
 
 	mockFacade.AssertExpectations(t)
+}
+
+func CreateTestUser() *entities.User {
+	return &entities.User{
+		ID:        uuid.New(),
+		Username:  "boom",
+		Email:     "bom",
+		Password:  "foo",
+		FirstName: "john",
+		LastName:  "smith",
+		Role:      entities.RoleDriver,
+	}
 }

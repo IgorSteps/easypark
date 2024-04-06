@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
 	"github.com/stretchr/testify/suite"
 )
@@ -39,12 +40,14 @@ func (s *TestCreateUserSuite) TestCreateUser_HappyPath() {
 	// ------
 	s.Require().NoError(err, "Creating user should not return an error")
 
-	var targetModel models.CreateUserResponse
+	var targetModel entities.User
 	err = s.UnmarshalHTTPResponse(responseBody, &targetModel)
 	if err != nil {
 		s.T().Fail()
 	}
-	s.Require().Equal("user created successfully", targetModel.Message, "Response body message is wrong")
+	s.Require().Equal(createUserReq.Username, targetModel.Username, "Response body username is wrong")
+	s.Require().Equal(createUserReq.Email, targetModel.Email, "Response body username is wrong")
+	s.Require().Equal(createUserReq.Password, targetModel.Password, "Response body username is wrong")
 	s.Require().Equal(http.StatusCreated, responseCode, "Response code is wrong")
 }
 
@@ -80,12 +83,15 @@ func (s *TestCreateUserSuite) TestCreateUser_UnhappyPath_UserAlreadyExists() {
 	// ------
 	s.Require().NoError(err, "Creating user 1 should not return an error")
 
-	var targetModel models.CreateUserResponse
+	var targetModel entities.User
 	err = s.UnmarshalHTTPResponse(responseBody, &targetModel)
 	if err != nil {
 		s.T().Fail()
 	}
-	s.Require().Equal("user created successfully", targetModel.Message, "Response body 1 message is wrong")
+	s.Require().Equal(createUserReq1.Username, targetModel.Username, "Response body username is wrong")
+	s.Require().Equal(createUserReq1.Email, targetModel.Email, "Response body username is wrong")
+	s.Require().Equal(createUserReq1.Password, targetModel.Password, "Response body username is wrong")
+
 	s.Require().Equal(http.StatusCreated, responseCode, "Response code 1 is wrong")
 
 	s.Require().NoError(err2, "Creating user 2 should not return an error")

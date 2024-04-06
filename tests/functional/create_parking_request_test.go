@@ -9,6 +9,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/IgorSteps/easypark/tests/functional/utils"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
@@ -24,10 +25,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_HappyPath() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Populate db with mock data.
-	err := PopulateUsers(ctx, &s.RestClientSuite)
-	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, _, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	testRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: uuid.New(),
@@ -38,7 +36,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_HappyPath() {
 	// --------
 	// ACT
 	// --------
-	respBody, respCode, err := s.CreateParkingRequest(ctx, userToken, userID.String(), testRequest)
+	respBody, respCode, err := s.CreateParkingRequest(ctx, driverToken, driver.ID.String(), testRequest)
 
 	// --------
 	// ASSERT
@@ -62,10 +60,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidI
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Populate db with mock data.
-	err := PopulateUsers(ctx, &s.RestClientSuite)
-	s.Require().NoError(err, "Populating system with mock user data shouldn't return an error")
-	userID, _, userToken := GetUserIDAndToken(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	testRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: uuid.New(),
@@ -76,7 +71,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidI
 	// --------
 	// ACT
 	// --------
-	respBody, respCode, err := s.CreateParkingRequest(ctx, userToken, userID.String(), testRequest)
+	respBody, respCode, err := s.CreateParkingRequest(ctx, driverToken, driver.ID.String(), testRequest)
 
 	// --------
 	// ASSERT

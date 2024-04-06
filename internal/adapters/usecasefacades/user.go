@@ -9,7 +9,7 @@ import (
 
 // DriverCreator provides an interface implemented by the RegisterDriver usecase.
 type DriverCreator interface {
-	Execute(ctx context.Context, user *entities.User) error
+	Execute(ctx context.Context, user *entities.User) (*entities.User, error)
 }
 
 // UserAuthenticator provides an interface implemented by the AuthenticateUser usecase.
@@ -51,7 +51,7 @@ func NewUserFacade(
 }
 
 // CreateDriver wraps the RegisterDriver usecase.
-func (s *UserFacade) CreateDriver(ctx context.Context, user *entities.User) error {
+func (s *UserFacade) CreateDriver(ctx context.Context, user *entities.User) (*entities.User, error) {
 	return s.driverCreator.Execute(ctx, user)
 }
 

@@ -8,6 +8,7 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/IgorSteps/easypark/tests/functional/utils"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -23,7 +24,7 @@ func (s *TestCreateParkingLot) TestCreateParkingLot_HappyPath() {
 	defer cancel()
 
 	// Created admin
-	adminToken := CreateAdmin(ctx, &s.RestClientSuite)
+	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 	testRequest := &models.CreateParkingLotRequest{
 		Name:     "science",
 		Capacity: 10,
@@ -60,7 +61,7 @@ func (s *TestCreateParkingLot) TestCreateParkingLot_UnhappyPath_AlreadyExists() 
 	defer cancel()
 
 	// Created admin
-	adminToken := CreateAdmin(ctx, &s.RestClientSuite)
+	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 	testRequest := &models.CreateParkingLotRequest{
 		Name:     "science",
 		Capacity: 10,

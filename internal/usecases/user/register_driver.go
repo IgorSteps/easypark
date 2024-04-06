@@ -23,19 +23,19 @@ func NewRegisterDriver(logger *logrus.Logger, repo repositories.UserRepository) 
 }
 
 // Execute runs the usecase business logic.
-func (s *RegisterDriver) Execute(ctx context.Context, user *entities.User) error {
+func (s *RegisterDriver) Execute(ctx context.Context, user *entities.User) (*entities.User, error) {
 	err := s.validate(ctx, user)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	user.SetOnCreate()
 	err = s.UserRepository.CreateUser(ctx, user)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return user, err
 }
 
 // Validate checks if the user already exists using their email or username.

@@ -36,13 +36,13 @@ func TestRegisterUser_HappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := usecase.Execute(ctx, testUser)
+	driver, err := usecase.Execute(ctx, testUser)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.Nil(t, err, "Error must be nil")
-
+	assert.NotNil(t, driver, "Driver cannot be nil")
 	// Assert logger.
 	assert.Equal(t, 0, len(hook.Entries))
 	hook.Reset()
@@ -66,12 +66,13 @@ func TestRegisterUser_UnhappyPath_UserExists(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := usecase.Execute(ctx, testUser)
+	driver, err := usecase.Execute(ctx, testUser)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
+	assert.Nil(t, driver, "Driver must be nil")
 	assert.Equal(t, err.Error(), "Resource 'what' already exists")
 
 	// Assert logger.
@@ -103,13 +104,14 @@ func TestRegisterUser_UnhappyPath_CreateUser_Fails(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := usecase.Execute(ctx, testUser)
+	driver, err := usecase.Execute(ctx, testUser)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.Equal(t, err, testError)
+	assert.Nil(t, driver, "Driver must be nil")
 
 	// Assert logger.
 	assert.Equal(t, 0, len(hook.Entries))
@@ -135,13 +137,14 @@ func TestRegisterUser_UnhappyPath_CheckUserExistsByEmail_Fails(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := usecase.Execute(ctx, testUser)
+	driver, err := usecase.Execute(ctx, testUser)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.Equal(t, err, testError, "Errors are not equal")
+	assert.Nil(t, driver, "Driver must be nil")
 
 	// Assert logger.
 	assert.Equal(t, 0, len(hook.Entries))
@@ -161,5 +164,4 @@ func CreateTestUser() *entities.User {
 		LastName:  "smith",
 		Role:      entities.RoleDriver,
 	}
-
 }
