@@ -263,6 +263,12 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
 ]
 ```
 
+- **500 INTERNAL SERVER ERROR**
+
+```json
+  {"Meaningful error message"}
+```
+
 ### 7. Update Parking Request Status API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
@@ -395,14 +401,33 @@ curl -X POST http://localhost:8080/parking-lots \
 
 ### Prerequisites
 
-- Linux environment
-- VS Code
-- Docker
-- Golang (LTS version)
+#### Mac
+
+- Linux environment(normal terminal on MacOS)
+- VS Code with:
+  - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
+- [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
+- [GoLang](https://go.dev/doc/install) (Follow instructions for Mac)
+
+#### Windows
+
+- VS Code with:
+  - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
+  - [Remote extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) (need to connect VS code to WSL2)
+- Linux environment([WSL2](https://learn.microsoft.com/en-us/windows/wsl/install))
+- [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) (Download for Windows and enable integration with WSL2 in the settings)
+- [GoLang](https://go.dev/doc/install) (Follow instructions for Linux and install in your WSL2)
 
 ### Setting up environment
 
-From project root, run:
+Git clone to your Linux environment using `git clone https://github.com/IgorSteps/easypark.git`.
+
+Open the project in VS Code:
+
+- On Mac: just open it like you would any project.
+- On Windows, use your VS Code Remote Extension to connect to your WSL2 and locate your cloned project there.
+
+From project root in your Linux Environment, run:
 
 1. Run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
 
