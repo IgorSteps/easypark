@@ -22,10 +22,10 @@ API Specification can be found [here](docs/API_SPEC.md).
 
 #### Windows
 
+- Linux environment([WSL2](https://learn.microsoft.com/en-us/windows/wsl/install))
 - VS Code with:
   - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
-  - [Remote extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) (need to connect VS code to WSL2)
-- Linux environment([WSL2](https://learn.microsoft.com/en-us/windows/wsl/install))
+  - [Remote extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) (need to connect VS Code to WSL2)
 - [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) (Download for Windows and [enable integration with WSL2 in the settings](https://docs.docker.com/desktop/wsl/))
 - [GoLang](https://go.dev/doc/install) (Follow instructions for Linux and install in your WSL2)
 
@@ -36,11 +36,9 @@ Git clone to your Linux environment using `git clone https://github.com/IgorStep
 Open the project in VS Code:
 
 - On Mac: just open it like you would any project.
-- On Windows, use your VS Code Remote Extension to connect to your WSL2 and locate your cloned project there.
+- On Windows: use your VS Code Remote Extension to connect to your WSL2 and locate your cloned project there.
 
-From project root in your Linux Environment, run:
-
-1. Run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
+From project root in your Linux Environment, run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
 
 ### Starting the app
 
