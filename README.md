@@ -177,18 +177,18 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 **Endpoint**: `POST /drivers/{id}/parking-requests`
 
-**Description**: Creates a parkign request for the driver.
+**Description**: Creates a parking request for the driver.
 
 **Request Body**:
 
 Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
 
 ```bash
-curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
+curl -X POST http://localhost:8080/drivers/{id}parking-requests \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "destination": "science",
+    "destination": "desired parking lot id",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z"
 }'
@@ -223,7 +223,53 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
   }
   ```
 
-### 6. Update Parking Request Status API Endpoint
+### 6. Get All Parking Request API Endpoint
+
+**Endpoint**: `GET /parking-requests`
+
+**Description**: Gets all parking requests.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-requests
+```
+
+**Responses**:
+
+- **200 OK**
+
+```json
+[
+  {
+    "ID":"8275277b-0ec2-4cbf-9129-79a76194fe2e",
+    "UserID":"413662b8-0214-4935-a022-175438e6c4f1",
+    "ParkingSpaceID":null,
+    "DestinationParkingLotID":"714a2875-d358-423b-83b2-72a701a82492",
+    "StartTime":"2024-04-06T16:59:09.441792+01:00",
+    "EndTime":"2024-04-06T16:59:09.441792+01:00",
+    "Status":"pending"
+  },
+  {
+    "ID":"e071153e-9f5b-409e-8451-457e64dba8a2",
+    "UserID":"413662b8-0214-4935-a022-175438e6c4f1",
+    "ParkingSpaceID":null,
+    "DestinationParkingLotID":"2fa0a013-9d29-451c-9b04-0e65c5c82990",
+    "StartTime":"2024-04-06T16:59:09.443992",
+    "EndTime":"2024-04-06T16:59:09.441792+01:00",
+    "Status":"pending"
+  },
+  {others...}
+]
+```
+
+- **500 INTERNAL SERVER ERROR**
+
+```json
+  {"Meaningful error message"}
+```
+
+### 7. Update Parking Request Status API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
 
@@ -268,7 +314,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
   }
   ```
 
-### 7. Update Parking Request Space API Endpoint
+### 8. Update Parking Request Space API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/space`
 
@@ -285,7 +331,33 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
 }'
 ```
 
-### 8. Create Parking Lot API Endpoint
+**Responses**:
+
+- **400 BAD REQUEST**
+
+  ```json
+  {
+   "meaningful error message"
+  }
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {
+   "Interal error: meaningful error message"
+  }
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {
+   "start time cannot be after the end time"
+  }
+  ```
+
+### 9. Create Parking Lot API Endpoint
 
 **Endpoint**: `POST /parking-lots`
 
@@ -325,19 +397,37 @@ curl -X POST http://localhost:8080/parking-lots \
   }
 ```
 
-
 ## Running locally
 
 ### Prerequisites
 
-- Linux environment
-- VS Code
-- Docker
-- Golang (LTS version)
+#### Mac
+
+- Linux environment(normal terminal on MacOS)
+- VS Code with:
+  - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
+- [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
+- [GoLang](https://go.dev/doc/install) (Follow instructions for Mac)
+
+#### Windows
+
+- VS Code with:
+  - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
+  - [Remote extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) (need to connect VS code to WSL2)
+- Linux environment([WSL2](https://learn.microsoft.com/en-us/windows/wsl/install))
+- [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) (Download for Windows and enable integration with WSL2 in the settings)
+- [GoLang](https://go.dev/doc/install) (Follow instructions for Linux and install in your WSL2)
 
 ### Setting up environment
 
-From project root, run:
+Git clone to your Linux environment using `git clone https://github.com/IgorSteps/easypark.git`.
+
+Open the project in VS Code:
+
+- On Mac: just open it like you would any project.
+- On Windows, use your VS Code Remote Extension to connect to your WSL2 and locate your cloned project there.
+
+From project root in your Linux Environment, run:
 
 1. Run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
 

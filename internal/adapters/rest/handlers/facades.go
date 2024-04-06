@@ -36,6 +36,9 @@ type ParkingRequestFacade interface {
 
 	// AssignParkingSpace is implemented by usecasefacades.ParkingRequestFacade that wraps parking space assigment usecase.
 	AssignParkingSpace(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error
+
+	// GetAllParkingRequests is implemented by usecasefacades.ParkingRequestFacade that wraps getting all parking requests.
+	GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error)
 }
 
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.

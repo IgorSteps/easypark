@@ -7,7 +7,7 @@ import (
 func main() {
 	app, err := SetupApp()
 	if err != nil {
-		log.Fatalf("failed to build DI for easpark app: %v", err)
+		log.Fatalf("failed to setup Easpark app: %v", err)
 	}
 
 	app.logger.Info("starting Easypark")

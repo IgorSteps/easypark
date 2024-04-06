@@ -12,6 +12,11 @@ type ParkingRequestCreator interface {
 	Execute(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error)
 }
 
+// ParkingRequestsGetter provides an interface implemented by the GetAllParkingRequests usecase.
+type ParkingRequestsGetter interface {
+	Execute(ctx context.Context) ([]entities.ParkingRequest, error)
+}
+
 // ParkingRequestUpdater provides an interface implemented by UpdateParkingRequest usecase.
 type ParkingRequestStatusUpdater interface {
 	Execute(ctx context.Context, id uuid.UUID, status string) error
@@ -27,6 +32,7 @@ type ParkingRequestFacade struct {
 	parkingRequestCreator        ParkingRequestCreator
 	parkgingRequestStatusUpdater ParkingRequestStatusUpdater
 	parkingRequestSpaceAssigner  ParkingRequestSpaceAssigner
+	parkingRequestGetter         ParkingRequestsGetter
 }
 
 // NewParkingRequestFacade creates a new instance of ParkingRequestFacade.
@@ -34,11 +40,13 @@ func NewParkingRequestFacade(
 	creator ParkingRequestCreator,
 	updater ParkingRequestStatusUpdater,
 	assigner ParkingRequestSpaceAssigner,
+	getter ParkingRequestsGetter,
 ) *ParkingRequestFacade {
 	return &ParkingRequestFacade{
 		parkingRequestCreator:        creator,
 		parkgingRequestStatusUpdater: updater,
 		parkingRequestSpaceAssigner:  assigner,
+		parkingRequestGetter:         getter,
 	}
 }
 
@@ -55,4 +63,9 @@ func (s *ParkingRequestFacade) UpdateParkingRequestStatus(ctx context.Context, i
 // AssignParkingSpace wraps the UpdateParkingRequestSpace usecase.
 func (s *ParkingRequestFacade) AssignParkingSpace(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error {
 	return s.parkingRequestSpaceAssigner.Execute(ctx, requestID, spaceID)
+}
+
+// GetAllParkingRequests wraps the GetAllParkingRequests usecase.
+func (s *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
+	return s.parkingRequestGetter.Execute(ctx)
 }
