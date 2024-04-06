@@ -69,7 +69,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidI
 
 	testRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now().Add(500000),
+		StartTime:               time.Now().Add(500000), // start time is bigger than end time.
 		EndTime:                 time.Now(),
 	}
 

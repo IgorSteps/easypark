@@ -239,6 +239,30 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
 
 - **200 OK**
 
+```json
+[
+  {
+    "ID":"8275277b-0ec2-4cbf-9129-79a76194fe2e",
+    "UserID":"413662b8-0214-4935-a022-175438e6c4f1",
+    "ParkingSpaceID":null,
+    "DestinationParkingLotID":"714a2875-d358-423b-83b2-72a701a82492",
+    "StartTime":"2024-04-06T16:59:09.441792+01:00",
+    "EndTime":"2024-04-06T16:59:09.441792+01:00",
+    "Status":"pending"
+  },
+  {
+    "ID":"e071153e-9f5b-409e-8451-457e64dba8a2",
+    "UserID":"413662b8-0214-4935-a022-175438e6c4f1",
+    "ParkingSpaceID":null,
+    "DestinationParkingLotID":"2fa0a013-9d29-451c-9b04-0e65c5c82990",
+    "StartTime":"2024-04-06T16:59:09.443992",
+    "EndTime":"2024-04-06T16:59:09.441792+01:00",
+    "Status":"pending"
+  },
+  {others...}
+]
+```
+
 ### 7. Update Parking Request Status API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
