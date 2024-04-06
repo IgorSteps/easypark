@@ -184,7 +184,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
 
 ```bash
-curl -X POST http://localhost:8080/drivers/192ef0ce-5b65-4bd5-9ae5-ff1d6d46cf19/parking-requests \
+curl -X POST http://localhost:8080/drivers/{id}parking-requests \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
@@ -390,7 +390,6 @@ curl -X POST http://localhost:8080/parking-lots \
       ]
   }
 ```
-
 
 ## Running locally
 

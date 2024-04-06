@@ -65,6 +65,7 @@ func (s *ParkingRequestFacade) AssignParkingSpace(ctx context.Context, requestID
 	return s.parkingRequestSpaceAssigner.Execute(ctx, requestID, spaceID)
 }
 
+// GetAllParkingRequests wraps the GetAllParkingRequests usecase.
 func (s *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
 	return s.parkingRequestGetter.Execute(ctx)
 }
