@@ -142,6 +142,7 @@ func TestParkingLotPostgresRepository_GetAllParkingRequests_HappyPath(t *testing
 
 	var lots []entities.ParkingLot
 	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Preload("ParkingSpaces").Return(mockDatastore).Once()
 	mockDatastore.EXPECT().FindAll(&lots).Return(mockDatastore).Once().Run(func(args mock.Arguments) {
 		arg := args.Get(0).(*[]entities.ParkingLot) // Get the first argument passed to FindAll()
 		*arg = testLots                             // Set it to the expected park reqs
