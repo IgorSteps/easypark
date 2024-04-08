@@ -5,8 +5,10 @@ import (
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 // Error code to signify that a unique contraint has been violated.
@@ -56,4 +58,20 @@ func (s *ParkingLotPostgresRepository) GetAllParkingLots(ctx context.Context) ([
 	}
 
 	return lots, nil
+}
+
+func (s *ParkingLotPostgresRepository) DeleteParkingLot(ctx context.Context, id uuid.UUID) error {
+	result := s.DB.WithContext(ctx).Delete(&entities.ParkingLot{}, id)
+
+	err := result.Error()
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			s.Logger.WithError(err).WithField("id", id).Error("parking lot not found")
+			return repositories.NewInvalidInputError("parking lot not found")
+		}
+
+		s.Logger.WithError(err).WithField("id", id).Error("failed to delete a parking lot")
+		return repositories.NewInternalError("failed to delete a parking lot")
+	}
+	return nil
 }

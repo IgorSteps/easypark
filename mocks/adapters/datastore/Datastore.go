@@ -70,6 +70,65 @@ func (_c *Datastore_Create_Call) RunAndReturn(run func(interface{}) datastore.Da
 	return _c
 }
 
+// Delete provides a mock function with given fields: value, conds
+func (_m *Datastore) Delete(value interface{}, conds ...interface{}) datastore.Datastore {
+	var _ca []interface{}
+	_ca = append(_ca, value)
+	_ca = append(_ca, conds...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Delete")
+	}
+
+	var r0 datastore.Datastore
+	if rf, ok := ret.Get(0).(func(interface{}, ...interface{}) datastore.Datastore); ok {
+		r0 = rf(value, conds...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(datastore.Datastore)
+		}
+	}
+
+	return r0
+}
+
+// Datastore_Delete_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Delete'
+type Datastore_Delete_Call struct {
+	*mock.Call
+}
+
+// Delete is a helper method to define mock.On call
+//   - value interface{}
+//   - conds ...interface{}
+func (_e *Datastore_Expecter) Delete(value interface{}, conds ...interface{}) *Datastore_Delete_Call {
+	return &Datastore_Delete_Call{Call: _e.mock.On("Delete",
+		append([]interface{}{value}, conds...)...)}
+}
+
+func (_c *Datastore_Delete_Call) Run(run func(value interface{}, conds ...interface{})) *Datastore_Delete_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]interface{}, len(args)-1)
+		for i, a := range args[1:] {
+			if a != nil {
+				variadicArgs[i] = a.(interface{})
+			}
+		}
+		run(args[0].(interface{}), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *Datastore_Delete_Call) Return(_a0 datastore.Datastore) *Datastore_Delete_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Datastore_Delete_Call) RunAndReturn(run func(interface{}, ...interface{}) datastore.Datastore) *Datastore_Delete_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Error provides a mock function with given fields:
 func (_m *Datastore) Error() error {
 	ret := _m.Called()

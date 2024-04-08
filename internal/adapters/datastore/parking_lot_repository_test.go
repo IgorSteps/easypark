@@ -110,7 +110,7 @@ func TestParkingLotPostgresRepository_CreateParkingLot_UnhappyPath_UniqueKeyViol
 	mockDB.AssertExpectations(t)
 }
 
-func TestParkingLotPostgresRepository_GetAllParkingRequests_HappyPath(t *testing.T) {
+func TestParkingLotPostgresRepository_GetAllParkingLots_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -160,5 +160,59 @@ func TestParkingLotPostgresRepository_GetAllParkingRequests_HappyPath(t *testing
 	assert.Nil(t, err, "Error must be nil")
 	assert.Equal(t, testLots, actualLots, "Parking lots retunred do not equal expected")
 	assert.Equal(t, 0, len(hook.Entries), "Logger shouldn't log anything")
+	mockDatastore.AssertExpectations(t)
+}
+
+func TestParkingLotPostgresRepository_DeleteParkingLot_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewParkingParkingLotPostgresRepository(testLogger, mockDatastore)
+	testCtx := context.Background()
+	testID := uuid.New()
+
+	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Delete(&entities.ParkingLot{}, testID).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.DeleteParkingLot(testCtx, testID)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	mockDatastore.AssertExpectations(t)
+}
+
+func TestParkingLotPostgresRepository_DeleteParkingLot_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewParkingParkingLotPostgresRepository(testLogger, mockDatastore)
+	testCtx := context.Background()
+	testID := uuid.New()
+	testError := errors.New("boom")
+
+	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Delete(&entities.ParkingLot{}, testID).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().Error().Return(testError).Once()
+
+	// --------
+	// ACT
+	// --------
+	err := repository.DeleteParkingLot(testCtx, testID)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.IsType(t, &repositories.InternalError{}, err, "Error is of wrong type")
+	assert.EqualError(t, err, "Internal error: failed to delete a parking lot", "Error is wrong ")
 	mockDatastore.AssertExpectations(t)
 }

@@ -47,9 +47,13 @@ func (s *GormWrapper) Save(value interface{}) datastore.Datastore {
 	return &GormWrapper{DB: s.DB.Save(value)}
 }
 
-// Preload eager loads relations in other SQL.
+// Preload eager loads relations like foreign keys.
 func (s *GormWrapper) Preload(column string, conditions ...interface{}) datastore.Datastore {
 	return &GormWrapper{DB: s.DB.Preload(column, conditions...)}
+}
+
+func (s *GormWrapper) Delete(value interface{}, conds ...interface{}) datastore.Datastore {
+	return &GormWrapper{DB: s.DB.Delete(value)}
 }
 
 // Error returns any errors encountered.
