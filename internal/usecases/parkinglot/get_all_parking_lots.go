@@ -28,6 +28,9 @@ func (s *GetAllParkingLots) Execute(ctx context.Context) ([]entities.ParkingLot,
 	if err != nil {
 		return nil, err
 	}
+	for i := range lots {
+		lots[i].OnGet()
+	}
 
 	return lots, nil
 }

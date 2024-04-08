@@ -188,7 +188,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 **Request Body**:
 
-Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime
+Ensure that the JSON sent in the REST request uses the RFC 3339 date/time format for StartTime and EndTime. And destination being a desired ParkingLot ID.
 
 ```bash
 curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
@@ -207,7 +207,7 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 
   ```json
   {
-    "destination": "science",
+    "destination": "d56541a1-335b-49cb-84bb-672009ecf580",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z",
     "status": "pending"
@@ -429,7 +429,7 @@ curl -X POST http://localhost:8080/parking-lots \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <ADMIN_TOKEN>" \
 -d '{
-    "name": "boom",
+    "name": "cmp",
     "capacity": 10
 }'
 ```
@@ -441,11 +441,13 @@ curl -X POST http://localhost:8080/parking-lots \
 ```json
   {
     "id":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
-    "name":"science",
+    "name":"cmp",
     "capacity":10,
     "parkingSpaces":[
         {
-          "ID":"a2856678-3bfb-4ce2-a041-b5d0048d8993","ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054","Name":"science-1",
+          "ID":"a2856678-3bfb-4ce2-a041-b5d0048d8993",
+          "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
+          "Name":"science-1",
           "Status":"available",
           "FreeAt":"0001-01-01T00:00:00Z","OccupiedAt":"0001-01-01T00:00:00Z",
           "UserID":null,
@@ -460,7 +462,7 @@ curl -X POST http://localhost:8080/parking-lots \
 
 **Endpoint**: `GET /parking-lots`
 
-**Description**: Gets all parking lots.
+**Description**: Gets all parking lots and their statistics.
 
 **Request Body**:
 
@@ -475,26 +477,29 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
   ```json
     [
       {
-        "ID":"7620c9fc-9786-452e-9ab6-76df83693230",
-        "Name":"boom",
-      "Capacity":10,
-      "ParkingSpaces":null,
-      "Available":0,
-      "Occupied":0,
-      "Reserved":0,
-      "Blocked":0
-    },
-    {
-      "ID":"d2def4c5-9d92-4730-b08d-51205d8958c1",
-      "Name":"hhhh",
-      "Capacity":10,
-      "ParkingSpaces":null,
-      "Available":0,
-      "Occupied":0,
-      "Reserved":0,
-      "Blocked":0
-      }
-  ]
+        "ID":"bb8625ea-8c80-484c-8a75-3386649eef25",
+        "Name":"cmp",
+        "Capacity":10,
+        "ParkingSpaces":[
+          {
+            "ID":"66ad6486-50da-45e8-b614-e7f1f68d7669",
+            "ParkingLotID":"bb8625ea-8c80-484c-8a75-3386649eef25",
+            "Name":"cmp-1",
+            "Status":"available",
+            "FreeAt":"0000-12-31T23:58:45-00:01",
+            "OccupiedAt":"0000-12-31T23:58:45-00:01",
+            "UserID":null,
+            "ParkingRequests":null
+          },
+          {"other parking spaces..."}
+        ],
+        "Available":0,
+        "Occupied":0,
+        "Reserved":0,
+        "Blocked":0
+      },
+      {"other parking lots..."}
+    ]
   ```
 
 - **500 INTERNAL SERVER ERROR**

@@ -24,22 +24,52 @@ func TestGetAllParkingLots_Execute_HappyPath(t *testing.T) {
 
 	testLots := []entities.ParkingLot{
 		{
-			ID:            uuid.New(),
-			Name:          "blol",
-			Capacity:      10,
-			ParkingSpaces: nil,
+			ID:       uuid.New(),
+			Name:     "lot-1",
+			Capacity: 10,
+			ParkingSpaces: []entities.ParkingSpace{
+				{
+					Status: entities.StatusBlocked,
+				},
+				{
+					Status: entities.StatusOccupied,
+				},
+				{
+					Status: entities.StatusAvailable,
+				},
+			},
 		},
 		{
-			ID:            uuid.New(),
-			Name:          "blol",
-			Capacity:      10,
-			ParkingSpaces: nil,
+			ID:       uuid.New(),
+			Name:     "lot-2",
+			Capacity: 10,
+			ParkingSpaces: []entities.ParkingSpace{
+				{
+					Status: entities.StatusBlocked,
+				},
+				{
+					Status: entities.StatusOccupied,
+				},
+				{
+					Status: entities.StatusAvailable,
+				},
+			},
 		},
 		{
-			ID:            uuid.New(),
-			Name:          "blol",
-			Capacity:      10,
-			ParkingSpaces: nil,
+			ID:       uuid.New(),
+			Name:     "lot-3",
+			Capacity: 10,
+			ParkingSpaces: []entities.ParkingSpace{
+				{
+					Status: entities.StatusBlocked,
+				},
+				{
+					Status: entities.StatusOccupied,
+				},
+				{
+					Status: entities.StatusAvailable,
+				},
+			},
 		},
 	}
 
@@ -54,7 +84,10 @@ func TestGetAllParkingLots_Execute_HappyPath(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.Nil(t, err, "Error must be nil")
-	assert.Equal(t, testLots, lots, "Wrong p`rking lots")
+	assert.Equal(t, testLots, lots, "Wrong parking lots")
+	assert.Equal(t, 1, testLots[0].Available, "Wrong num of available parking spaces")
+	assert.Equal(t, 1, testLots[0].Occupied, "Wrong num of occupied parking spaces")
+	assert.Equal(t, 1, testLots[0].Blocked, "Wrong num of blocked parking spaces")
 	mockRepo.AssertExpectations(t)
 }
 
