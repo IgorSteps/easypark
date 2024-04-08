@@ -27,7 +27,7 @@ func (s *TestUpdateParkingRequestSpaceSuite) TestUpdateParkingRequestSpace_Happy
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
 	// Creating a parking lot.
-	parkingLot := utils.CreateParkingLot(ctx, adminToken, &s.RestClientSuite)
+	parkingLot := utils.CreateParkingLot(ctx, adminToken, nil, &s.RestClientSuite)
 
 	// Creating a parking request.
 	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, &s.RestClientSuite)

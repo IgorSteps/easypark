@@ -13,6 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestParkingLotPostgresRepository_CreateParkingLot_HappyPath(t *testing.T) {
@@ -107,4 +108,56 @@ func TestParkingLotPostgresRepository_CreateParkingLot_UnhappyPath_UniqueKeyViol
 	assert.IsType(t, &repositories.ResourceAlreadyExistsError{}, err, "wrong error type")
 	assert.EqualError(t, err, "Resource 'sci' already exists", "errors are not equal")
 	mockDB.AssertExpectations(t)
+}
+
+func TestParkingLotPostgresRepository_GetAllParkingRequests_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, hook := test.NewNullLogger()
+	mockDatastore := &mocks.Datastore{}
+	repository := datastore.NewParkingParkingLotPostgresRepository(testLogger, mockDatastore)
+	testCtx := context.Background()
+
+	testLots := []entities.ParkingLot{
+		{
+			ID:            uuid.New(),
+			Name:          "vvv",
+			Capacity:      10,
+			ParkingSpaces: nil,
+		},
+		{
+			ID:            uuid.New(),
+			Name:          "vvv",
+			Capacity:      10,
+			ParkingSpaces: nil,
+		},
+		{
+			ID:            uuid.New(),
+			Name:          "vvv",
+			Capacity:      10,
+			ParkingSpaces: nil,
+		},
+	}
+
+	var lots []entities.ParkingLot
+	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().FindAll(&lots).Return(mockDatastore).Once().Run(func(args mock.Arguments) {
+		arg := args.Get(0).(*[]entities.ParkingLot) // Get the first argument passed to FindAll()
+		*arg = testLots                             // Set it to the expected park reqs
+	})
+	mockDatastore.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	actualLots, err := repository.GetAllParkingLots(testCtx)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.Equal(t, testLots, actualLots, "Parking lots retunred do not equal expected")
+	assert.Equal(t, 0, len(hook.Entries), "Logger shouldn't log anything")
+	mockDatastore.AssertExpectations(t)
 }

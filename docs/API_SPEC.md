@@ -455,3 +455,50 @@ curl -X POST http://localhost:8080/parking-lots \
       ]
   }
 ```
+
+### 2. Get All Parking Lots API Endpoint
+
+**Endpoint**: `GET /parking-lots`
+
+**Description**: Gets all parking lots.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+    [
+      {
+        "ID":"7620c9fc-9786-452e-9ab6-76df83693230",
+        "Name":"boom",
+      "Capacity":10,
+      "ParkingSpaces":null,
+      "Available":0,
+      "Occupied":0,
+      "Reserved":0,
+      "Blocked":0
+    },
+    {
+      "ID":"d2def4c5-9d92-4730-b08d-51205d8958c1",
+      "Name":"hhhh",
+      "Capacity":10,
+      "ParkingSpaces":null,
+      "Available":0,
+      "Occupied":0,
+      "Reserved":0,
+      "Blocked":0
+      }
+  ]
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+    {"Internal error: meaningful error message"}
+  ```

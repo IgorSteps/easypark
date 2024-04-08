@@ -69,6 +69,64 @@ func (_c *ParkingLotRepository_CreateParkingLot_Call) RunAndReturn(run func(cont
 	return _c
 }
 
+// GetAllParkingLots provides a mock function with given fields: ctx
+func (_m *ParkingLotRepository) GetAllParkingLots(ctx context.Context) ([]entities.ParkingLot, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAllParkingLots")
+	}
+
+	var r0 []entities.ParkingLot
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]entities.ParkingLot, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []entities.ParkingLot); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.ParkingLot)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ParkingLotRepository_GetAllParkingLots_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllParkingLots'
+type ParkingLotRepository_GetAllParkingLots_Call struct {
+	*mock.Call
+}
+
+// GetAllParkingLots is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *ParkingLotRepository_Expecter) GetAllParkingLots(ctx interface{}) *ParkingLotRepository_GetAllParkingLots_Call {
+	return &ParkingLotRepository_GetAllParkingLots_Call{Call: _e.mock.On("GetAllParkingLots", ctx)}
+}
+
+func (_c *ParkingLotRepository_GetAllParkingLots_Call) Run(run func(ctx context.Context)) *ParkingLotRepository_GetAllParkingLots_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *ParkingLotRepository_GetAllParkingLots_Call) Return(_a0 []entities.ParkingLot, _a1 error) *ParkingLotRepository_GetAllParkingLots_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ParkingLotRepository_GetAllParkingLots_Call) RunAndReturn(run func(context.Context) ([]entities.ParkingLot, error)) *ParkingLotRepository_GetAllParkingLots_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewParkingLotRepository creates a new instance of ParkingLotRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewParkingLotRepository(t interface {

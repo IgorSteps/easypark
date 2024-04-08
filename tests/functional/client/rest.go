@@ -96,6 +96,10 @@ func (s *RestClientSuite) GetDriversParkingRequests(ctx context.Context, driverT
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/drivers/"+driverID.String()+"/parking-requests", nil, driverToken)
 }
 
+func (s *RestClientSuite) GetAllParkingLots(ctx context.Context, adminToken string) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodGet, "/parking-lots", nil, adminToken)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)

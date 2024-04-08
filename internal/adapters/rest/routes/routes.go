@@ -24,6 +24,7 @@ type HandlerFactory interface {
 	GetAllParkingRequestsForDriver() http.Handler
 
 	ParkingLotCreate() http.Handler
+	GetAllParkingLots() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -64,6 +65,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
 		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
 		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
+		r.Method(http.MethodGet, "/parking-lots", handlerFactory.GetAllParkingLots())
 	})
 
 	return router

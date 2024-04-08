@@ -134,13 +134,15 @@ func CreateParkingRequest(
 	return targetModel
 }
 
-func CreateParkingLot(ctx context.Context, adminToken string, s *client.RestClientSuite) entities.ParkingLot {
-	createRequest := &models.CreateParkingLotRequest{
-		Name:     "science",
-		Capacity: 10,
+func CreateParkingLot(ctx context.Context, adminToken string, request *models.CreateParkingLotRequest, s *client.RestClientSuite) entities.ParkingLot {
+	if request == nil {
+		request = &models.CreateParkingLotRequest{
+			Name:     "default",
+			Capacity: 10,
+		}
 	}
 
-	respBody, respCode, err := s.CreateParkingLot(ctx, adminToken, createRequest)
+	respBody, respCode, err := s.CreateParkingLot(ctx, adminToken, request)
 	s.Require().NoError(err, "Failed to create parking lot")
 	s.Require().Equal(http.StatusCreated, respCode, "Response code must be 201")
 
