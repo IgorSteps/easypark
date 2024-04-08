@@ -19,12 +19,13 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory := &mocks.HandlerFactory{}
 	mockMiddleware := &mocks.Middleware{}
 	logger := logrus.New()
+
 	// Test handler to return from the factory.
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	// Define a simple pass-through middleware function for testing
+	// Simple middleware function for testing
 	passThroughMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			next.ServeHTTP(w, r) // Call the next handler in the chain
@@ -42,9 +43,10 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().GetAllParkingRequests().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllParkingRequestsForDriver().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllParkingLots().Return(testHandler).Once()
+	mockHandlerFactory.EXPECT().DeleteParkingLot().Return(testHandler).Once()
 
 	// This middlware will get executed for very route invocation.
-	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(10)
+	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(11)
 	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(3)
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
