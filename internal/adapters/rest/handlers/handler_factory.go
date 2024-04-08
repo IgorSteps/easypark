@@ -75,3 +75,8 @@ func (s *HandlerFactory) GetAllParkingRequestsForDriver() http.Handler {
 func (s *HandlerFactory) GetAllParkingLots() http.Handler {
 	return NewParkingLotGetAllHandler(s.logger, s.facade.parkingLotFacade)
 }
+
+// DeleteParkingLot returns a new REST handler to delete a parking lot.
+func (s *HandlerFactory) DeleteParkingLot() http.Handler {
+	return NewDeleteParkingLotHandler(s.logger, s.facade.parkingLotFacade)
+}
