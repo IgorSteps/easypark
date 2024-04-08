@@ -44,3 +44,16 @@ func (s *ParkingLotPostgresRepository) CreateParkingLot(ctx context.Context, par
 
 	return nil
 }
+
+func (s *ParkingLotPostgresRepository) GetAllParkingLots(ctx context.Context) ([]entities.ParkingLot, error) {
+	var lots []entities.ParkingLot
+
+	result := s.DB.WithContext(ctx).Preload("ParkingSpaces").FindAll(&lots)
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).Error("failed to query for all parking lots in the database")
+		return []entities.ParkingLot{}, repositories.NewInternalError("failed to query for all parking lots in the database")
+	}
+
+	return lots, nil
+}

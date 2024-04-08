@@ -22,11 +22,16 @@ type UserFacade interface {
 	BanDriver(ctx context.Context, id uuid.UUID) error
 }
 
+// ParkingLotFacade provides an interface implemented by usecasefacades.ParkingLotsFacade.
 type ParkingLotFacade interface {
+	// CreateParkingLot is implemented by usecasefacades.ParkingLotsFacade that wraps parking lot creation usecase.
 	CreateParkingLot(ctx context.Context, name string, capacity int) (entities.ParkingLot, error)
+
+	// GetAllPakringLots is implemented by usecasefacades.ParkingLotsFacade that wraps getting all parking lots.
+	GetAllParkingLots(ctx context.Context) ([]entities.ParkingLot, error)
 }
 
-// ParkingRequestFacade is provides an interface implemented by usecasefacades.ParkingRequestFacade.
+// ParkingRequestFacade provides an interface implemented by usecasefacades.ParkingRequestFacade.
 type ParkingRequestFacade interface {
 	// CreateParkingRequest is implemented by usecasefacades.ParkingRequestFacade that wraps parking request creation usecase.
 	CreateParkingRequest(ctx context.Context, parkingRequest *entities.ParkingRequest) (*entities.ParkingRequest, error)

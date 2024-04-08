@@ -70,3 +70,8 @@ func (s *HandlerFactory) GetAllParkingRequests() http.Handler {
 func (s *HandlerFactory) GetAllParkingRequestsForDriver() http.Handler {
 	return NewDriversParkingRequestsGetHandler(s.logger, s.facade.parkingRequestFacade)
 }
+
+// GetAllParkingLots returns a new REST handler to get all parking lots.
+func (s *HandlerFactory) GetAllParkingLots() http.Handler {
+	return NewParkingLotGetAllHandler(s.logger, s.facade.parkingLotFacade)
+}

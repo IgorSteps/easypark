@@ -1,8 +1,8 @@
 # EasyPark
 
-[Trello board](https://trello.com/invite/b/lGdfavnm/ATTI15a8afbd1ced04b229e8f2380279ac156CE4A0AF/easypark)
+[Task tracking](https://trello.com/invite/b/lGdfavnm/ATTI15a8afbd1ced04b229e8f2380279ac156CE4A0AF/easypark)
 
-Easpark is a REST API built with Clean Architecture. It provides a set of endpoints for drivers and admins to use and manage parking.
+Easpark is a backend built with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) principles. It provides REST API endpoints for drivers and admins to be able to use and manage parking through our UI.
 
 ## API Specification
 
@@ -80,11 +80,13 @@ Config values are specified in [here](./config.yaml). If edit it to include new 
 
 ### Cleaning database tables
 
-Run `make clean-db` to truncate existing tables. Note, you need to add new table names to `./build/clean-db.sh` script.
+Run `make clean-db` to truncate existing tables. Note, you need to add new table names to [script](./build/cleandb.sh).
 
 ### Creating admin user
 
-Run the `make create-admin` to create an admin directly in the database. This creates an admin with the following details:
+Run the `make create-admin` runs this [script](./build/createadmin.sh) to create an admin directly in the database and give you a JWT back.
+
+This creates an admin with the following details:
 
 ```json
 {
@@ -98,32 +100,15 @@ Run the `make create-admin` to create an admin directly in the database. This cr
 }
 ```
 
-To get JWT for this admin, run:
-
-```bash
-curl -X POST http://localhost:8080/login \
--H "Content-Type: application/json" \
--d '{
-    "Username": "adminUsername",
-    "Password": "securePassword"
-}'
-```
-
-For example, as an admin, you can curl `drivers` endpoint to get all drivers:
-
-```bash
-curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/drivers
-```
-
 ### Connecting to PgAdmin
 
 PgAdming provides a nice UI for DB management and debugging.
 
 1. Go to `http://localhost:5050` to access PgAdmin
-2. Log in with the `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in the docker-compose.yml file
+2. Log in with the `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in the [docker-compose.yml](./docker-compose.yml) file
 3. To connect to our PostgreSQL database from PgAdmin:
     - Right-click on "Servers" in the left panel and choose "Create > Server".
     - In the "Create Server" dialog, go to the "Connection" tab.
-    - Set "Hostname/address" to `database`, which is the name of our PostgreSQL service defined in our docker-compose.yml.
-    - Fill in the "Username" and "Password" fields with the POSTGRES_USER and POSTGRES_PASSWORD specified in docker-compose.yml.
+    - Set "Hostname/address" to `database`, which is the name of our PostgreSQL service defined in our [docker-compose.yml](./docker-compose.yml).
+    - Fill in the "Username" and "Password" fields with the POSTGRES_USER and POSTGRES_PASSWORD specified in [docker-compose.yml](./docker-compose.yml).
     - Click "Save" to establish the connection.

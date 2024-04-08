@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// ParkingLot represents a parking lot.
 type ParkingLot struct {
 	ID            uuid.UUID `gorm:"primary_key"`
 	Name          string    `gorm:"unique"`
@@ -18,6 +19,7 @@ type ParkingLot struct {
 	Blocked   int `gorm:"-"`
 }
 
+// OnCreate sets internally managed fields, name and capcaity and creates parking spaces and sets initial statistics.
 func (s *ParkingLot) OnCreate(name string, capacity int) {
 	s.ID = uuid.New()
 	s.Name = name
@@ -28,5 +30,33 @@ func (s *ParkingLot) OnCreate(name string, capacity int) {
 		space := ParkingSpace{}
 		space.OnCreate(fmt.Sprintf("%s-%d", name, i+1), s.ID)
 		s.ParkingSpaces = append(s.ParkingSpaces, space)
+	}
+
+	// On creation all spaces are available.
+	s.Available = capacity
+	s.Occupied = 0
+	s.Reserved = 0
+	s.Blocked = 0
+}
+
+// OnGet calculates statistics for this parking lot.
+func (s *ParkingLot) OnGet() {
+	// Reset.
+	s.Available = 0
+	s.Occupied = 0
+	s.Reserved = 0
+	s.Blocked = 0
+
+	for _, space := range s.ParkingSpaces {
+		switch space.Status {
+		case StatusAvailable:
+			s.Available++
+		case StatusOccupied:
+			s.Occupied++
+		case StatusReserved:
+			s.Reserved++
+		case StatusBlocked:
+			s.Blocked++
+		}
 	}
 }

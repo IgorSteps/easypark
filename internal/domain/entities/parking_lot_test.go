@@ -39,3 +39,32 @@ func TestParkingLot_OnCreate(t *testing.T) {
 		assert.Contains(t, space.Name, fmt.Sprint(i+1), "Parking space number must include a number")
 	}
 }
+
+func TestParkingLot_OnGet(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	lot := entities.ParkingLot{}
+	testName := "cool name"
+	testCapacity := 10
+
+	// Create a lot with 10 spaces.
+	lot.OnCreate(testName, testCapacity)
+	// Set parking space statuses
+	lot.ParkingSpaces[0].Status = entities.StatusBlocked
+	lot.ParkingSpaces[1].Status = entities.StatusOccupied
+	lot.ParkingSpaces[2].Status = entities.StatusReserved
+
+	// --------
+	// ACT
+	// --------
+	lot.OnGet()
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Equal(t, 7, lot.Available, "Must have 7 available spaces")
+	assert.Equal(t, 1, lot.Blocked, "Must have 1 blocked space")
+	assert.Equal(t, 1, lot.Reserved, "Must have 1 reserved space")
+	assert.Equal(t, 1, lot.Occupied, "Must have 1 occupied space")
+}

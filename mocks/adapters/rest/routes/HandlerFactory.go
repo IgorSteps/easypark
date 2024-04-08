@@ -209,6 +209,53 @@ func (_c *HandlerFactory_GetAllDrivers_Call) RunAndReturn(run func() http.Handle
 	return _c
 }
 
+// GetAllParkingLots provides a mock function with given fields:
+func (_m *HandlerFactory) GetAllParkingLots() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAllParkingLots")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_GetAllParkingLots_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllParkingLots'
+type HandlerFactory_GetAllParkingLots_Call struct {
+	*mock.Call
+}
+
+// GetAllParkingLots is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) GetAllParkingLots() *HandlerFactory_GetAllParkingLots_Call {
+	return &HandlerFactory_GetAllParkingLots_Call{Call: _e.mock.On("GetAllParkingLots")}
+}
+
+func (_c *HandlerFactory_GetAllParkingLots_Call) Run(run func()) *HandlerFactory_GetAllParkingLots_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_GetAllParkingLots_Call) Return(_a0 http.Handler) *HandlerFactory_GetAllParkingLots_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_GetAllParkingLots_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_GetAllParkingLots_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetAllParkingRequests provides a mock function with given fields:
 func (_m *HandlerFactory) GetAllParkingRequests() http.Handler {
 	ret := _m.Called()
