@@ -507,3 +507,36 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
   ```json
     {"Internal error: meaningful error message"}
   ```
+
+### 3. Delete a Parking Lot API Endpoint
+
+**Endpoint**: `DELETE /parking-lots/{id}`
+
+**Description**: Deletes a parking lots with given ID.
+
+**Request Body**:
+
+```bash
+curl -X DELETE http://localhost:8080/parking-lots/{id} \
+-H "Authorization: Bearer <ADMIN_TOKEN>"
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+  {"successfully deleted parking lot"}
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+    {"Internal error: meaningful error message"}
+  ```

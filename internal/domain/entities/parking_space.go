@@ -23,7 +23,7 @@ type ParkingSpace struct {
 	FreeAt          time.Time
 	OccupiedAt      time.Time
 	UserID          *uuid.UUID
-	ParkingRequests []ParkingRequest
+	ParkingRequests []ParkingRequest `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 func (s *ParkingSpace) OnCreate(name string, parkingLotID uuid.UUID) {

@@ -53,7 +53,7 @@ func (s *GormWrapper) Preload(column string, conditions ...interface{}) datastor
 }
 
 func (s *GormWrapper) Delete(value interface{}, conds ...interface{}) datastore.Datastore {
-	return &GormWrapper{DB: s.DB.Delete(value)}
+	return &GormWrapper{DB: s.DB.Delete(value, conds)}
 }
 
 // Error returns any errors encountered.
