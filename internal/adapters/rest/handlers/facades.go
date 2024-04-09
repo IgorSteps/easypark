@@ -70,6 +70,7 @@ type Facade struct {
 	parkingRequestFacade ParkingRequestFacade
 	parkingLotFacade     ParkingLotFacade
 	parkingSpaceFacade   ParkingSpaceFacade
+	notificationFacade   NotificationFacade
 }
 
 // NewFacade returns new instance of Facade.
@@ -78,11 +79,13 @@ func NewFacade(
 	prFacade ParkingRequestFacade,
 	plFacade ParkingLotFacade,
 	psFacade ParkingSpaceFacade,
+	nFacade NotificationFacade,
 ) *Facade {
 	return &Facade{
 		userFacade:           uFacade,
 		parkingRequestFacade: prFacade,
 		parkingLotFacade:     plFacade,
 		parkingSpaceFacade:   psFacade,
+		notificationFacade:   nFacade,
 	}
 }

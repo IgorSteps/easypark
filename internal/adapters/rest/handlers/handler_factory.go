@@ -85,3 +85,8 @@ func (s *HandlerFactory) DeleteParkingLot() http.Handler {
 func (s *HandlerFactory) UpdateParkingSpaceStatus() http.Handler {
 	return NewParkingSpaceStatusHandler(s.facade.parkingSpaceFacade, s.logger)
 }
+
+// CreateNotificaiton returns a new REST handler to create a notification.
+func (s *HandlerFactory) CreateNotification() http.Handler {
+	return NewNotificationCreateHandler(s.logger, s.facade.notificationFacade)
+}
