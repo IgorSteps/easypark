@@ -45,7 +45,7 @@ func (s *ParkingSpaceStatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	updateSpace, err := s.facade.UpdateParkingSpaceStatus(r.Context(), parsedID, updateSpaceStatusRequest.Status)
+	updatedSpace, err := s.facade.UpdateParkingSpaceStatus(r.Context(), parsedID, updateSpaceStatusRequest.Status)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to update parking space status")
 
@@ -62,6 +62,7 @@ func (s *ParkingSpaceStatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		}
 	}
 
+	s.logger.Debug(updatedSpace)
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(updateSpace)
+	json.NewEncoder(w).Encode(updatedSpace)
 }
