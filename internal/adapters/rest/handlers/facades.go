@@ -34,6 +34,12 @@ type ParkingLotFacade interface {
 	DeleteParkingLot(ctx context.Context, id uuid.UUID) error
 }
 
+// ParkingSpaceFacade provides an interface implemented by usecasefacades.ParkingSpaceFacade.
+type ParkingSpaceFacade interface {
+	// UpdateParkingSpaceStatus is implemented by usecasefacades.ParkingSpaceFacade that wraps updating parking space status usecase.
+	UpdateParkingSpaceStatus(ctx context.Context, id uuid.UUID, status string) (entities.ParkingSpace, error)
+}
+
 // ParkingRequestFacade provides an interface implemented by usecasefacades.ParkingRequestFacade.
 type ParkingRequestFacade interface {
 	// CreateParkingRequest is implemented by usecasefacades.ParkingRequestFacade that wraps parking request creation usecase.
@@ -57,6 +63,7 @@ type Facade struct {
 	userFacade           UserFacade
 	parkingRequestFacade ParkingRequestFacade
 	parkingLotFacade     ParkingLotFacade
+	parkingSpaceFacade   ParkingSpaceFacade
 }
 
 // NewFacade returns new instance of Facade.
@@ -64,10 +71,12 @@ func NewFacade(
 	uFacade UserFacade,
 	prFacade ParkingRequestFacade,
 	plFacade ParkingLotFacade,
+	psFacade ParkingSpaceFacade,
 ) *Facade {
 	return &Facade{
 		userFacade:           uFacade,
 		parkingRequestFacade: prFacade,
 		parkingLotFacade:     plFacade,
+		parkingSpaceFacade:   psFacade,
 	}
 }
