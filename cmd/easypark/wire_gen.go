@@ -17,6 +17,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	usecases5 "github.com/IgorSteps/easypark/internal/usecases/notification"
 	usecases3 "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	usecases2 "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	usecases4 "github.com/IgorSteps/easypark/internal/usecases/parkingspace"
@@ -65,7 +66,10 @@ func SetupApp() (*App, error) {
 	parkingLotFacade := usecasefacades.NewParkingLotFacade(createParkingLot, getAllParkingLots, deteleParkingLot)
 	updateParkingSpaceStatus := usecases4.NewUpdateParkingSpaceStatus(logrusLogger, parkingSpacePostgresRepository)
 	parkingSpaceFacade := usecasefacades.NewParkingSpaceFacade(updateParkingSpaceStatus)
-	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade, parkingSpaceFacade)
+	notificationPostgresRepository := datastore.NewNotificationPostgresRepository(logrusLogger, gormWrapper)
+	createNotification := usecases5.NewCreateNotification(logrusLogger, notificationPostgresRepository)
+	notificationFacade := usecasefacades.NewNotificationFacade(createNotification)
+	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade, parkingSpaceFacade, notificationFacade)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
 	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)
