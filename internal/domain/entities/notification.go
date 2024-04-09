@@ -10,13 +10,8 @@ import (
 type NotificationType int
 
 const (
-	// notifications:
 	ArrivalNotification NotificationType = iota
 	DepartureNotification
-	// alerts:
-	LocationMismatchNotification
-	ArrivalDelayNotification
-	DepartureDelayNotification
 )
 
 // Notification represents a notification.
@@ -27,7 +22,6 @@ type Notification struct {
 	ParkingSpaceID uuid.UUID
 	Location       string
 	Timestamp      time.Time
-	Message        string
 }
 
 func (s *Notification) OnCreate(driverID, spaceID uuid.UUID, location string, notificationType NotificationType) *Notification {
