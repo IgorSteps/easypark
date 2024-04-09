@@ -16,7 +16,7 @@ const (
 
 // Notification represents a notification.
 type Notification struct {
-	ID             uuid.UUID
+	ID             uuid.UUID `gorm:"primary_key"`
 	Type           NotificationType
 	DriverID       uuid.UUID
 	ParkingSpaceID uuid.UUID
