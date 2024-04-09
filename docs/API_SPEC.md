@@ -561,3 +561,32 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
     "status": "blocked"
 }'
 ```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+  {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
+    "Name":"cmp-1",
+    "Status":"blocked",
+    "FreeAt":"0000-12-31T23:58:45-00:01",
+    "OccupiedAt":"0000-12-31T23:58:45-00:01",
+    "UserID":null,
+    "ParkingRequests":null
+  }
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"Internal error: meaningful error message"}
+  ```
