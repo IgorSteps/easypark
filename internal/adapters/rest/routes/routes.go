@@ -12,19 +12,23 @@ import (
 
 // HandlerFactory defines an interface for creating different REST handlers.
 type HandlerFactory interface {
+	// User handlers.
 	DriverCreate() http.Handler
 	UserAuthorise() http.Handler
 	GetAllDrivers() http.Handler
 	DriverBan() http.Handler
 
+	// Parking request handlers.
 	ParkingRequestCreate() http.Handler
 	ParkingRequestStatusUpdate() http.Handler
 	AssignParkingSpace() http.Handler
 	GetAllParkingRequests() http.Handler
 	GetAllParkingRequestsForDriver() http.Handler
 
+	// Parking lots handlers.
 	ParkingLotCreate() http.Handler
 	GetAllParkingLots() http.Handler
+	DeleteParkingLot() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -66,6 +70,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
 		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
 		r.Method(http.MethodGet, "/parking-lots", handlerFactory.GetAllParkingLots())
+		r.Method(http.MethodDelete, "/parking-lots/{id}", handlerFactory.DeleteParkingLot())
 	})
 
 	return router

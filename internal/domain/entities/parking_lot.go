@@ -11,7 +11,8 @@ type ParkingLot struct {
 	ID            uuid.UUID `gorm:"primary_key"`
 	Name          string    `gorm:"unique"`
 	Capacity      int
-	ParkingSpaces []ParkingSpace
+	ParkingSpaces []ParkingSpace `gorm:"constraint:OnDelete:CASCADE;"`
+
 	// Below are the stats we require for monitoring, they are not persisted.
 	Available int `gorm:"-"`
 	Occupied  int `gorm:"-"`

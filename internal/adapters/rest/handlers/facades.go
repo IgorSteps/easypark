@@ -27,8 +27,11 @@ type ParkingLotFacade interface {
 	// CreateParkingLot is implemented by usecasefacades.ParkingLotsFacade that wraps parking lot creation usecase.
 	CreateParkingLot(ctx context.Context, name string, capacity int) (entities.ParkingLot, error)
 
-	// GetAllPakringLots is implemented by usecasefacades.ParkingLotsFacade that wraps getting all parking lots.
+	// GetAllPakringLots is implemented by usecasefacades.ParkingLotsFacade that wraps getting all parking lots usecase.
 	GetAllParkingLots(ctx context.Context) ([]entities.ParkingLot, error)
+
+	// DeleteParkingLot is implemented by usecasefacades.ParkingLotFacade that wraps deleting parking lot usecase.
+	DeleteParkingLot(ctx context.Context, id uuid.UUID) error
 }
 
 // ParkingRequestFacade provides an interface implemented by usecasefacades.ParkingRequestFacade.

@@ -13,5 +13,6 @@ type Datastore interface {
 	FindAll(value interface{}) Datastore
 	Save(value interface{}) Datastore
 	Preload(column string, conditions ...interface{}) Datastore
+	Delete(value interface{}, conds ...interface{}) Datastore
 	Error() error
 }
