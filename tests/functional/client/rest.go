@@ -101,8 +101,14 @@ func (s *RestClientSuite) GetAllParkingLots(ctx context.Context, adminToken stri
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/parking-lots", nil, adminToken)
 }
 
+// DeleteParkingLot interacts with the REST API to delete a parking lot.
 func (s *RestClientSuite) DeleteParkingLot(ctx context.Context, adminToken string, id uuid.UUID) ([]byte, int, error) {
 	return s.sendRequestWithToken(ctx, http.MethodDelete, "/parking-lots/"+id.String(), nil, adminToken)
+}
+
+// UpdateParkingSpaceStatus interacts with the REST API to update status of parking space.
+func (s *RestClientSuite) UpdateParkingSpaceStatus(ctx context.Context, adminToken string, id uuid.UUID, request *models.UpdateParkingSpaceStatus) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-spaces/"+id.String()+"/status", request, adminToken)
 }
 
 // sendRequest sends a HTTP request via provided method and path.

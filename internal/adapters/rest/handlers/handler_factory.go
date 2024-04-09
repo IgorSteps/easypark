@@ -80,3 +80,8 @@ func (s *HandlerFactory) GetAllParkingLots() http.Handler {
 func (s *HandlerFactory) DeleteParkingLot() http.Handler {
 	return NewDeleteParkingLotHandler(s.logger, s.facade.parkingLotFacade)
 }
+
+// UpdateParkingSpaceStatus returns a new REST handler to update status of a parking space.
+func (s *HandlerFactory) UpdateParkingSpaceStatus() http.Handler {
+	return NewParkingSpaceStatusHandler(s.facade.parkingSpaceFacade, s.logger)
+}

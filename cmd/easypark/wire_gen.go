@@ -19,6 +19,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
 	usecases3 "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	usecases2 "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
+	usecases4 "github.com/IgorSteps/easypark/internal/usecases/parkingspace"
 	"github.com/IgorSteps/easypark/internal/usecases/user"
 )
 
@@ -62,7 +63,9 @@ func SetupApp() (*App, error) {
 	getAllParkingLots := usecases3.NewGetAllParkingLots(logrusLogger, parkingLotPostgresRepository)
 	deteleParkingLot := usecases3.NewDeleteParkingLot(logrusLogger, parkingLotPostgresRepository)
 	parkingLotFacade := usecasefacades.NewParkingLotFacade(createParkingLot, getAllParkingLots, deteleParkingLot)
-	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade)
+	updateParkingSpaceStatus := usecases4.NewUpdateParkingSpaceStatus(logrusLogger, parkingSpacePostgresRepository)
+	parkingSpaceFacade := usecasefacades.NewParkingSpaceFacade(updateParkingSpaceStatus)
+	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade, parkingSpaceFacade)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
 	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)
