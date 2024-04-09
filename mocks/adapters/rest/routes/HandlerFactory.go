@@ -538,6 +538,53 @@ func (_c *HandlerFactory_ParkingRequestStatusUpdate_Call) RunAndReturn(run func(
 	return _c
 }
 
+// UpdateParkingSpaceStatus provides a mock function with given fields:
+func (_m *HandlerFactory) UpdateParkingSpaceStatus() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateParkingSpaceStatus")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_UpdateParkingSpaceStatus_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateParkingSpaceStatus'
+type HandlerFactory_UpdateParkingSpaceStatus_Call struct {
+	*mock.Call
+}
+
+// UpdateParkingSpaceStatus is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) UpdateParkingSpaceStatus() *HandlerFactory_UpdateParkingSpaceStatus_Call {
+	return &HandlerFactory_UpdateParkingSpaceStatus_Call{Call: _e.mock.On("UpdateParkingSpaceStatus")}
+}
+
+func (_c *HandlerFactory_UpdateParkingSpaceStatus_Call) Run(run func()) *HandlerFactory_UpdateParkingSpaceStatus_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_UpdateParkingSpaceStatus_Call) Return(_a0 http.Handler) *HandlerFactory_UpdateParkingSpaceStatus_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_UpdateParkingSpaceStatus_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_UpdateParkingSpaceStatus_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UserAuthorise provides a mock function with given fields:
 func (_m *HandlerFactory) UserAuthorise() http.Handler {
 	ret := _m.Called()

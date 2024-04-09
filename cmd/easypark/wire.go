@@ -24,6 +24,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
 	parkingLotUsecases "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	parkingRequestUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
+	parkingSpaceUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingspace"
 	userUsecases "github.com/IgorSteps/easypark/internal/usecases/user"
 	"github.com/google/wire"
 )
@@ -90,6 +91,10 @@ func SetupApp() (*App, error) {
 		parkingLotUsecases.NewDeleteParkingLot,
 		wire.Bind(new(usecasefacades.ParkingLotDeleter), new(*parkingLotUsecases.DeteleParkingLot)),
 
+		// parking space
+		parkingSpaceUsecases.NewUpdateParkingSpaceStatus,
+		wire.Bind(new(usecasefacades.ParkingSpaceStatusUpdater), new(*parkingSpaceUsecases.UpdateParkingSpaceStatus)),
+
 		// facades
 		usecasefacades.NewUserFacade,
 		wire.Bind(new(handlers.UserFacade), new(*usecasefacades.UserFacade)),
@@ -97,6 +102,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(handlers.ParkingRequestFacade), new(*usecasefacades.ParkingRequestFacade)),
 		usecasefacades.NewParkingLotFacade,
 		wire.Bind(new(handlers.ParkingLotFacade), new(*usecasefacades.ParkingLotFacade)),
+		usecasefacades.NewParkingSpaceFacade,
+		wire.Bind(new(handlers.ParkingSpaceFacade), new(*usecasefacades.ParkingSpaceFacade)),
 		handlers.NewFacade,
 
 		// rest handlers and middleware

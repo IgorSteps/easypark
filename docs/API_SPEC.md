@@ -540,3 +540,24 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
   ```json
     {"Internal error: meaningful error message"}
   ```
+
+## Parking Space
+
+### 1. Update Parking Space Status API Endpoint
+
+**Endpoint**: `PATCH /parking-spaces/{id}/status`
+
+**Description**: Updates a parking space status with the given ID.
+
+**Request Body**:
+
+Ensure that the status is one of the following: `available, occupied, blocked, reserved`.
+
+```bash
+curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "status": "blocked"
+}'
+```
