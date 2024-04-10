@@ -31,7 +31,7 @@ func (s *CreateNotification) Execute(ctx context.Context, driverID uuid.UUID, sp
 	notification := entities.Notification{}
 	notification.OnCreate(driverID, spaceID, location, domainNotificationType)
 
-	err = s.notificationRepo.Create(ctx, notification)
+	err = s.notificationRepo.Create(ctx, &notification)
 	if err != nil {
 		return entities.Notification{}, err
 	}
