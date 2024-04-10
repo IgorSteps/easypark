@@ -31,6 +31,7 @@ func NewDatabaseFromConfig(config config.DatabaseConfig, logger *GormLogrusLogge
 		&entities.ParkingLot{},
 		&entities.ParkingSpace{},
 		&entities.ParkingRequest{},
+		&entities.Notification{},
 	)
 
 	return db, nil

@@ -22,6 +22,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	notificationUsecases "github.com/IgorSteps/easypark/internal/usecases/notification"
 	parkingLotUsecases "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	parkingRequestUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	parkingSpaceUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingspace"
@@ -48,6 +49,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(repositories.ParkingSpaceRepository), new(*datastore.ParkingSpacePostgresRepository)),
 		datastore.NewParkingParkingLotPostgresRepository,
 		wire.Bind(new(repositories.ParkingLotRepository), new(*datastore.ParkingLotPostgresRepository)),
+		datastore.NewNotificationPostgresRepository,
+		wire.Bind(new(repositories.NotificationRepository), new(*datastore.NotificationPostgresRepository)),
 
 		// db
 		db.NewDatabaseFromConfig,
@@ -58,7 +61,7 @@ func SetupApp() (*App, error) {
 		auth.NewJWTTokenServiceFromConfig,
 		wire.Bind(new(repositories.TokenRepository), new(*auth.JWTTokenService)),
 
-		// usecases
+		// usecases:
 		// user
 		userUsecases.NewRegisterDriver,
 		wire.Bind(new(usecasefacades.DriverCreator), new(*userUsecases.RegisterDriver)),
@@ -70,7 +73,6 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(usecasefacades.DriverBanner), new(*userUsecases.BanDriver)),
 		userUsecases.NewCheckDriverStatus,
 		wire.Bind(new(middleware.StatusChecker), new(*userUsecases.CheckDriverStatus)),
-
 		// parking request
 		parkingRequestUsecases.NewCreateParkingRequest,
 		wire.Bind(new(usecasefacades.ParkingRequestCreator), new(*parkingRequestUsecases.CreateParkingRequest)),
@@ -82,7 +84,6 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(usecasefacades.ParkingRequestsAllGetter), new(*parkingRequestUsecases.GetAllParkingRequests)),
 		parkingRequestUsecases.NewGetDriversParkingRequests,
 		wire.Bind(new(usecasefacades.ParkingRequestDriversGetter), new(*parkingRequestUsecases.GetDriversParkingRequests)),
-
 		// parking lot
 		parkingLotUsecases.NewCreateParkingLot,
 		wire.Bind(new(usecasefacades.ParkingLotCreator), new(*parkingLotUsecases.CreateParkingLot)),
@@ -90,10 +91,12 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(usecasefacades.ParkingLotGetter), new(*parkingLotUsecases.GetAllParkingLots)),
 		parkingLotUsecases.NewDeleteParkingLot,
 		wire.Bind(new(usecasefacades.ParkingLotDeleter), new(*parkingLotUsecases.DeteleParkingLot)),
-
 		// parking space
 		parkingSpaceUsecases.NewUpdateParkingSpaceStatus,
 		wire.Bind(new(usecasefacades.ParkingSpaceStatusUpdater), new(*parkingSpaceUsecases.UpdateParkingSpaceStatus)),
+		// notification
+		notificationUsecases.NewCreateNotification,
+		wire.Bind(new(usecasefacades.NotificationCreator), new(*notificationUsecases.CreateNotification)),
 
 		// facades
 		usecasefacades.NewUserFacade,
@@ -104,6 +107,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(handlers.ParkingLotFacade), new(*usecasefacades.ParkingLotFacade)),
 		usecasefacades.NewParkingSpaceFacade,
 		wire.Bind(new(handlers.ParkingSpaceFacade), new(*usecasefacades.ParkingSpaceFacade)),
+		usecasefacades.NewNotificationFacade,
+		wire.Bind(new(handlers.NotificationFacade), new(*usecasefacades.NotificationFacade)),
 		handlers.NewFacade,
 
 		// rest handlers and middleware

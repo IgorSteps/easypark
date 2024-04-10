@@ -71,3 +71,8 @@ checks:
 .PHONY: create-admin
 create-admin:
 	./build/createadmin.sh
+
+## create-driver: creates a driver direcrly.
+.PHONY: create-driver
+create-driver:
+	./build/createdriver.sh

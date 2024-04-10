@@ -58,12 +58,19 @@ type ParkingRequestFacade interface {
 	GetDriversParkingRequests(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error)
 }
 
+// NotificationFacade provides an interface implemented by usecasefacades.NotificationFacade.
+type NotificationFacade interface {
+	// CreateNotification is implemented by usecasefacades.NotificationFacade that wraps creating a notification.
+	CreateNotification(ctx context.Context, driverID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error)
+}
+
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.
 type Facade struct {
 	userFacade           UserFacade
 	parkingRequestFacade ParkingRequestFacade
 	parkingLotFacade     ParkingLotFacade
 	parkingSpaceFacade   ParkingSpaceFacade
+	notificationFacade   NotificationFacade
 }
 
 // NewFacade returns new instance of Facade.
@@ -72,11 +79,13 @@ func NewFacade(
 	prFacade ParkingRequestFacade,
 	plFacade ParkingLotFacade,
 	psFacade ParkingSpaceFacade,
+	nFacade NotificationFacade,
 ) *Facade {
 	return &Facade{
 		userFacade:           uFacade,
 		parkingRequestFacade: prFacade,
 		parkingLotFacade:     plFacade,
 		parkingSpaceFacade:   psFacade,
+		notificationFacade:   nFacade,
 	}
 }

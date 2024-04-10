@@ -590,3 +590,24 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
   ```json
   {"Internal error: meaningful error message"}
   ```
+
+## Notification
+
+### 1. Create Notification API Endpoint
+
+**Endpoint**: `POST /drivers/{id}/notification`
+
+**Description**: Creates a notification for a driver with the given id.
+
+**Request Body**:
+
+```bash
+curl -X POST http://localhost:8080/drivers/{id}/notifications \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <DRIVER_TOKEN>" \
+-d '{
+    "parkingSpaceID": "some park space id",
+    "location": "cmp-1",
+    "notificationType": 0
+}'
+```

@@ -111,6 +111,11 @@ func (s *RestClientSuite) UpdateParkingSpaceStatus(ctx context.Context, adminTok
 	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-spaces/"+id.String()+"/status", request, adminToken)
 }
 
+// CreateNotification interacts with the REST API to create a notification for a driver.
+func (s *RestClientSuite) CreateNotification(ctx context.Context, driverToken string, driverID uuid.UUID, request *models.CreateNotificationRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+driverID.String()+"/notifications", request, driverToken)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)
