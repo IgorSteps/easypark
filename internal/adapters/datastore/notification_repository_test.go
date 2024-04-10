@@ -29,7 +29,7 @@ func TestNotificationPostgresRepository_Create_HappyPath(t *testing.T) {
 	// ----
 	// ACT
 	// ----
-	err := repo.Create(testCtx, noification)
+	err := repo.Create(testCtx, &noification)
 
 	// ------
 	// ASSERT
@@ -55,7 +55,7 @@ func TestNotificationPostgresRepository_Create_UnhappyPath(t *testing.T) {
 	// ----
 	// ACT
 	// ----
-	err := repo.Create(testCtx, noification)
+	err := repo.Create(testCtx, &noification)
 
 	// ------
 	// ASSERT

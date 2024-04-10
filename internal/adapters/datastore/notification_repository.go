@@ -23,8 +23,8 @@ func NewNotificationPostgresRepository(l *logrus.Logger, db Datastore) *Notifica
 }
 
 // Create creates a new record in the database.
-func (s *NotificationPostgresRepository) Create(ctx context.Context, notification entities.Notification) error {
-	result := s.DB.Create(&notification)
+func (s *NotificationPostgresRepository) Create(ctx context.Context, notification *entities.Notification) error {
+	result := s.DB.WithContext(ctx).Create(notification)
 
 	err := result.Error()
 	if err != nil {
