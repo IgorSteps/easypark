@@ -24,6 +24,7 @@ func TestNotificationPostgresRepository_Create_HappyPath(t *testing.T) {
 	noification := entities.Notification{}
 
 	mockDatastore.EXPECT().Create(&noification).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().Error().Return(nil).Once()
 
 	// ----
@@ -50,6 +51,7 @@ func TestNotificationPostgresRepository_Create_UnhappyPath(t *testing.T) {
 
 	testError := errors.New("boom")
 	mockDatastore.EXPECT().Create(&noification).Return(mockDatastore).Once()
+	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().Error().Return(testError).Once()
 
 	// ----

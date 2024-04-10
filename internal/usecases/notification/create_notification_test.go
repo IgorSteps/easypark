@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCreateNotification_Execute_HappyPath(t *testing.T) {
@@ -27,9 +28,7 @@ func TestCreateNotification_Execute_HappyPath(t *testing.T) {
 	testLocation := "boom"
 	testNotificationType := 0
 
-	notification := entities.Notification{}
-	notification.OnCreate(testDriverID, testSpaceID, testLocation, entities.ArrivalNotification)
-	mockRepo.EXPECT().Create(testCtx, notification).Return(nil).Once()
+	mockRepo.EXPECT().Create(testCtx, mock.Anything).Return(nil).Once()
 
 	// --------
 	// ACT
@@ -41,6 +40,9 @@ func TestCreateNotification_Execute_HappyPath(t *testing.T) {
 	// --------
 	assert.Nil(t, err, "Error must be nil")
 	assert.Equal(t, entities.ArrivalNotification, notification.Type, "Notification type is wrong")
+	assert.Equal(t, testDriverID, notification.DriverID)
+	assert.Equal(t, testLocation, notification.Location)
+	assert.Equal(t, testSpaceID, notification.ParkingSpaceID)
 	mockRepo.AssertExpectations(t)
 }
 
