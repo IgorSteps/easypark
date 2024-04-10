@@ -24,13 +24,11 @@ type Notification struct {
 	Timestamp      time.Time
 }
 
-func (s *Notification) OnCreate(driverID, spaceID uuid.UUID, location string, notificationType NotificationType) *Notification {
-	return &Notification{
-		ID:             uuid.New(),
-		Type:           notificationType,
-		DriverID:       driverID,
-		ParkingSpaceID: spaceID,
-		Location:       location,
-		Timestamp:      time.Now(),
-	}
+func (s *Notification) OnCreate(driverID, spaceID uuid.UUID, location string, notificationType NotificationType) {
+	s.ID = uuid.New()
+	s.Type = notificationType
+	s.DriverID = driverID
+	s.ParkingSpaceID = spaceID
+	s.Location = location
+	s.Timestamp = time.Now()
 }

@@ -23,7 +23,7 @@ func (_m *NotificationRepository) EXPECT() *NotificationRepository_Expecter {
 }
 
 // Create provides a mock function with given fields: ctx, notification
-func (_m *NotificationRepository) Create(ctx context.Context, notification entities.Notification) error {
+func (_m *NotificationRepository) Create(ctx context.Context, notification *entities.Notification) error {
 	ret := _m.Called(ctx, notification)
 
 	if len(ret) == 0 {
@@ -31,7 +31,7 @@ func (_m *NotificationRepository) Create(ctx context.Context, notification entit
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, entities.Notification) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.Notification) error); ok {
 		r0 = rf(ctx, notification)
 	} else {
 		r0 = ret.Error(0)
@@ -47,14 +47,14 @@ type NotificationRepository_Create_Call struct {
 
 // Create is a helper method to define mock.On call
 //   - ctx context.Context
-//   - notification entities.Notification
+//   - notification *entities.Notification
 func (_e *NotificationRepository_Expecter) Create(ctx interface{}, notification interface{}) *NotificationRepository_Create_Call {
 	return &NotificationRepository_Create_Call{Call: _e.mock.On("Create", ctx, notification)}
 }
 
-func (_c *NotificationRepository_Create_Call) Run(run func(ctx context.Context, notification entities.Notification)) *NotificationRepository_Create_Call {
+func (_c *NotificationRepository_Create_Call) Run(run func(ctx context.Context, notification *entities.Notification)) *NotificationRepository_Create_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(entities.Notification))
+		run(args[0].(context.Context), args[1].(*entities.Notification))
 	})
 	return _c
 }
@@ -64,7 +64,7 @@ func (_c *NotificationRepository_Create_Call) Return(_a0 error) *NotificationRep
 	return _c
 }
 
-func (_c *NotificationRepository_Create_Call) RunAndReturn(run func(context.Context, entities.Notification) error) *NotificationRepository_Create_Call {
+func (_c *NotificationRepository_Create_Call) RunAndReturn(run func(context.Context, *entities.Notification) error) *NotificationRepository_Create_Call {
 	_c.Call.Return(run)
 	return _c
 }
