@@ -28,3 +28,9 @@ func (s *ParkingRequest) OnCreate() {
 	s.ID = uuid.New()
 	s.Status = RequestStatusPending
 }
+
+// Approve this parking request and associate this parking request to the selected parking space.
+func (s *ParkingRequest) OnSpaceAssign(spaceID uuid.UUID) {
+	s.ParkingSpaceID = &spaceID
+	s.Status = RequestStatusApproved
+}

@@ -37,11 +37,11 @@ func (s *TestGetDriversParkingRequestsSuite) TestGetDriversParkingRequests_Happy
 	driver2, driver2Token := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, anotherDriver)
 
 	for i := 0; i < 5; i++ {
-		_ = utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
+		_ = utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), nil, &s.RestClientSuite)
 	}
 
 	for i := 0; i < 5; i++ {
-		_ = utils.CreateParkingRequest(ctx, driver2Token, driver2.ID, uuid.New(), &s.RestClientSuite)
+		_ = utils.CreateParkingRequest(ctx, driver2Token, driver2.ID, uuid.New(), nil, &s.RestClientSuite)
 	}
 
 	// --------

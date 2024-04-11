@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// ParkingRequestSpaceHandler provides a REST Handler implementation to change parking spaces of parking requests and
+// ParkingRequestSpaceHandler provides a REST Handler implementation to assign parking spaces to parking requests and
 // implements http.Handler interface.
 type ParkingRequestSpaceHandler struct {
 	logger *logrus.Logger
@@ -26,7 +26,8 @@ func NewParkingRequestSpaceHandler(f ParkingRequestFacade, l *logrus.Logger) *Pa
 	}
 }
 
-// ServeHTTP handles incoming HTTP request to change parking request space. Method name matches the http.Handler interface.
+// ServeHTTP handles incoming HTTP request to assign a parking space to a parking request.
+// Method name matches the http.Handler interface.
 func (s *ParkingRequestSpaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var updateParkingRequest models.ParkingRequestSpaceUpdateRequest
 
@@ -68,7 +69,7 @@ func (s *ParkingRequestSpaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := models.UpdateParkingRequestStatusResponse{
+	response := models.ParkingRequestSpaceUpdateResponse{
 		Message: "successfully assigned a space to a parking request",
 	}
 	json.NewEncoder(w).Encode(response)
