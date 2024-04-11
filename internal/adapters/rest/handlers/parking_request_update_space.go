@@ -68,7 +68,7 @@ func (s *ParkingRequestSpaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := models.UpdateParkingRequestStatusResponse{
+	response := models.ParkingRequestSpaceUpdateResponse{
 		Message: "successfully assigned a space to a parking request",
 	}
 	json.NewEncoder(w).Encode(response)

@@ -230,7 +230,7 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
   }
   ```
 
-### 2. Get All Parking Request API Endpoint
+### 2. Get All Parking Requests API Endpoint
 
 **Endpoint**: `GET /parking-requests`
 
@@ -330,18 +330,18 @@ curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/drivers/{i
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
 
-**Description**: Updated a parking request status.
+**Description**: Directly update a parking request status. Note, parking requests cannot be approved through this endpoint, for this refer to 'Update Parking Request Space API Endpoint'.
 
 **Request Body**:
 
-Ensure that the status is one of the following: `approved, rejected, pending`.
+Ensure that the status is one of the following: `rejected, pending`.
 
 ```bash
 curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <ADMIN_TOKEN>" \
 -d '{
-    "status": "approved"
+    "status": "rejected"
 }'
 ```
 
@@ -375,7 +375,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
 
 **Endpoint**: `PATCH /parking-requests/{id}/space`
 
-**Description**: Update a parking request with a parking space.
+**Description**: Update a parking request with a parking space. Note that if parking request is rejected, it cannot be assigned a parking space. Note that if a parking request is assigned a parking space, it becomes approved. You can also make multiple parking requests to the same parking space as long as their times don't overlap. Cannot assign blocked parking space.
 
 **Request Body**:
 

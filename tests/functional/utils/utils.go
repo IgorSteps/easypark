@@ -113,12 +113,15 @@ func CreateParkingRequest(
 	driverToken string,
 	driverID uuid.UUID,
 	destinationLotID uuid.UUID,
+	createRequest *models.CreateParkingRequestRequest,
 	s *client.RestClientSuite,
 ) models.CreateParkingRequestResponse {
-	createRequest := &models.CreateParkingRequestRequest{
-		DestinationParkingLotID: destinationLotID,
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(555),
+	if createRequest == nil {
+		createRequest = &models.CreateParkingRequestRequest{
+			DestinationParkingLotID: destinationLotID,
+			StartTime:               time.Now(),
+			EndTime:                 time.Now().Add(555),
+		}
 	}
 
 	respBody, respCode, err := s.CreateParkingRequest(ctx, driverToken, driverID.String(), createRequest)
@@ -151,4 +154,33 @@ func CreateParkingLot(ctx context.Context, adminToken string, request *models.Cr
 	s.Require().NoError(err, "Failed to unmarshall create parking lot response")
 
 	return targetModel
+}
+
+func UpdateParkingRequestStatus(ctx context.Context, req *models.UpdateParkingRequestStatusRequest, adminToken string, parkingRequestID uuid.UUID, s *client.RestClientSuite) {
+	respBody, respCode, err := s.UpdateParkingRequestStatus(ctx, adminToken, parkingRequestID.String(), req)
+
+	s.Require().NoError(err, "Updating status of the parking request shouldn't return error")
+	s.Require().Equal(http.StatusOK, respCode, "Must return 200")
+
+	// Unmarshall response body.
+	var tModel models.UpdateParkingRequestStatusResponse
+	err = s.UnmarshalHTTPResponse(respBody, &tModel)
+	if err != nil {
+		s.T().Fail()
+	}
+}
+
+func UpdateParkingRequestSpace(ctx context.Context, adminToken string, parkRequestID uuid.UUID, req *models.ParkingRequestSpaceUpdateRequest, s *client.RestClientSuite) {
+	respBody, respCode, err := s.UpdateParkingRequestSpace(ctx, adminToken, parkRequestID, req)
+	s.Require().NoError(err, "Updating a parking request shouldn't return an error")
+
+	// --------
+	// ASSERT
+	// --------
+	s.Require().Equal(http.StatusOK, respCode, "Updating parking request should return 200 code")
+
+	var updateParkingRequestResp models.ParkingRequestSpaceUpdateResponse
+	err = s.UnmarshalHTTPResponse(respBody, &updateParkingRequestResp)
+	s.Require().NoError(err, "Must not return error")
+	s.Require().Equal("successfully assigned a space to a parking request", updateParkingRequestResp.Message, "Response body is wrong.")
 }

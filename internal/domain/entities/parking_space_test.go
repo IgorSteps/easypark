@@ -29,3 +29,18 @@ func TestParkingSpace_OnCreate(t *testing.T) {
 	assert.Equal(t, entities.StatusAvailable, space.Status, "Parking space statuses mast match")
 	assert.NotNil(t, space.ID, "Parking space must have ID set")
 }
+
+// func TestParkingSpace_IsAvailableFor(t *testing.T) {
+// 	// --------
+// 	// ASSEMBLE
+// 	// --------
+// 	space := entities.ParkingSpace{
+// 		ID:           uuid.New(),
+// 		ParkingLotID: uuid.New(),
+// 		Name:         "cmp",
+// 		Status:       entities.StatusReserved,
+// 		FreeAt:       time.Now().Add(900000),
+// 		BusyAt:       time.Now(),
+// 	}
+
+// }

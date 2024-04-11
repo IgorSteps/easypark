@@ -33,6 +33,13 @@ func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, 
 		return err
 	}
 
+	// We don't allow updating status of approved requests, because they have a parking space assigned.
+	if parkingRequest.Status == entities.RequestStatusApproved && (domainStatus == entities.RequestStatusRejected || domainStatus == entities.RequestStatusPending) {
+		s.logger.Warn("not allowed to change status of an approved request to 'rejected' or 'pending'")
+		return repositories.NewInvalidInputError("not allowed to change approved request status to reject or pending")
+	}
+
+	// Udpate status.
 	parkingRequest.Status = domainStatus
 
 	err = s.repo.Save(ctx, &parkingRequest)
@@ -43,11 +50,10 @@ func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, 
 	return nil
 }
 
-// TODO: Move to domain?
 func parkingRequestFromString(status string) (entities.ParkingRequestStatus, error) {
 	switch status {
 	case "approved":
-		return entities.RequestStatusApproved, nil
+		return "", repositories.NewInvalidInputError("not allowed to directly approve parking requests")
 	case "rejected":
 		return entities.RequestStatusRejected, nil
 	case "pending":

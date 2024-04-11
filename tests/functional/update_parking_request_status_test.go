@@ -28,7 +28,7 @@ func (s *TestApproveParkingRequestSuite) TestApproveParkingRequest_HappyPath() {
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
 	// Create parking request.
-	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), nil, &s.RestClientSuite)
 
 	updateRequst := &models.UpdateParkingRequestStatusRequest{
 		Status: "approved",
@@ -65,7 +65,7 @@ func (s *TestApproveParkingRequestSuite) TestRejectParkingRequest_HappyPath() {
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
 	// Create parking request.
-	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), nil, &s.RestClientSuite)
 
 	updateRequst := &models.UpdateParkingRequestStatusRequest{
 		Status: "rejected",
@@ -102,7 +102,7 @@ func (s *TestApproveParkingRequestSuite) TestUpdateParkingRequest_UnhappyPath_Un
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
 
 	// Create parking request.
-	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), &s.RestClientSuite)
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, uuid.New(), nil, &s.RestClientSuite)
 
 	updateRequst := &models.UpdateParkingRequestStatusRequest{
 		Status: "boom",

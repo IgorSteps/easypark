@@ -44,13 +44,14 @@ func TestUpdateParkingRequestSpace_Execute_HappyPath(t *testing.T) {
 		Status:       entities.StatusAvailable,
 	}
 
-	// Setup mocks
+	// Setup mocks.
 	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
 	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
-	// Update both entitites.
-	testParkSpace.OnAssign(testRequest.StartTime, testRequest.EndTime, testRequest.UserID)
+	// Update both entities.
+	testParkSpace.OnAssign(testRequest.StartTime, testRequest.EndTime)
 	testRequest.ParkingSpaceID = &testParkSpace.ID
+	testRequest.Status = entities.RequestStatusApproved
 
 	mockSpaceRepository.EXPECT().Save(testCtx, &testParkSpace).Return(nil).Once()
 	mockRequestRepository.EXPECT().Save(testCtx, &testRequest).Return(nil).Once()
@@ -68,6 +69,7 @@ func TestUpdateParkingRequestSpace_Execute_HappyPath(t *testing.T) {
 	mockSpaceRepository.AssertExpectations(t)
 }
 
+// In this test, the desired and actual parking lot IDs differ.
 func TestUpdateParkingRequestSpace_Execute_UnhappyPath_WrongParkingSpace(t *testing.T) {
 	// --------
 	// ASSEMBLE
@@ -168,6 +170,51 @@ func TestUpdateParkingRequestSpace_Execute_UnhappyPath_ParkingSpaceUnavailable(t
 	mockSpaceRepository.AssertExpectations(t)
 }
 
+func TestUpdateParkingRequestSpace_Execute_UnhappyPath_ParkingRequestAlreadyRejected(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockRequestRepository := &mocks.ParkingRequestRepository{}
+	mockSpaceRepository := &mocks.ParkingSpaceRepository{}
+	usecase := usecases.NewUpdateParkingRequestSpace(testLogger, mockRequestRepository, mockSpaceRepository)
+
+	testCtx := context.Background()
+	testRequestID := uuid.New()
+	testParkingSpaceID := uuid.New()
+	testParkingLotID := uuid.New()
+	testRequest := entities.ParkingRequest{
+		ID:                      testRequestID,
+		UserID:                  uuid.New(),
+		DestinationParkingLotID: testParkingLotID,
+		StartTime:               time.Now(),
+		EndTime:                 time.Now().Add(500),
+		Status:                  entities.RequestStatusRejected, // already rejected
+	}
+	testParkSpace := entities.ParkingSpace{
+		ID:           testParkingSpaceID,
+		ParkingLotID: testParkingLotID,
+		Status:       entities.StatusAvailable,
+	}
+
+	// Setup mocks.
+	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+
+	// ------
+	// ACT
+	// ------
+	err := usecase.Execute(testCtx, testRequestID, testParkingSpaceID)
+
+	// ------
+	// ASSERT
+	// ------
+	assert.EqualError(t, err, "rejected parking request cannot be assigned a space", "Wrong error")
+	assert.IsType(t, &repositories.InvalidInputError{}, err, "Error is of the wrong type")
+	mockRequestRepository.AssertExpectations(t)
+	mockSpaceRepository.AssertExpectations(t)
+}
+
 func TestUpdateParkingRequestSpace_Execute_UnhappyPath_RepoErrors(t *testing.T) {
 	// --------
 	// ASSEMBLE
@@ -222,7 +269,7 @@ func TestUpdateParkingRequestSpace_Execute_UnhappyPath_RepoErrors(t *testing.T) 
 				mockSpaceRepository.EXPECT().GetParkingSpaceByID(mock.Anything, testSpaceID).Return(testParkSpace, nil).Once()
 				mockRequestRepository.EXPECT().GetParkingRequestByID(mock.Anything, testRequestID).Return(testRequest, nil).Once()
 				// Update parking space.
-				testParkSpace.OnAssign(testRequest.StartTime, testRequest.EndTime, testRequest.UserID)
+				testParkSpace.OnAssign(testRequest.StartTime, testRequest.EndTime)
 				mockSpaceRepository.EXPECT().Save(mock.Anything, &testParkSpace).Return(testError).Once()
 			},
 			expectedError: testError,
