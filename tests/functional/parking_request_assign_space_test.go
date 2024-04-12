@@ -127,7 +127,7 @@ func (s *TestAssignParkingSpace) TestAssignParkingSpace_UnhappyPath_Overlap() {
 	// --------
 	// ASSEMBLE
 	// --------
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)

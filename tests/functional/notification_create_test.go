@@ -21,7 +21,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 	// --------
 	// ASSEMBLE
 	// --------
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Created admin.
@@ -70,7 +70,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	// --------
 	// ASSEMBLE
 	// --------
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Created admin.
