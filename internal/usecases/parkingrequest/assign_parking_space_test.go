@@ -394,8 +394,8 @@ func TestAssignParkingSpace_UnhappyPath_ParkingSpaceReserved(t *testing.T) {
 	// ------
 	// ASSERT
 	// ------
-	assert.IsType(t, &repositories.InternalError{}, err, "Error is of wrong type")
-	assert.EqualError(t, err, "Internal error: not implemented, cannot assign reserved parking spaces yet", "Must return error")
+	assert.IsType(t, &repositories.InvalidInputError{}, err, "Error is of wrong type")
+	assert.EqualError(t, err, "not allowed to assign reserved parking space", "Must return error")
 
 	mockRequestRepository.AssertExpectations(t)
 	mockSpaceRepository.AssertExpectations(t)
