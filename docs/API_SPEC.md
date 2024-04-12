@@ -552,7 +552,7 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 **Request Body**:
 
 ```bash
-curl http://localhost:8080/parking-spaces/{id}
+curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spaces/{id}
 ```
 
 **Response**:
