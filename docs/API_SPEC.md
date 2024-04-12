@@ -679,3 +679,42 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
   ```json
   {"Internal error: meaningful error message"}
   ```
+
+### 2. Get All Notifications API Endpoint
+
+**Endpoint**: `GET /notifications`
+
+**Description**: Gets all notifications.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/notifications
+```
+
+**RESPONSES**:
+
+- **200 OK**
+
+ ```json
+  [ 
+    {
+      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "Type": 0,
+      "DriverID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "Location":"cmp-1",
+      "Timestamp":"0000-12-31T23:58:45-00:01",
+    },
+    {"other notifications"}
+  ]
+ ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {
+    "Internal error: meaningful message"
+  }
+  ```
+  

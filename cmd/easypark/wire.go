@@ -99,6 +99,8 @@ func SetupApp() (*App, error) {
 		// notification
 		notificationUsecases.NewCreateNotification,
 		wire.Bind(new(usecasefacades.NotificationCreator), new(*notificationUsecases.CreateNotification)),
+		notificationUsecases.NewGetAllNotifications,
+		wire.Bind(new(usecasefacades.NotificationGetter), new(*notificationUsecases.GetAllNotifications)),
 
 		// facades
 		usecasefacades.NewUserFacade,

@@ -85,6 +85,64 @@ func (_c *NotificationFacade_CreateNotification_Call) RunAndReturn(run func(cont
 	return _c
 }
 
+// GetAllNotifications provides a mock function with given fields: ctx
+func (_m *NotificationFacade) GetAllNotifications(ctx context.Context) ([]entities.Notification, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAllNotifications")
+	}
+
+	var r0 []entities.Notification
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]entities.Notification, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []entities.Notification); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.Notification)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// NotificationFacade_GetAllNotifications_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllNotifications'
+type NotificationFacade_GetAllNotifications_Call struct {
+	*mock.Call
+}
+
+// GetAllNotifications is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *NotificationFacade_Expecter) GetAllNotifications(ctx interface{}) *NotificationFacade_GetAllNotifications_Call {
+	return &NotificationFacade_GetAllNotifications_Call{Call: _e.mock.On("GetAllNotifications", ctx)}
+}
+
+func (_c *NotificationFacade_GetAllNotifications_Call) Run(run func(ctx context.Context)) *NotificationFacade_GetAllNotifications_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *NotificationFacade_GetAllNotifications_Call) Return(_a0 []entities.Notification, _a1 error) *NotificationFacade_GetAllNotifications_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *NotificationFacade_GetAllNotifications_Call) RunAndReturn(run func(context.Context) ([]entities.Notification, error)) *NotificationFacade_GetAllNotifications_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewNotificationFacade creates a new instance of NotificationFacade. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewNotificationFacade(t interface {

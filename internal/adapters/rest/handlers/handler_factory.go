@@ -95,3 +95,8 @@ func (s *HandlerFactory) CreateNotification() http.Handler {
 func (s *HandlerFactory) GetSingleParkingSpace() http.Handler {
 	return NewParkingSpaceGetSingleHandler(s.logger, s.facade.parkingSpaceFacade)
 }
+
+// GetAllNotifications returns a new REST handler to get all notifications.
+func (s *HandlerFactory) GetAllNotifications() http.Handler {
+	return NewNotificationGetAllHandler(s.logger, s.facade.notificationFacade)
+}
