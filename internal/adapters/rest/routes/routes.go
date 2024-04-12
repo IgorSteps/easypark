@@ -31,6 +31,7 @@ type HandlerFactory interface {
 	DeleteParkingLot() http.Handler
 
 	// Parking space handlers.
+	GetSingleParkingSpace() http.Handler
 	UpdateParkingSpaceStatus() http.Handler
 
 	// Notification handlers
@@ -65,20 +66,26 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPost, "/drivers/{id}/parking-requests", handlerFactory.ParkingRequestCreate())
 		r.Method(http.MethodGet, "/drivers/{id}/parking-requests", handlerFactory.GetAllParkingRequestsForDriver())
 		r.Method(http.MethodPost, "/drivers/{id}/notifications", handlerFactory.CreateNotification())
+		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
 	})
 
 	// Admin routes
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.Authorise, middleware.RequireRole(entities.RoleAdmin))
+		// Drivers
 		r.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
 		r.Method(http.MethodPatch, "/drivers/{id}/status", handlerFactory.DriverBan())
-		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
-		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
+		// Park lots
 		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
-		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
 		r.Method(http.MethodGet, "/parking-lots", handlerFactory.GetAllParkingLots())
 		r.Method(http.MethodDelete, "/parking-lots/{id}", handlerFactory.DeleteParkingLot())
+		// Park requests
+		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
+		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
+		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
+		// Park spaces
 		r.Method(http.MethodPatch, "/parking-spaces/{id}/status", handlerFactory.UpdateParkingSpaceStatus())
+		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
 	})
 
 	return router

@@ -31,6 +31,7 @@ States a parking space can be in: available, occupied, reserved, blocked.
   - A parking space remains 'available' even after being assigned to a driver’s parking request, allowing for multiple requests to be considered(as long as they don't overlap).
 - **Admin Reservation**:
   - Admin can reserve spaces for specific purposes, such as events. Reserved spaces cannot be assigned to parking requests.
+  - A reservation starts immediately and only ends when the admin changes the status of the parking space.
 - **Unreserving**:
   - When a space is unreserved by the admin, its status immediately returns to 'available'.
 - **Driver Arrival**:
@@ -39,6 +40,7 @@ States a parking space can be in: available, occupied, reserved, blocked.
   - Once the driver departs, the status reverts to 'available'.
 - **Admin Blocking**:
   - Spaces can be blocked by the admin for road repairs or emergencies. No bookings can be made for blocked spaces.
+  - A block starts immediately and only ends when the admin changes the status of the parking space.
 - **Unblocking**:
   - When a space is unblocked by the admin, its status immediately returns to 'available'.
 

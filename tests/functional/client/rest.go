@@ -116,6 +116,11 @@ func (s *RestClientSuite) CreateNotification(ctx context.Context, driverToken st
 	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+driverID.String()+"/notifications", request, driverToken)
 }
 
+// GetSingleParkingSpace interacts with the REST API to get a single parking space.
+func (s *RestClientSuite) GetSingleParkingSpace(ctx context.Context, token, id string) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodGet, "/parking-spaces/"+id, nil, token)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)
