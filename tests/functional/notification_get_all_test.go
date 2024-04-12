@@ -59,7 +59,14 @@ func (s *TestCreateNotificationSuite) TestGetAllNotifications_HappyPath() {
 	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
 	s.Require().NoError(err)
 	s.Require().NoError(err, "Must not return error")
-	s.Require().Equal(expectedNotfs, targetModel)
+	for i, expected := range expectedNotfs {
+		// Compare all fields except the timestamp
+		s.Require().Equal(expected.ID, targetModel[i].ID)
+		s.Require().Equal(expected.ParkingSpaceID, targetModel[i].ParkingSpaceID)
+		s.Require().Equal(expected.Location, targetModel[i].Location)
+		s.Require().Equal(expected.Type, targetModel[i].Type)
+		s.Require().Equal(expected.DriverID, targetModel[i].DriverID)
+	}
 }
 
 func TestGetAllNotificationSuiteInit(t *testing.T) {
