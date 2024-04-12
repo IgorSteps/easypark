@@ -29,6 +29,7 @@ func TestParkingSpaceRepository_GetParkingSpaceByID_HappyPath(t *testing.T) {
 	testID := uuid.New()
 
 	mockDB.EXPECT().WithContext(mock.Anything).Return(mockDB).Once()
+	mockDB.EXPECT().Preload("ParkingRequests").Return(mockDB).Once()
 	mockDB.EXPECT().First(pakingSpace, "id = ?", testID).Return(mockDB).Once()
 	mockDB.EXPECT().Error().Return(nil).Once()
 
@@ -56,6 +57,7 @@ func TestParkingSpaceRepository_GetParkingSpaceByID_UnhappyPath_NotFound(t *test
 	testID := uuid.New()
 
 	mockDB.EXPECT().WithContext(mock.Anything).Return(mockDB).Once()
+	mockDB.EXPECT().Preload("ParkingRequests").Return(mockDB).Once()
 	mockDB.EXPECT().First(pakingSpace, "id = ?", testID).Return(mockDB).Once()
 	mockDB.EXPECT().Error().Return(gorm.ErrRecordNotFound).Once()
 
@@ -85,6 +87,7 @@ func TestParkingSpaceRepository_GetParkingSpaceByID_UnhappyPath_Internal(t *test
 	testError := errors.New("boom")
 
 	mockDB.EXPECT().WithContext(mock.Anything).Return(mockDB).Once()
+	mockDB.EXPECT().Preload("ParkingRequests").Return(mockDB).Once()
 	mockDB.EXPECT().First(pakingSpace, "id = ?", testID).Return(mockDB).Once()
 	mockDB.EXPECT().Error().Return(testError).Once()
 

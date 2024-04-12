@@ -34,11 +34,11 @@ type ParkingRequestSpaceAssigner interface {
 
 // ParkingRequestFacade uses facade pattern to wrap parking request' usecases to allow for managing other things such as DB transactions if needed.
 type ParkingRequestFacade struct {
-	parkingRequestCreator        ParkingRequestCreator
-	parkgingRequestStatusUpdater ParkingRequestStatusUpdater
-	parkingRequestSpaceAssigner  ParkingRequestSpaceAssigner
-	parkingRequestAllGetter      ParkingRequestsAllGetter
-	parkingRequestDriversGetter  ParkingRequestDriversGetter
+	parkingRequestCreator       ParkingRequestCreator
+	parkingRequestStatusUpdater ParkingRequestStatusUpdater
+	parkingRequestSpaceAssigner ParkingRequestSpaceAssigner
+	parkingRequestAllGetter     ParkingRequestsAllGetter
+	parkingRequestDriversGetter ParkingRequestDriversGetter
 }
 
 // NewParkingRequestFacade creates a new instance of ParkingRequestFacade.
@@ -50,11 +50,11 @@ func NewParkingRequestFacade(
 	specificGetter ParkingRequestDriversGetter,
 ) *ParkingRequestFacade {
 	return &ParkingRequestFacade{
-		parkingRequestCreator:        creator,
-		parkgingRequestStatusUpdater: updater,
-		parkingRequestSpaceAssigner:  assigner,
-		parkingRequestAllGetter:      allGetter,
-		parkingRequestDriversGetter:  specificGetter,
+		parkingRequestCreator:       creator,
+		parkingRequestStatusUpdater: updater,
+		parkingRequestSpaceAssigner: assigner,
+		parkingRequestAllGetter:     allGetter,
+		parkingRequestDriversGetter: specificGetter,
 	}
 }
 
@@ -65,10 +65,10 @@ func (s *ParkingRequestFacade) CreateParkingRequest(ctx context.Context, parking
 
 // UpdateParkingRequestStatus wraps the UpdateParkingRequestStatus usecase.
 func (s *ParkingRequestFacade) UpdateParkingRequestStatus(ctx context.Context, id uuid.UUID, status string) error {
-	return s.parkgingRequestStatusUpdater.Execute(ctx, id, status)
+	return s.parkingRequestStatusUpdater.Execute(ctx, id, status)
 }
 
-// AssignParkingSpace wraps the UpdateParkingRequestSpace usecase.
+// AssignParkingSpace wraps the AssignParkingSpace usecase.
 func (s *ParkingRequestFacade) AssignParkingSpace(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error {
 	return s.parkingRequestSpaceAssigner.Execute(ctx, requestID, spaceID)
 }
@@ -78,7 +78,7 @@ func (s *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]ent
 	return s.parkingRequestAllGetter.Execute(ctx)
 }
 
-// GetDriversParkingRequests wrpas the GetDriversParkingRequests usecase.
+// GetDriversParkingRequests wraps the GetDriversParkingRequests usecase.
 func (s *ParkingRequestFacade) GetDriversParkingRequests(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error) {
 	return s.parkingRequestDriversGetter.Execute(ctx, id)
 }

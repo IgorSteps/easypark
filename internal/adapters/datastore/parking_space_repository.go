@@ -28,7 +28,7 @@ func NewParkingSpacePostgresRepository(l *logrus.Logger, db Datastore) *ParkingS
 func (s *ParkingSpacePostgresRepository) GetParkingSpaceByID(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error) {
 	var space entities.ParkingSpace
 
-	result := s.DB.WithContext(ctx).First(&space, "id = ?", id)
+	result := s.DB.WithContext(ctx).Preload("ParkingRequests").First(&space, "id = ?", id)
 	err := result.Error()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
