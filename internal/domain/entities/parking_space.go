@@ -31,8 +31,9 @@ func (s *ParkingSpace) OnCreate(name string, parkingLotID uuid.UUID) {
 }
 
 // CheckForOverlap checks that the new request's time slot doesn't overlap with existing parking requests' time slots.
-// TODO: TVery naive way of checking for overlap, hence the performance is shit, refactor in the future
 func (s *ParkingSpace) CheckForOverlap(requestStartTime, requestEndTime time.Time) bool {
+	// TODO: Very naive way of checking for overlap, hence the performance is not great for large number of parking requests,
+	// but I think it is okay for an MVP.
 	for _, parkingRequest := range s.ParkingRequests {
 		// Checks if the new request completely overlaps an existing request
 		if requestStartTime.Before(parkingRequest.StartTime) && requestEndTime.After(parkingRequest.EndTime) {

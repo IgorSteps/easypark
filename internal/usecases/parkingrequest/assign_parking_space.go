@@ -69,13 +69,12 @@ func (s *AssignParkingSpace) Execute(ctx context.Context, requestID uuid.UUID, p
 	case entities.StatusBlocked:
 		s.logger.Warn("not allowed to assign blocked parking space")
 		return repositories.NewInvalidInputError("not allowed to assign blocked parking space")
-
 	case entities.StatusReserved:
-		// TODO: Check against existing reservations for this parking space.
-		s.logger.Warn("not implemented, cannot assign reserved parking spaces yet")
-		return repositories.NewInternalError("not implemented, cannot assign reserved parking spaces yet")
-
-	case entities.StatusOccupied: // If space is occupied now, it can be available in the future, so check for overlap.
+		// TODO: Ideally, we would allow to have reservations for parking spaces like we do with parking requests.
+		// but there a lot of considerations...
+		s.logger.Warn("not allowed to assign reserved parking space")
+		return repositories.NewInvalidInputError("not allowed to assign reserved parking space")
+	case entities.StatusOccupied: // If space is occupied now, it can be available in the future, so still check for overlap.
 	case entities.StatusAvailable:
 		if parkingSpace.CheckForOverlap(parkingRequest.StartTime, parkingRequest.EndTime) {
 			s.logger.Warn("there is an overlap with existing parking requests time slots")
