@@ -6,8 +6,11 @@ import (
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 )
 
-// NotificationRepository provides an interfaces for CRUD opertions on Notifications.
+// NotificationRepository provides an interfaces for CRUD operations on Notifications.
 type NotificationRepository interface {
-	// Create creates a notificaioin in our DB.
+	// Create creates a notification in our DB.
 	Create(ctx context.Context, notification *entities.Notification) error
+
+	// GetAll gets all notifications for our DB.
+	GetAll(ctx context.Context) ([]entities.Notification, error)
 }

@@ -34,3 +34,17 @@ func (s *NotificationPostgresRepository) Create(ctx context.Context, notificatio
 
 	return nil
 }
+
+// GetAll get all notifications from our database.
+func (s *NotificationPostgresRepository) GetAll(ctx context.Context) ([]entities.Notification, error) {
+	var notifications []entities.Notification
+	result := s.DB.WithContext(ctx).FindAll(&notifications)
+
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).Error("failed to get all notifications in the database")
+		return nil, repositories.NewInternalError("failed to get all notifications in the database")
+	}
+
+	return notifications, nil
+}

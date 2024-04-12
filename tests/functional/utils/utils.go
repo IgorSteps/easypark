@@ -217,3 +217,22 @@ func GetSingleParkingRequest(ctx context.Context, id, token string, s *client.Re
 
 	return targetSpageModel
 }
+
+func CreateNotification(
+	ctx context.Context,
+	driverToken,
+	adminToken string,
+	driverID uuid.UUID,
+	req *models.CreateNotificationRequest,
+	s *client.RestClientSuite,
+) entities.Notification {
+	respBody, respCode, err := s.CreateNotification(ctx, driverToken, driverID, req)
+
+	s.Require().NoError(err, "Must not return an error")
+	s.Require().Equal(http.StatusCreated, respCode, "Response code must be 201")
+
+	var targetModel entities.Notification
+	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
+	s.Require().NoError(err, "Must not return an error")
+	return targetModel
+}
