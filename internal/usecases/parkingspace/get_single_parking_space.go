@@ -9,11 +9,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// GetSingleParkingSpace provides business logic to get a single parking space.
 type GetSingleParkingSpace struct {
 	logger *logrus.Logger
 	repo   repositories.ParkingSpaceRepository
 }
 
+// NewGetSingleParkingSpace returns a new instance of GetSingleParkingSpace.
 func NewGetSingleParkingSpace(l *logrus.Logger, r repositories.ParkingSpaceRepository) *GetSingleParkingSpace {
 	return &GetSingleParkingSpace{
 		logger: l,
@@ -21,6 +23,7 @@ func NewGetSingleParkingSpace(l *logrus.Logger, r repositories.ParkingSpaceRepos
 	}
 }
 
+// Execute runs the business logic.
 func (s *GetSingleParkingSpace) Execute(ctx context.Context, parkingSpaceID uuid.UUID) (entities.ParkingSpace, error) {
 	return s.repo.GetParkingSpaceByID(ctx, parkingSpaceID)
 }

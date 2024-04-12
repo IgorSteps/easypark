@@ -10,11 +10,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// ParkingSpaceGetSingleHandler provides a REST Handler implementation to get a single parking space and
+// implements http.Handler interface.
 type ParkingSpaceGetSingleHandler struct {
 	logger *logrus.Logger
 	facade ParkingSpaceFacade
 }
 
+// NewParkingSpaceGetSingleHandler returns a new instance of ParkingSpaceGetSingleHandler.
 func NewParkingSpaceGetSingleHandler(l *logrus.Logger, f ParkingSpaceFacade) *ParkingSpaceGetSingleHandler {
 	return &ParkingSpaceGetSingleHandler{
 		logger: l,
@@ -22,6 +25,7 @@ func NewParkingSpaceGetSingleHandler(l *logrus.Logger, f ParkingSpaceFacade) *Pa
 	}
 }
 
+// ServeHTTP handles incoming HTTP request to get a single parking space. Method name matches the http.Handler interface.
 func (s *ParkingSpaceGetSingleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	parkingSpaceID := chi.URLParam(r, "id")
 	parsedID, err := uuid.Parse(parkingSpaceID)
