@@ -94,6 +94,8 @@ func SetupApp() (*App, error) {
 		// parking space
 		parkingSpaceUsecases.NewUpdateParkingSpaceStatus,
 		wire.Bind(new(usecasefacades.ParkingSpaceStatusUpdater), new(*parkingSpaceUsecases.UpdateParkingSpaceStatus)),
+		parkingSpaceUsecases.NewGetSingleParkingSpace,
+		wire.Bind(new(usecasefacades.ParkingSpaceGetter), new(*parkingSpaceUsecases.GetSingleParkingSpace)),
 		// notification
 		notificationUsecases.NewCreateNotification,
 		wire.Bind(new(usecasefacades.NotificationCreator), new(*notificationUsecases.CreateNotification)),

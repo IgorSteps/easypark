@@ -14,21 +14,29 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestCreateNotification_Execute_HappyPath(t *testing.T) {
+func TestCreateNotification_Execute_HappyPath_Arrival(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
 	testLogger, _ := test.NewNullLogger()
-	mockRepo := &mocks.NotificationRepository{}
-	usecase := usecases.NewCreateNotification(testLogger, mockRepo)
+	mockNotificationRepo := &mocks.NotificationRepository{}
+	mockSpaceRepo := &mocks.ParkingSpaceRepository{}
+	usecase := usecases.NewCreateNotification(testLogger, mockNotificationRepo, mockSpaceRepo)
 
 	testCtx := context.Background()
 	testDriverID := uuid.New()
 	testSpaceID := uuid.New()
 	testLocation := "boom"
-	testNotificationType := 0
+	testNotificationType := 0 // arrival
 
-	mockRepo.EXPECT().Create(testCtx, mock.Anything).Return(nil).Once()
+	testParkingSpace := entities.ParkingSpace{
+		ID:     testSpaceID,
+		Status: entities.StatusAvailable,
+	}
+	mockSpaceRepo.EXPECT().GetParkingSpaceByID(testCtx, testSpaceID).Return(testParkingSpace, nil).Once()
+	mockNotificationRepo.EXPECT().Create(testCtx, mock.Anything).Return(nil).Once()
+	testParkingSpace.Status = entities.StatusOccupied
+	mockSpaceRepo.EXPECT().Save(testCtx, &testParkingSpace).Return(nil).Once()
 
 	// --------
 	// ACT
@@ -43,7 +51,49 @@ func TestCreateNotification_Execute_HappyPath(t *testing.T) {
 	assert.Equal(t, testDriverID, notification.DriverID)
 	assert.Equal(t, testLocation, notification.Location)
 	assert.Equal(t, testSpaceID, notification.ParkingSpaceID)
-	mockRepo.AssertExpectations(t)
+	mockNotificationRepo.AssertExpectations(t)
+	mockSpaceRepo.AssertExpectations(t)
+}
+
+func TestCreateNotification_Execute_HappyPath_Departure(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockNotificationRepo := &mocks.NotificationRepository{}
+	mockSpaceRepo := &mocks.ParkingSpaceRepository{}
+	usecase := usecases.NewCreateNotification(testLogger, mockNotificationRepo, mockSpaceRepo)
+
+	testCtx := context.Background()
+	testDriverID := uuid.New()
+	testSpaceID := uuid.New()
+	testLocation := "boom"
+	testNotificationType := 1 // departure
+
+	testParkingSpace := entities.ParkingSpace{
+		ID:     testSpaceID,
+		Status: entities.StatusAvailable,
+	}
+	mockSpaceRepo.EXPECT().GetParkingSpaceByID(testCtx, testSpaceID).Return(testParkingSpace, nil).Once()
+	mockNotificationRepo.EXPECT().Create(testCtx, mock.Anything).Return(nil).Once()
+	testParkingSpace.Status = entities.StatusAvailable
+	mockSpaceRepo.EXPECT().Save(testCtx, &testParkingSpace).Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	notification, err := usecase.Execute(testCtx, testDriverID, testSpaceID, testLocation, testNotificationType)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.Equal(t, entities.DepartureNotification, notification.Type, "Notification type is wrong")
+	assert.Equal(t, testDriverID, notification.DriverID)
+	assert.Equal(t, testLocation, notification.Location)
+	assert.Equal(t, testSpaceID, notification.ParkingSpaceID)
+	mockNotificationRepo.AssertExpectations(t)
+	mockSpaceRepo.AssertExpectations(t)
 }
 
 func TestCreateNotification_Execute_UnhappyPath_ParsingFailed(t *testing.T) {
@@ -52,7 +102,8 @@ func TestCreateNotification_Execute_UnhappyPath_ParsingFailed(t *testing.T) {
 	// --------
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.NotificationRepository{}
-	usecase := usecases.NewCreateNotification(testLogger, mockRepo)
+	mockSpaceRepo := &mocks.ParkingSpaceRepository{}
+	usecase := usecases.NewCreateNotification(testLogger, mockRepo, mockSpaceRepo)
 
 	testCtx := context.Background()
 	testDriverID := uuid.New()

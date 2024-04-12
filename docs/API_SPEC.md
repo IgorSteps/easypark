@@ -543,7 +543,48 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 
 ## Parking Space
 
-### 1. Update Parking Space Status API Endpoint
+### 1. Get Single Parking Space API Endpoint
+
+**Endpoint**: `GET /parking-spaces/{id}`
+
+**Description**: Gets a parking space status with the given ID.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spaces/{id}
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+  {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
+    "Name":"cmp-1",
+    "Status":"blocked",
+    "FreeAt":"0000-12-31T23:58:45-00:01",
+    "OccupiedAt":"0000-12-31T23:58:45-00:01",
+    "UserID":null,
+    "ParkingRequests":null
+  }
+  ```
+
+  - **400 BAD REQUEST**
+
+  ```json
+  {"meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"Internal error: meaningful error message"}
+  ```
+
+### 2. Update Parking Space Status API Endpoint
 
 **Endpoint**: `PATCH /parking-spaces/{id}/status`
 
@@ -597,7 +638,7 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
 
 **Endpoint**: `POST /drivers/{id}/notification`
 
-**Description**: Creates a notification for a driver with the given id.
+**Description**: Creates a notification for a driver with the given id. Notification type is `Arrival = 0` and `Departure = 1`.
 
 **Request Body**:
 
@@ -606,8 +647,35 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "parkingSpaceID": "some park space id",
+    "parkingSpaceID": "allocated parking space id",
     "location": "cmp-1",
     "notificationType": 0
 }'
 ```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+  {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "Type": 0,
+    "DriverID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "Location":"cmp-1",
+    "Timestamp":"0000-12-31T23:58:45-00:01",
+  }
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"Internal error: meaningful error message"}
+  ```

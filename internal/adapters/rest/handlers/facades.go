@@ -38,6 +38,9 @@ type ParkingLotFacade interface {
 type ParkingSpaceFacade interface {
 	// UpdateParkingSpaceStatus is implemented by usecasefacades.ParkingSpaceFacade that wraps updating parking space status usecase.
 	UpdateParkingSpaceStatus(ctx context.Context, id uuid.UUID, status string) (entities.ParkingSpace, error)
+
+	// GetSingleParkingSpace is implemented by usecasefacades.ParkingSpaceFacade that wraps getting single parking space usecase.
+	GetSingleParkingSpace(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error)
 }
 
 // ParkingRequestFacade provides an interface implemented by usecasefacades.ParkingRequestFacade.

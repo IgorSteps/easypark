@@ -90,3 +90,8 @@ func (s *HandlerFactory) UpdateParkingSpaceStatus() http.Handler {
 func (s *HandlerFactory) CreateNotification() http.Handler {
 	return NewNotificationCreateHandler(s.logger, s.facade.notificationFacade)
 }
+
+// GetSingleParkingSpace returns a new REST handler to get a single parking space.
+func (s *HandlerFactory) GetSingleParkingSpace() http.Handler {
+	return NewParkingSpaceGetSingleHandler(s.logger, s.facade.parkingSpaceFacade)
+}

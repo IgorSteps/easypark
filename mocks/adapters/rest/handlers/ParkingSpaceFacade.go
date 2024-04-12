@@ -25,6 +25,63 @@ func (_m *ParkingSpaceFacade) EXPECT() *ParkingSpaceFacade_Expecter {
 	return &ParkingSpaceFacade_Expecter{mock: &_m.Mock}
 }
 
+// GetSingleParkingSpace provides a mock function with given fields: ctx, id
+func (_m *ParkingSpaceFacade) GetSingleParkingSpace(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSingleParkingSpace")
+	}
+
+	var r0 entities.ParkingSpace
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (entities.ParkingSpace, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) entities.ParkingSpace); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(entities.ParkingSpace)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ParkingSpaceFacade_GetSingleParkingSpace_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSingleParkingSpace'
+type ParkingSpaceFacade_GetSingleParkingSpace_Call struct {
+	*mock.Call
+}
+
+// GetSingleParkingSpace is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id uuid.UUID
+func (_e *ParkingSpaceFacade_Expecter) GetSingleParkingSpace(ctx interface{}, id interface{}) *ParkingSpaceFacade_GetSingleParkingSpace_Call {
+	return &ParkingSpaceFacade_GetSingleParkingSpace_Call{Call: _e.mock.On("GetSingleParkingSpace", ctx, id)}
+}
+
+func (_c *ParkingSpaceFacade_GetSingleParkingSpace_Call) Run(run func(ctx context.Context, id uuid.UUID)) *ParkingSpaceFacade_GetSingleParkingSpace_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uuid.UUID))
+	})
+	return _c
+}
+
+func (_c *ParkingSpaceFacade_GetSingleParkingSpace_Call) Return(_a0 entities.ParkingSpace, _a1 error) *ParkingSpaceFacade_GetSingleParkingSpace_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ParkingSpaceFacade_GetSingleParkingSpace_Call) RunAndReturn(run func(context.Context, uuid.UUID) (entities.ParkingSpace, error)) *ParkingSpaceFacade_GetSingleParkingSpace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateParkingSpaceStatus provides a mock function with given fields: ctx, id, status
 func (_m *ParkingSpaceFacade) UpdateParkingSpaceStatus(ctx context.Context, id uuid.UUID, status string) (entities.ParkingSpace, error) {
 	ret := _m.Called(ctx, id, status)

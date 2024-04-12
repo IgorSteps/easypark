@@ -191,3 +191,29 @@ func BlockParkingSpace(ctx context.Context, adminToken string, parkingSpaceID uu
 
 	s.Require().Equal(entities.StatusBlocked, targetSpaceModel.Status, "Wrong status")
 }
+
+func GetAllParkingLots(ctx context.Context, adminToken string, s *client.RestClientSuite) []entities.ParkingLot {
+	respBody, respCode, err := s.GetAllParkingLots(ctx, adminToken)
+	s.Require().NoError(err, "No error must be returned when updating parking space status")
+	s.Require().Equal(http.StatusOK, respCode, "Response code should be 200")
+
+	// Unmarshall response.
+	var targetLotModel []entities.ParkingLot
+	err = s.UnmarshalHTTPResponse(respBody, &targetLotModel)
+	s.Require().NoError(err, "failed to unmarshall response")
+
+	return targetLotModel
+}
+
+func GetSingleParkingRequest(ctx context.Context, id, token string, s *client.RestClientSuite) entities.ParkingSpace {
+	respBody, respCode, err := s.GetSingleParkingSpace(ctx, token, id)
+	s.Require().NoError(err, "No error must be returned when updating parking space status")
+	s.Require().Equal(http.StatusOK, respCode, "Response code should be 200")
+
+	// Unmarshall response.
+	var targetSpageModel entities.ParkingSpace
+	err = s.UnmarshalHTTPResponse(respBody, &targetSpageModel)
+	s.Require().NoError(err, "failed to unmarshall response")
+
+	return targetSpageModel
+}
