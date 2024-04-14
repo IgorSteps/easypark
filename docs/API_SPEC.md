@@ -46,7 +46,7 @@ curl -X POST http://localhost:8080/login \
   
     ```json
     {
-      "error": "Invalid credentials" // or "User not found"
+      "error": "Invalid credentials"
     }
     ```
 
@@ -99,7 +99,7 @@ curl -X POST http://localhost:8080/register \
 
     ```json
     {
-      "error": "User already exists" // or "invalid request body"
+      "error": "User already exists"
     }
     ```
 
@@ -155,7 +155,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 **Endpoint**: `PATCH /drivers/{id}/status`
 
-**Description**: Updates driver status in the system.
+**Description**: Updates driver status in the system(can only be `ban` status for now).
 
 **Request Body**:
 
@@ -163,9 +163,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
   
   ```bash
   curl -X PATCH http://localhost:8080/drivers/{id}/status \
-      -H "Content-Type: application/json" \
-      -H "Authorization: Bearer <ADMIN_TOKEN>" \
-      -d '{"status":"ban"}'
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <ADMIN_TOKEN>" \
+  -d '{"status":"ban"}'
   ```
 
 **Responses**:
@@ -371,7 +371,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
   }
   ```
 
-### 5. Update Parking Request Space API Endpoint
+### 5. Assign Parking Request a Space API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/space`
 
@@ -420,7 +420,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
 
 **Endpoint**: `POST /parking-lots`
 
-**Description**: Create a parking lot.
+**Description**: Create a parking lot, and its parking spaces.
 
 **Request Body**:
 
@@ -445,13 +445,11 @@ curl -X POST http://localhost:8080/parking-lots \
     "capacity":10,
     "parkingSpaces":[
         {
-          "ID":"a2856678-3bfb-4ce2-a041-b5d0048d8993",
+          "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
           "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
-          "Name":"science-1",
-          "Status":"available",
-          "FreeAt":"0001-01-01T00:00:00Z","OccupiedAt":"0001-01-01T00:00:00Z",
-          "UserID":null,
-          "ParkingRequests":null
+          "Name":"cmp-1",
+          "Status":"blocked",
+          "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
         },
         {"other spaces..."}
       ]
@@ -462,7 +460,7 @@ curl -X POST http://localhost:8080/parking-lots \
 
 **Endpoint**: `GET /parking-lots`
 
-**Description**: Gets all parking lots and their statistics.
+**Description**: Gets all parking lots and their statistics(total, occupied, available, blocked and reserved spaces).
 
 **Request Body**:
 
@@ -482,14 +480,11 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
         "Capacity":10,
         "ParkingSpaces":[
           {
-            "ID":"66ad6486-50da-45e8-b614-e7f1f68d7669",
+            "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
             "ParkingLotID":"bb8625ea-8c80-484c-8a75-3386649eef25",
             "Name":"cmp-1",
-            "Status":"available",
-            "FreeAt":"0000-12-31T23:58:45-00:01",
-            "OccupiedAt":"0000-12-31T23:58:45-00:01",
-            "UserID":null,
-            "ParkingRequests":null
+            "Status":"blocked",
+            "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
           },
           {"other parking spaces..."}
         ],
@@ -512,7 +507,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
 
 **Endpoint**: `DELETE /parking-lots/{id}`
 
-**Description**: Deletes a parking lots with given ID.
+**Description**: Deletes a parking lots with given ID, as well as its parking spaces and parking requests referencing these spaces.
 
 **Request Body**:
 
@@ -565,10 +560,7 @@ curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spac
     "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
     "Name":"cmp-1",
     "Status":"blocked",
-    "FreeAt":"0000-12-31T23:58:45-00:01",
-    "OccupiedAt":"0000-12-31T23:58:45-00:01",
-    "UserID":null,
-    "ParkingRequests":null
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
   }
   ```
 
@@ -613,10 +605,7 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
     "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
     "Name":"cmp-1",
     "Status":"blocked",
-    "FreeAt":"0000-12-31T23:58:45-00:01",
-    "OccupiedAt":"0000-12-31T23:58:45-00:01",
-    "UserID":null,
-    "ParkingRequests":null
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
   }
   ```
 
@@ -718,3 +707,32 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/notificatio
   }
   ```
   
+## Alert
+
+### 1. Get Single Alert API Endpoint
+
+**Endpoint**: `GET /alerts/{id}`
+
+**Description**: Gets single alert using its id.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/alerts/{id}
+```
+
+**RESPONSES**:
+
+Returns an error of one of these types: `0 - Location mismatch alert`.
+
+- **200 OK**
+
+  ```json
+  {
+      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "Type": 0,
+      "Message": "some message",
+      "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+    },
+  ```
