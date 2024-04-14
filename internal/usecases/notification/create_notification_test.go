@@ -179,8 +179,11 @@ func TestCreateNotification_Execute_LocationMismatchAlert(t *testing.T) {
 
 	// assert logger
 	assert.Equal(t, 2, len(hook.Entries), "Logger must log twice")
-	assert.Equal(t, "created alert for location mismatch on arrival", hook.Entries[0].Message)
-	assert.Equal(t, testAlert, hook.Entries[0].Data["alert"])
+	assert.Equal(t, "created location mismatch alert", hook.Entries[0].Message)
+	assert.Equal(t, testAlert.ID, hook.Entries[0].Data["id"])
+	assert.Equal(t, testAlert.Message, hook.Entries[0].Data["msg"])
+	assert.Equal(t, testAlert.Type, hook.Entries[0].Data["type"])
+	assert.Equal(t, testAlert.UserID, hook.Entries[0].Data["driverID"])
 	assert.Equal(t, "location mismatch, not updating parking space status to occupied", hook.Entries[1].Message)
 }
 
