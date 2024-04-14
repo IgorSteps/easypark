@@ -17,7 +17,8 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
-	usecases5 "github.com/IgorSteps/easypark/internal/usecases/notification"
+	usecases5 "github.com/IgorSteps/easypark/internal/usecases/alert"
+	usecases6 "github.com/IgorSteps/easypark/internal/usecases/notification"
 	usecases3 "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	usecases2 "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
 	usecases4 "github.com/IgorSteps/easypark/internal/usecases/parkingspace"
@@ -68,10 +69,14 @@ func SetupApp() (*App, error) {
 	getSingleParkingSpace := usecases4.NewGetSingleParkingSpace(logrusLogger, parkingSpacePostgresRepository)
 	parkingSpaceFacade := usecasefacades.NewParkingSpaceFacade(updateParkingSpaceStatus, getSingleParkingSpace)
 	notificationPostgresRepository := datastore.NewNotificationPostgresRepository(logrusLogger, gormWrapper)
-	createNotification := usecases5.NewCreateNotification(logrusLogger, notificationPostgresRepository, parkingSpacePostgresRepository)
-	getAllNotifications := usecases5.NewGetAllNotifications(logrusLogger, notificationPostgresRepository)
+	alertPostgresRepository := datastore.NewAlertPostgresRepository(logrusLogger, gormWrapper)
+	createAlert := usecases5.NewCreateAlert(logrusLogger, alertPostgresRepository)
+	createNotification := usecases6.NewCreateNotification(logrusLogger, notificationPostgresRepository, parkingSpacePostgresRepository, createAlert)
+	getAllNotifications := usecases6.NewGetAllNotifications(logrusLogger, notificationPostgresRepository)
 	notificationFacade := usecasefacades.NewNotificationFacade(createNotification, getAllNotifications)
-	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade, parkingSpaceFacade, notificationFacade)
+	getSingleAlert := usecases5.NewGetSingleAlert(logrusLogger, alertPostgresRepository)
+	alertFacade := usecasefacades.NewAlertFacade(getSingleAlert)
+	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade, parkingSpaceFacade, notificationFacade, alertFacade)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
 	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)

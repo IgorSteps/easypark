@@ -1,12 +1,17 @@
 # Design
 
-This document describes the states, rules and assumptions of parking requests, spaces and notifications within the EasyPark system. It is a guide for admins and developers in managing and understanding how parking resources are allocated and maintained.
+This document describes the states, rules and assumptions of entities within the EasyPark system. It is a guide for admins and developers in managing and understanding how parking resources are allocated and maintained.
 
 ## States
 
+### Parking Lot
+
+- When a parking lot is created, all its parking spaces in it are of `available` status.
+- When a parking lot is deleted, all its parking spaces and parking requests referencing those parking spaces are deleted.
+
 ### Parking Request
 
-States a parking request can be in: pending, approved, rejected.
+States a parking request can be in: `pending`, `approved`, `rejected`.
 
 - **Pending**:
   - All new parking requests are created a 'pending' status.
@@ -23,7 +28,7 @@ States a parking request can be in: pending, approved, rejected.
 
 ### Parking Space
 
-States a parking space can be in: available, occupied, reserved, blocked.
+States a parking space can be in: `available`, `occupied`, `reserved`, `blocked`.
 
 - **Initial State**:
   - Upon creation, all parking spaces are set to 'available'.
@@ -43,6 +48,10 @@ States a parking space can be in: available, occupied, reserved, blocked.
   - A block starts immediately and only ends when the admin changes the status of the parking space.
 - **Unblocking**:
   - When a space is unblocked by the admin, its status immediately returns to 'available'.
+
+### Notifications
+
+### Alerts
 
 ## Assumptions
 

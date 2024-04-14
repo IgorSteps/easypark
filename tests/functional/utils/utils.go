@@ -205,7 +205,7 @@ func GetAllParkingLots(ctx context.Context, adminToken string, s *client.RestCli
 	return targetLotModel
 }
 
-func GetSingleParkingRequest(ctx context.Context, id, token string, s *client.RestClientSuite) entities.ParkingSpace {
+func GetSingleParkingSpace(ctx context.Context, id, token string, s *client.RestClientSuite) entities.ParkingSpace {
 	respBody, respCode, err := s.GetSingleParkingSpace(ctx, token, id)
 	s.Require().NoError(err, "No error must be returned when updating parking space status")
 	s.Require().Equal(http.StatusOK, respCode, "Response code should be 200")

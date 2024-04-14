@@ -33,7 +33,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 
 	testRequest := &models.CreateNotificationRequest{
 		ParkingSpaceID:   parkingSpaceID,
-		Location:         "cmp",
+		Location:         parkingLot.ParkingSpaces[0].Name,
 		NotificationType: 0, // arrival
 	}
 
@@ -44,7 +44,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 	// --------
 	respBody, respCode, err := s.CreateNotification(ctx, driverToken, driver.ID, testRequest)
 	// Get updated parking space to check the status has been updated.
-	parkingSpace := utils.GetSingleParkingRequest(ctx, parkingSpaceID.String(), adminToken, &s.RestClientSuite)
+	parkingSpace := utils.GetSingleParkingSpace(ctx, parkingSpaceID.String(), adminToken, &s.RestClientSuite)
 
 	// --------
 	// ASSERT
@@ -82,7 +82,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 
 	testRequest := &models.CreateNotificationRequest{
 		ParkingSpaceID:   parkingSpaceID,
-		Location:         "cmp",
+		Location:         parkingLot.ParkingSpaces[0].Name,
 		NotificationType: 1, // departure
 	}
 
@@ -93,7 +93,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	// --------
 	respBody, respCode, err := s.CreateNotification(ctx, driverToken, driver.ID, testRequest)
 	// Get updated parking space to check the status has been updated.
-	parkingSpace := utils.GetSingleParkingRequest(ctx, parkingSpaceID.String(), adminToken, &s.RestClientSuite)
+	parkingSpace := utils.GetSingleParkingSpace(ctx, parkingSpaceID.String(), adminToken, &s.RestClientSuite)
 
 	// --------
 	// ASSERT

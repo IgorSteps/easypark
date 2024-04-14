@@ -126,6 +126,10 @@ func (s *RestClientSuite) GetAllNotifications(ctx context.Context, adminToken st
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/notifications", nil, adminToken)
 }
 
+func (s *RestClientSuite) GetSingleAlert(ctx context.Context, adminToken string, id uuid.UUID) {
+
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)

@@ -22,6 +22,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	alertUsecases "github.com/IgorSteps/easypark/internal/usecases/alert"
 	notificationUsecases "github.com/IgorSteps/easypark/internal/usecases/notification"
 	parkingLotUsecases "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
 	parkingRequestUsecases "github.com/IgorSteps/easypark/internal/usecases/parkingrequest"
@@ -51,6 +52,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(repositories.ParkingLotRepository), new(*datastore.ParkingLotPostgresRepository)),
 		datastore.NewNotificationPostgresRepository,
 		wire.Bind(new(repositories.NotificationRepository), new(*datastore.NotificationPostgresRepository)),
+		datastore.NewAlertPostgresRepository,
+		wire.Bind(new(repositories.AlertRepository), new(*datastore.AlertPostgresRepository)),
 
 		// db
 		db.NewDatabaseFromConfig,
@@ -96,6 +99,11 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(usecasefacades.ParkingSpaceStatusUpdater), new(*parkingSpaceUsecases.UpdateParkingSpaceStatus)),
 		parkingSpaceUsecases.NewGetSingleParkingSpace,
 		wire.Bind(new(usecasefacades.ParkingSpaceGetter), new(*parkingSpaceUsecases.GetSingleParkingSpace)),
+		// alert
+		alertUsecases.NewCreateAlert,
+		wire.Bind(new(repositories.AlertCreator), new(*alertUsecases.CreateAlert)),
+		alertUsecases.NewGetSingleAlert,
+		wire.Bind(new(usecasefacades.AlertSingleGetter), new(*alertUsecases.GetSingleAlert)),
 		// notification
 		notificationUsecases.NewCreateNotification,
 		wire.Bind(new(usecasefacades.NotificationCreator), new(*notificationUsecases.CreateNotification)),
@@ -113,6 +121,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(handlers.ParkingSpaceFacade), new(*usecasefacades.ParkingSpaceFacade)),
 		usecasefacades.NewNotificationFacade,
 		wire.Bind(new(handlers.NotificationFacade), new(*usecasefacades.NotificationFacade)),
+		usecasefacades.NewAlertFacade,
+		wire.Bind(new(handlers.AlertFacade), new(*usecasefacades.AlertFacade)),
 		handlers.NewFacade,
 
 		// rest handlers and middleware
