@@ -70,6 +70,12 @@ type NotificationFacade interface {
 	GetAllNotifications(ctx context.Context) ([]entities.Notification, error)
 }
 
+// AlertFacade provides an interface implemented by usecasefacades.AlertFacade.
+type AlertFacade interface {
+	// GetAlert is implemented by usecasefacades.AlertFacade that wraps get a single alert usecase.
+	GetAlert(ctx context.Context, id uuid.UUID) (entities.Alert, error)
+}
+
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.
 type Facade struct {
 	userFacade           UserFacade
@@ -77,6 +83,7 @@ type Facade struct {
 	parkingLotFacade     ParkingLotFacade
 	parkingSpaceFacade   ParkingSpaceFacade
 	notificationFacade   NotificationFacade
+	alertFacade          AlertFacade
 }
 
 // NewFacade returns new instance of Facade.
@@ -86,6 +93,7 @@ func NewFacade(
 	plFacade ParkingLotFacade,
 	psFacade ParkingSpaceFacade,
 	nFacade NotificationFacade,
+	aFacade AlertFacade,
 ) *Facade {
 	return &Facade{
 		userFacade:           uFacade,
@@ -93,5 +101,6 @@ func NewFacade(
 		parkingLotFacade:     plFacade,
 		parkingSpaceFacade:   psFacade,
 		notificationFacade:   nFacade,
+		alertFacade:          aFacade,
 	}
 }

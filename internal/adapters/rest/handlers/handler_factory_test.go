@@ -19,7 +19,8 @@ func TestHandlers_UserCreate_HappyPath(t *testing.T) {
 	mockParkingLotFacade := &mocks.ParkingLotFacade{}
 	mockParkingSpacefacade := &mocks.ParkingSpaceFacade{}
 	mockNotificationFacade := &mocks.NotificationFacade{}
-	mockFacade := handlers.NewFacade(mockUserFacade, mockParkingRequestFacade, mockParkingLotFacade, mockParkingSpacefacade, mockNotificationFacade)
+	mockAlertFacade := &mocks.AlertFacade{}
+	mockFacade := handlers.NewFacade(mockUserFacade, mockParkingRequestFacade, mockParkingLotFacade, mockParkingSpacefacade, mockNotificationFacade, mockAlertFacade)
 
 	handlerFactory := handlers.NewHandlerFactory(testLogger, mockFacade)
 
@@ -44,7 +45,8 @@ func TestHandlers_UserLogin_HappyPath(t *testing.T) {
 	mockParkingLotFacade := &mocks.ParkingLotFacade{}
 	mockParkingSpacefacade := &mocks.ParkingSpaceFacade{}
 	mockNotificationFacade := &mocks.NotificationFacade{}
-	mockFacade := handlers.NewFacade(mockUserFacade, mockParkingRequestFacade, mockParkingLotFacade, mockParkingSpacefacade, mockNotificationFacade)
+	mockAlertFacade := &mocks.AlertFacade{}
+	mockFacade := handlers.NewFacade(mockUserFacade, mockParkingRequestFacade, mockParkingLotFacade, mockParkingSpacefacade, mockNotificationFacade, mockAlertFacade)
 
 	handlerFactory := handlers.NewHandlerFactory(testLogger, mockFacade)
 

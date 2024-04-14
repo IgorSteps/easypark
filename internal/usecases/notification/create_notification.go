@@ -9,20 +9,30 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// CreateNotification provides business logic to create notifications.
 type CreateNotification struct {
 	logger           *logrus.Logger
 	notificationRepo repositories.NotificationRepository
 	spaceRepo        repositories.ParkingSpaceRepository
+	alertCreator     repositories.AlertCreator
 }
 
-func NewCreateNotification(l *logrus.Logger, notifRepo repositories.NotificationRepository, spaceRepo repositories.ParkingSpaceRepository) *CreateNotification {
+// NewCreateNotification returns a new instance of CreateNotification.
+func NewCreateNotification(
+	l *logrus.Logger,
+	notifRepo repositories.NotificationRepository,
+	spaceRepo repositories.ParkingSpaceRepository,
+	alertCreator repositories.AlertCreator,
+) *CreateNotification {
 	return &CreateNotification{
 		logger:           l,
 		notificationRepo: notifRepo,
 		spaceRepo:        spaceRepo,
+		alertCreator:     alertCreator,
 	}
 }
 
+// Execute runs the business logic to create notifications.
 func (s *CreateNotification) Execute(ctx context.Context, driverID uuid.UUID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error) {
 	domainNotificationType, err := parseNotificationType(notificationType)
 	if err != nil {
@@ -45,20 +55,41 @@ func (s *CreateNotification) Execute(ctx context.Context, driverID uuid.UUID, sp
 
 	// Check notification type and update parking space status accordingly.
 	if domainNotificationType == entities.ArrivalNotification {
-		// Arrival.
+		// Check for if the parking space status is not available (shouldn't be the case).
 		if parkingSpace.Status != entities.StatusAvailable {
-			// Let's warn if the driver notifies about arrival at the space, which status is not available.
-			s.logger.WithField("parking space id", parkingSpace.ID).Warn("parking space isn't available but received arrival notification, continuing...")
+			s.logger.WithField("parking space id", parkingSpace.ID).Warn("parking space isn't available but received arrival notification")
 		}
 
+		// Check for location mismatch.
+		if location != parkingSpace.Name {
+			alert, err := s.alertCreator.Execute(ctx, entities.LocationMismatch, "driver arrived at wrong parking space", driverID, spaceID)
+			if err != nil {
+				s.logger.Error("failed to create location mismatch alert")
+				return entities.Notification{}, err
+			}
+
+			// Let's debug log the alert.
+			s.logger.WithFields(logrus.Fields{
+				"id":             alert.ID,
+				"type":           alert.Type,
+				"msg":            alert.Message,
+				"driverID":       alert.UserID,
+				"parkingSpaceID": alert.ParkingSpaceID,
+			}).Debug("created location mismatch alert")
+
+			s.logger.Info("location mismatch, not updating parking space status to occupied")
+			return notification, nil
+		}
+
+		// Update parking space status.
 		parkingSpace.Status = entities.StatusOccupied
 	} else {
-		// Departure.
+		// Check for if the parking space status is not occupied (shouldn't be the case).
 		if parkingSpace.Status != entities.StatusOccupied {
-			// Let's warn if the driver notifies about departure from a space, which status is not occupied.
-			s.logger.WithField("parking space id", parkingSpace.ID).Warn("parking space isn't occupied but received departure notification, continuing...")
+			s.logger.WithField("parking space id", parkingSpace.ID).Warn("parking space isn't occupied but received departure notification")
 		}
 
+		// Update parking space status.
 		parkingSpace.Status = entities.StatusAvailable
 	}
 

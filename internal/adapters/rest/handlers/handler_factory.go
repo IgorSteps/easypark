@@ -100,3 +100,8 @@ func (s *HandlerFactory) GetSingleParkingSpace() http.Handler {
 func (s *HandlerFactory) GetAllNotifications() http.Handler {
 	return NewNotificationGetAllHandler(s.logger, s.facade.notificationFacade)
 }
+
+// GetSingleAlert returns a new REST handler to get a single alert.
+func (s *HandlerFactory) GetSingleAlert() http.Handler {
+	return NewAlertGetSingleHandler(s.logger, s.facade.alertFacade)
+}
