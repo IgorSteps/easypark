@@ -33,7 +33,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 
 	testRequest := &models.CreateNotificationRequest{
 		ParkingSpaceID:   parkingSpaceID,
-		Location:         "cmp",
+		Location:         parkingLot.ParkingSpaces[0].Name,
 		NotificationType: 0, // arrival
 	}
 
@@ -82,7 +82,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 
 	testRequest := &models.CreateNotificationRequest{
 		ParkingSpaceID:   parkingSpaceID,
-		Location:         "cmp",
+		Location:         parkingLot.ParkingSpaces[0].Name,
 		NotificationType: 1, // departure
 	}
 
