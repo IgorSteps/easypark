@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
 	"github.com/IgorSteps/easypark/tests/functional/utils"
 	"github.com/stretchr/testify/suite"
@@ -41,12 +42,15 @@ func (s *AlertCreateTestSuite) TestCreateAlert_LocationMismatch() {
 	// ACT
 	// --------
 	utils.CreateNotification(ctx, driverToken, adminToken, driver.ID, arrivalNotification, &s.RestClientSuite)
+	space := utils.GetSingleParkingSpace(ctx, parkingSpaceID.String(), adminToken, &s.RestClientSuite)
 
 	// --------
 	// ASSERT
 	// --------
-	// Cannot be asserted that the alert was created, because it is created during the notification creation process, hence the client only gets a new notification
-	// in the HTTP response - no alert data is fed back to the client. We debug log it for now.
+	// Cannot be asserted that the alert was created, because it is created during the notification creation process,
+	// hence the client only gets a new notification in the HTTP response - no alert data is fed back to the client.
+	// We can only assert that parking space status hasn't been changed to 'occupied', because the alert has been sent.
+	s.Require().Equal(entities.StatusAvailable, space.Status)
 }
 
 func TestAlertCreateTestSuiteInit(t *testing.T) {
