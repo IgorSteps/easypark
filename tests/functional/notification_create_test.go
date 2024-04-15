@@ -94,8 +94,21 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	// Assign that parking request a space we chose above.
 	utils.AssignParkingSpace(ctx, parkingSpaceID, parkingRequest.ID, adminToken, &s.RestClientSuite)
 
+	// Setup the request to create an arrival notification.
+	testArrivalRequest := &models.CreateNotificationRequest{
+		ParkingRequestID: parkingRequest.ID,
+		ParkingSpaceID:   parkingSpaceID,
+		Location:         parkingLot.ParkingSpaces[0].Name,
+		NotificationType: 0, // departure
+	}
+	// First a space must get an arrival notification in order to be able to receive departure notifs.
+	respBody, respCode, err := s.CreateNotification(ctx, driverToken, driver.ID, testArrivalRequest)
+	s.Require().NoError(err, "Must not return an error")
+	s.Require().Equal(http.StatusCreated, respCode, "Response code must be 201")
+
 	// Setup the request to create a departure notification.
-	testRequest := &models.CreateNotificationRequest{
+	testDepartureRequest := &models.CreateNotificationRequest{
+		ParkingRequestID: parkingRequest.ID,
 		ParkingSpaceID:   parkingSpaceID,
 		Location:         parkingLot.ParkingSpaces[0].Name,
 		NotificationType: 1, // departure
@@ -104,7 +117,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	// --------
 	// ACT
 	// --------
-	respBody, respCode, err := s.CreateNotification(ctx, driverToken, driver.ID, testRequest)
+	respBody, respCode, err = s.CreateNotification(ctx, driverToken, driver.ID, testDepartureRequest)
 	// Get updated parking space to check the status has been updated.
 	parkingSpace := utils.GetSingleParkingSpace(ctx, parkingSpaceID.String(), adminToken, &s.RestClientSuite)
 
@@ -123,9 +136,9 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 
 	s.Require().NotEmpty(targetModel.ID)
 	s.Require().Equal(driver.ID, targetModel.DriverID)
-	s.Require().Equal(testRequest.ParkingSpaceID, targetModel.ParkingSpaceID)
-	s.Require().Equal(testRequest.Location, targetModel.Location)
-	s.Require().Equal(testRequest.NotificationType, int(targetModel.Type))
+	s.Require().Equal(testDepartureRequest.ParkingSpaceID, targetModel.ParkingSpaceID)
+	s.Require().Equal(testDepartureRequest.Location, targetModel.Location)
+	s.Require().Equal(testDepartureRequest.NotificationType, int(targetModel.Type))
 }
 
 func TestCreateNotificationSuiteInit(t *testing.T) {

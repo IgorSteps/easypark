@@ -24,19 +24,27 @@ func (s *AlertCreateTestSuite) TestCreateAlert_LocationMismatch() {
 	defer cancel()
 
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
+
+	// Create a parking lot
 	createParkingLot := &models.CreateParkingLotRequest{
 		Name:     "test-lot",
 		Capacity: 5,
 	}
 	parkingLot := utils.CreateParkingLot(ctx, adminToken, createParkingLot, &s.RestClientSuite)
 	parkingSpaceID := parkingLot.ParkingSpaces[0].ID
-	//parkingSpaceLocation := parkingLot.ParkingSpaces[0].Name // actual location
+
+	// Create parking request
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, nil, &s.RestClientSuite)
+	// Assign that parking request a space we chose above.
+	utils.AssignParkingSpace(ctx, parkingSpaceID, parkingRequest.ID, adminToken, &s.RestClientSuite)
+
 	arrivalNotification := &models.CreateNotificationRequest{
+		ParkingRequestID: parkingRequest.ID,
 		ParkingSpaceID:   parkingSpaceID,
 		Location:         "wrong location",
 		NotificationType: 0, // arrival
 	}
-	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	// --------
 	// ACT

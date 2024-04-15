@@ -34,9 +34,19 @@ func (s *TestCreateNotificationSuite) TestGetAllNotifications_HappyPath() {
 	parkingLot := utils.CreateParkingLot(ctx, adminToken, nil, &s.RestClientSuite)
 
 	var expectedNotfs []entities.Notification
-	for i := 0; i < 10; i++ {
+	// Start with 1 to allow time.Now() to work properly
+	for i := 1; i < 10; i++ {
 		parkingSpaceID := parkingLot.ParkingSpaces[i].ID
+		createParkReq := &models.CreateParkingRequestRequest{
+			DestinationParkingLotID: parkingLot.ID,
+			StartTime:               time.Now().Add(time.Duration(i) * time.Hour),
+			EndTime:                 time.Now().Add((time.Duration(i) * time.Hour) * time.Hour),
+		}
+		parkRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, createParkReq, &s.RestClientSuite)
+		utils.AssignParkingSpace(ctx, parkingSpaceID, parkRequest.ID, adminToken, &s.RestClientSuite)
+
 		testRequest := &models.CreateNotificationRequest{
+			ParkingRequestID: parkRequest.ID,
 			ParkingSpaceID:   parkingSpaceID,
 			Location:         "cmp",
 			NotificationType: 0, // arrival
