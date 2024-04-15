@@ -57,8 +57,15 @@ func (s *AlertCreateTestSuite) TestCreateAlert_LocationMismatch() {
 	// --------
 	// Cannot be asserted that the alert was created, because it is created during the notification creation process,
 	// hence the client only gets a new notification in the HTTP response - no alert data is fed back to the client.
-	// We can only assert that parking space status hasn't been changed to 'occupied', because the alert has been sent.
+	// We can only assert that parking space and request status hasn't been changed to 'occupied' and 'active',
+	// because the alert has been sent.
 	s.Require().Equal(entities.ParkingSpaceStatusAvailable, space.Status)
+	for _, parkReq := range space.ParkingRequests {
+		// check the status of the parking request was changed as well
+		if parkReq.ID == parkingRequest.ID {
+			s.Require().Equal(entities.RequestStatusApproved, parkReq.Status)
+		}
+	}
 }
 
 func TestAlertCreateTestSuiteInit(t *testing.T) {

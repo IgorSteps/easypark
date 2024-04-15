@@ -63,9 +63,14 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
 	s.Require().NoError(err, "Must not return an error")
 
-	// Check status.
+	// Check statuses.
 	s.Require().Equal(entities.ParkingSpaceStatusOccupied, parkingSpace.Status)
-
+	for _, parkReq := range parkingSpace.ParkingRequests {
+		// check the status of the parking request was changed as well
+		if parkReq.ID == parkingRequest.ID {
+			s.Require().Equal(entities.RequestStatusActive, parkReq.Status)
+		}
+	}
 	s.Require().NotEmpty(targetModel.ID)
 	s.Require().Equal(driver.ID, targetModel.DriverID)
 	s.Require().Equal(testRequest.ParkingSpaceID, targetModel.ParkingSpaceID)
@@ -131,8 +136,14 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
 	s.Require().NoError(err, "Must not return an error")
 
-	// Check status.
+	// Check statuses.
 	s.Require().Equal(entities.ParkingSpaceStatusAvailable, parkingSpace.Status)
+	for _, parkReq := range parkingSpace.ParkingRequests {
+		// check the status of the parking request was changed as well.
+		if parkReq.ID == parkingRequest.ID {
+			s.Require().Equal(entities.RequestStatusCompleted, parkReq.Status)
+		}
+	}
 
 	s.Require().NotEmpty(targetModel.ID)
 	s.Require().Equal(driver.ID, targetModel.DriverID)
