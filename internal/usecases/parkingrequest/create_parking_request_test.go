@@ -29,7 +29,7 @@ func TestCreateParkingRequest_HappyPath(t *testing.T) {
 	mockRepo := &mocks.ParkingRequestRepository{}
 	usecase := usecases.NewCreateParkingRequest(testLogger, mockRepo)
 
-	mockRepo.EXPECT().CreateParkingRequest(testContext, testParkingRequest).Return(nil).Once()
+	mockRepo.EXPECT().Create(testContext, testParkingRequest).Return(nil).Once()
 
 	// --------
 	// ACT
@@ -88,7 +88,7 @@ func TestCreateParkingRequest_UnhappyPath_RepositoryError(t *testing.T) {
 	usecase := usecases.NewCreateParkingRequest(testLogger, mockRepo)
 
 	testError := errors.New("boom")
-	mockRepo.EXPECT().CreateParkingRequest(testContext, testParkingRequest).Return(testError).Once()
+	mockRepo.EXPECT().Create(testContext, testParkingRequest).Return(testError).Once()
 
 	// --------
 	// ACT

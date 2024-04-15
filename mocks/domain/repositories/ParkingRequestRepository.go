@@ -24,12 +24,12 @@ func (_m *ParkingRequestRepository) EXPECT() *ParkingRequestRepository_Expecter 
 	return &ParkingRequestRepository_Expecter{mock: &_m.Mock}
 }
 
-// CreateParkingRequest provides a mock function with given fields: ctx, parkReq
-func (_m *ParkingRequestRepository) CreateParkingRequest(ctx context.Context, parkReq *entities.ParkingRequest) error {
+// Create provides a mock function with given fields: ctx, parkReq
+func (_m *ParkingRequestRepository) Create(ctx context.Context, parkReq *entities.ParkingRequest) error {
 	ret := _m.Called(ctx, parkReq)
 
 	if len(ret) == 0 {
-		panic("no return value specified for CreateParkingRequest")
+		panic("no return value specified for Create")
 	}
 
 	var r0 error
@@ -42,58 +42,58 @@ func (_m *ParkingRequestRepository) CreateParkingRequest(ctx context.Context, pa
 	return r0
 }
 
-// ParkingRequestRepository_CreateParkingRequest_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateParkingRequest'
-type ParkingRequestRepository_CreateParkingRequest_Call struct {
+// ParkingRequestRepository_Create_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Create'
+type ParkingRequestRepository_Create_Call struct {
 	*mock.Call
 }
 
-// CreateParkingRequest is a helper method to define mock.On call
+// Create is a helper method to define mock.On call
 //   - ctx context.Context
 //   - parkReq *entities.ParkingRequest
-func (_e *ParkingRequestRepository_Expecter) CreateParkingRequest(ctx interface{}, parkReq interface{}) *ParkingRequestRepository_CreateParkingRequest_Call {
-	return &ParkingRequestRepository_CreateParkingRequest_Call{Call: _e.mock.On("CreateParkingRequest", ctx, parkReq)}
+func (_e *ParkingRequestRepository_Expecter) Create(ctx interface{}, parkReq interface{}) *ParkingRequestRepository_Create_Call {
+	return &ParkingRequestRepository_Create_Call{Call: _e.mock.On("Create", ctx, parkReq)}
 }
 
-func (_c *ParkingRequestRepository_CreateParkingRequest_Call) Run(run func(ctx context.Context, parkReq *entities.ParkingRequest)) *ParkingRequestRepository_CreateParkingRequest_Call {
+func (_c *ParkingRequestRepository_Create_Call) Run(run func(ctx context.Context, parkReq *entities.ParkingRequest)) *ParkingRequestRepository_Create_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(*entities.ParkingRequest))
 	})
 	return _c
 }
 
-func (_c *ParkingRequestRepository_CreateParkingRequest_Call) Return(_a0 error) *ParkingRequestRepository_CreateParkingRequest_Call {
+func (_c *ParkingRequestRepository_Create_Call) Return(_a0 error) *ParkingRequestRepository_Create_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *ParkingRequestRepository_CreateParkingRequest_Call) RunAndReturn(run func(context.Context, *entities.ParkingRequest) error) *ParkingRequestRepository_CreateParkingRequest_Call {
+func (_c *ParkingRequestRepository_Create_Call) RunAndReturn(run func(context.Context, *entities.ParkingRequest) error) *ParkingRequestRepository_Create_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetAllParkingRequests provides a mock function with given fields: ctx
-func (_m *ParkingRequestRepository) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
-	ret := _m.Called(ctx)
+// GetMany provides a mock function with given fields: ctx, query
+func (_m *ParkingRequestRepository) GetMany(ctx context.Context, query map[string]interface{}) ([]entities.ParkingRequest, error) {
+	ret := _m.Called(ctx, query)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetAllParkingRequests")
+		panic("no return value specified for GetMany")
 	}
 
 	var r0 []entities.ParkingRequest
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]entities.ParkingRequest, error)); ok {
-		return rf(ctx)
+	if rf, ok := ret.Get(0).(func(context.Context, map[string]interface{}) ([]entities.ParkingRequest, error)); ok {
+		return rf(ctx, query)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []entities.ParkingRequest); ok {
-		r0 = rf(ctx)
+	if rf, ok := ret.Get(0).(func(context.Context, map[string]interface{}) []entities.ParkingRequest); ok {
+		r0 = rf(ctx, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]entities.ParkingRequest)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
-		r1 = rf(ctx)
+	if rf, ok := ret.Get(1).(func(context.Context, map[string]interface{}) error); ok {
+		r1 = rf(ctx, query)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -101,89 +101,31 @@ func (_m *ParkingRequestRepository) GetAllParkingRequests(ctx context.Context) (
 	return r0, r1
 }
 
-// ParkingRequestRepository_GetAllParkingRequests_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllParkingRequests'
-type ParkingRequestRepository_GetAllParkingRequests_Call struct {
+// ParkingRequestRepository_GetMany_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMany'
+type ParkingRequestRepository_GetMany_Call struct {
 	*mock.Call
 }
 
-// GetAllParkingRequests is a helper method to define mock.On call
+// GetMany is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *ParkingRequestRepository_Expecter) GetAllParkingRequests(ctx interface{}) *ParkingRequestRepository_GetAllParkingRequests_Call {
-	return &ParkingRequestRepository_GetAllParkingRequests_Call{Call: _e.mock.On("GetAllParkingRequests", ctx)}
+//   - query map[string]interface{}
+func (_e *ParkingRequestRepository_Expecter) GetMany(ctx interface{}, query interface{}) *ParkingRequestRepository_GetMany_Call {
+	return &ParkingRequestRepository_GetMany_Call{Call: _e.mock.On("GetMany", ctx, query)}
 }
 
-func (_c *ParkingRequestRepository_GetAllParkingRequests_Call) Run(run func(ctx context.Context)) *ParkingRequestRepository_GetAllParkingRequests_Call {
+func (_c *ParkingRequestRepository_GetMany_Call) Run(run func(ctx context.Context, query map[string]interface{})) *ParkingRequestRepository_GetMany_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
+		run(args[0].(context.Context), args[1].(map[string]interface{}))
 	})
 	return _c
 }
 
-func (_c *ParkingRequestRepository_GetAllParkingRequests_Call) Return(_a0 []entities.ParkingRequest, _a1 error) *ParkingRequestRepository_GetAllParkingRequests_Call {
+func (_c *ParkingRequestRepository_GetMany_Call) Return(_a0 []entities.ParkingRequest, _a1 error) *ParkingRequestRepository_GetMany_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *ParkingRequestRepository_GetAllParkingRequests_Call) RunAndReturn(run func(context.Context) ([]entities.ParkingRequest, error)) *ParkingRequestRepository_GetAllParkingRequests_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// GetAllParkingRequestsForUser provides a mock function with given fields: ctx, userID
-func (_m *ParkingRequestRepository) GetAllParkingRequestsForUser(ctx context.Context, userID uuid.UUID) ([]entities.ParkingRequest, error) {
-	ret := _m.Called(ctx, userID)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetAllParkingRequestsForUser")
-	}
-
-	var r0 []entities.ParkingRequest
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) ([]entities.ParkingRequest, error)); ok {
-		return rf(ctx, userID)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) []entities.ParkingRequest); ok {
-		r0 = rf(ctx, userID)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]entities.ParkingRequest)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID) error); ok {
-		r1 = rf(ctx, userID)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// ParkingRequestRepository_GetAllParkingRequestsForUser_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAllParkingRequestsForUser'
-type ParkingRequestRepository_GetAllParkingRequestsForUser_Call struct {
-	*mock.Call
-}
-
-// GetAllParkingRequestsForUser is a helper method to define mock.On call
-//   - ctx context.Context
-//   - userID uuid.UUID
-func (_e *ParkingRequestRepository_Expecter) GetAllParkingRequestsForUser(ctx interface{}, userID interface{}) *ParkingRequestRepository_GetAllParkingRequestsForUser_Call {
-	return &ParkingRequestRepository_GetAllParkingRequestsForUser_Call{Call: _e.mock.On("GetAllParkingRequestsForUser", ctx, userID)}
-}
-
-func (_c *ParkingRequestRepository_GetAllParkingRequestsForUser_Call) Run(run func(ctx context.Context, userID uuid.UUID)) *ParkingRequestRepository_GetAllParkingRequestsForUser_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(uuid.UUID))
-	})
-	return _c
-}
-
-func (_c *ParkingRequestRepository_GetAllParkingRequestsForUser_Call) Return(_a0 []entities.ParkingRequest, _a1 error) *ParkingRequestRepository_GetAllParkingRequestsForUser_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *ParkingRequestRepository_GetAllParkingRequestsForUser_Call) RunAndReturn(run func(context.Context, uuid.UUID) ([]entities.ParkingRequest, error)) *ParkingRequestRepository_GetAllParkingRequestsForUser_Call {
+func (_c *ParkingRequestRepository_GetMany_Call) RunAndReturn(run func(context.Context, map[string]interface{}) ([]entities.ParkingRequest, error)) *ParkingRequestRepository_GetMany_Call {
 	_c.Call.Return(run)
 	return _c
 }

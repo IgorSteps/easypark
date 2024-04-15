@@ -44,7 +44,7 @@ func TestParkingRequestPostgresRepository_CreateParkingRequest_HappyPath(t *test
 	// --------
 	// ACT
 	// --------
-	err := repository.CreateParkingRequest(testCtx, testParkingRequest)
+	err := repository.Create(testCtx, testParkingRequest)
 
 	// --------
 	// ASSERT
@@ -79,7 +79,7 @@ func TestParkingRequestPostgresRepository_CreateParkingRequest_UnhappyPath(t *te
 	// --------
 	// ACT
 	// --------
-	err := repository.CreateParkingRequest(testCtx, testParkingRequest)
+	err := repository.Create(testCtx, testParkingRequest)
 
 	// --------
 	// ASSERT
@@ -134,7 +134,7 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequests_HappyPath(t *tes
 	// --------
 	// ACT
 	// --------
-	actualParkingRequests, err := repository.GetAllParkingRequests(testCtx)
+	actualParkingRequests, err := repository.GetMany(testCtx, nil)
 
 	// --------
 	// ASSERT
@@ -163,19 +163,19 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequests_UnhappyPath(t *t
 	// --------
 	// ACT
 	// --------
-	actualParkingRequests, err := repository.GetAllParkingRequests(testCtx)
+	actualParkingRequests, err := repository.GetMany(testCtx, nil)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.Empty(t, actualParkingRequests, "Parking requests retunred must be empty")
 	assert.IsType(t, &repositories.InternalError{}, err, "Error type is wrong")
-	assert.EqualError(t, err, "Internal error: failed to query for all parking requests in the database")
+	assert.EqualError(t, err, "Internal error: failed to query for many parking requests in the database")
 
 	// Assert logger
 	assert.Equal(t, 1, len(hook.Entries), "Logger should log the error")
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level, "Log level must be Error")
-	assert.Equal(t, "failed to query for all parking requests in the database", hook.LastEntry().Message, "Log message is wrong")
+	assert.Equal(t, "failed to query for many parking requests in the database", hook.LastEntry().Message, "Log message is wrong")
 	assert.Equal(t, testError, hook.LastEntry().Data["error"], "Error in the logger is wrong")
 
 	mockDatastore.AssertExpectations(t)
@@ -213,7 +213,11 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequestsForUser_HappyPath
 
 	var requests []entities.ParkingRequest
 	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
-	mockDatastore.EXPECT().Where("user_id = ?", testUserID).Return(mockDatastore).Once()
+
+	query := map[string]interface{}{
+		"user_id": testUserID,
+	}
+	mockDatastore.EXPECT().Where(query).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().FindAll(&requests).Return(mockDatastore).Once().Run(func(args mock.Arguments) {
 		arg := args.Get(0).(*[]entities.ParkingRequest) // Get the first argument passed to FindAll()
 		*arg = testParkingRequests                      // Set it to the expected park reqs
@@ -223,7 +227,7 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequestsForUser_HappyPath
 	// --------
 	// ACT
 	// --------
-	actualParkingRequests, err := repository.GetAllParkingRequestsForUser(testCtx, testUserID)
+	actualParkingRequests, err := repository.GetMany(testCtx, query)
 
 	// --------
 	// ASSERT
@@ -247,28 +251,31 @@ func TestParkingRequestPostgresRepository_GetAllParkingRequestsForUser_UnhappyPa
 
 	var requests []entities.ParkingRequest
 	mockDatastore.EXPECT().WithContext(testCtx).Return(mockDatastore).Once()
-	mockDatastore.EXPECT().Where("user_id = ?", testUserID).Return(mockDatastore).Once()
+	query := map[string]interface{}{
+		"user_id": testUserID,
+	}
+	mockDatastore.EXPECT().Where(query).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().FindAll(&requests).Return(mockDatastore).Once()
 	mockDatastore.EXPECT().Error().Return(testError).Once()
 
 	// --------
 	// ACT
 	// --------
-	actualParkingRequests, err := repository.GetAllParkingRequestsForUser(testCtx, testUserID)
+	actualParkingRequests, err := repository.GetMany(testCtx, query)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.NotNil(t, err, "Error must not be nil")
 	assert.IsType(t, &repositories.InternalError{}, err, "Error returned is of wrong type")
-	assert.EqualError(t, err, "Internal error: failed to query for all parking requests in the database for particular user")
+	assert.EqualError(t, err, "Internal error: failed to query for many parking requests in the database")
 	assert.Empty(t, actualParkingRequests, "Parking requests retunred must be empty")
 	mockDatastore.AssertExpectations(t)
 
 	// Assert logger
 	assert.Equal(t, 1, len(hook.Entries), "Logger should log the error")
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level, "Log level must be Error")
-	assert.Equal(t, "failed to query for all parking requests in the database for particular user", hook.LastEntry().Message, "Log message is wrong")
+	assert.Equal(t, "failed to query for many parking requests in the database", hook.LastEntry().Message, "Log message is wrong")
 	assert.Equal(t, testError, hook.LastEntry().Data["error"], "Error in the logger is wrong")
 }
 

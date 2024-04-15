@@ -184,6 +184,7 @@ func TestParkingSpaceRepository_GetMany_HappyPath(t *testing.T) {
 		},
 	}
 	mockDB.EXPECT().WithContext(testCtx).Return(mockDB).Once()
+	mockDB.EXPECT().Preload("ParkingRequests").Return(mockDB).Once()
 	mockDB.EXPECT().Where(query).Return(mockDB).Once()
 	var spaces []entities.ParkingSpace
 	mockDB.EXPECT().FindAll(&spaces).Return(mockDB).Once().Run(func(args mock.Arguments) {

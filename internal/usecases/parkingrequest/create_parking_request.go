@@ -10,15 +10,15 @@ import (
 
 // CreateParkingRequest provides business logic to create a parking request.
 type CreateParkingRequest struct {
-	logger *logrus.Logger
-	repo   repositories.ParkingRequestRepository
+	logger             *logrus.Logger
+	parkingRequestRepo repositories.ParkingRequestRepository
 }
 
 // NewCreateParkingRequest creates a new instance of the CreateParkingRequest.
 func NewCreateParkingRequest(l *logrus.Logger, r repositories.ParkingRequestRepository) *CreateParkingRequest {
 	return &CreateParkingRequest{
-		logger: l,
-		repo:   r,
+		logger:             l,
+		parkingRequestRepo: r,
 	}
 }
 
@@ -31,7 +31,7 @@ func (s *CreateParkingRequest) Execute(ctx context.Context, parkingRequest *enti
 
 	parkingRequest.OnCreate()
 
-	err = s.repo.CreateParkingRequest(ctx, parkingRequest)
+	err = s.parkingRequestRepo.Create(ctx, parkingRequest)
 	if err != nil {
 		return nil, err
 	}

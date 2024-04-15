@@ -24,8 +24,8 @@ func NewParkingRequestPostgresRepository(db Datastore, lgr *logrus.Logger) *Park
 	}
 }
 
-// CreateParkingRequest inserts a parking request into the database.
-func (s *ParkingRequestPostgresRepository) CreateParkingRequest(ctx context.Context, parkReq *entities.ParkingRequest) error {
+// Create inserts a parking request into the database.
+func (s *ParkingRequestPostgresRepository) Create(ctx context.Context, parkReq *entities.ParkingRequest) error {
 	result := s.DB.WithContext(ctx).Create(parkReq)
 	err := result.Error()
 	if err != nil {
@@ -36,29 +36,24 @@ func (s *ParkingRequestPostgresRepository) CreateParkingRequest(ctx context.Cont
 	return nil
 }
 
-// GetAllParkingRequests gets all parking requests from the database.
-func (s *ParkingRequestPostgresRepository) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
+// GetMany gets many parking requests from the database.
+func (s *ParkingRequestPostgresRepository) GetMany(ctx context.Context, query map[string]interface{}) ([]entities.ParkingRequest, error) {
 	var requests []entities.ParkingRequest
 
-	result := s.DB.WithContext(ctx).FindAll(&requests)
-	err := result.Error()
-	if err != nil {
-		s.Logger.WithError(err).Error("failed to query for all parking requests in the database")
-		return []entities.ParkingRequest{}, repositories.NewInternalError("failed to query for all parking requests in the database")
+	result := s.DB.WithContext(ctx)
+
+	// If query passed, use it as filter.
+	if query != nil {
+		result = result.Where(query)
 	}
 
-	return requests, nil
-}
+	// Get all requests if no query passed.
+	result = result.FindAll(&requests)
 
-// GetAllParkingRequestsForUser gets all parking requests from the database for a particular user.
-func (s *ParkingRequestPostgresRepository) GetAllParkingRequestsForUser(ctx context.Context, userID uuid.UUID) ([]entities.ParkingRequest, error) {
-	var requests []entities.ParkingRequest
-
-	result := s.DB.WithContext(ctx).Where("user_id = ?", userID).FindAll(&requests)
 	err := result.Error()
 	if err != nil {
-		s.Logger.WithError(err).WithField("userID", userID).Error("failed to query for all parking requests in the database for particular user")
-		return []entities.ParkingRequest{}, repositories.NewInternalError("failed to query for all parking requests in the database for particular user")
+		s.Logger.WithError(err).WithField("query", query).Error("failed to query for many parking requests in the database")
+		return []entities.ParkingRequest{}, repositories.NewInternalError("failed to query for many parking requests in the database")
 	}
 
 	return requests, nil
