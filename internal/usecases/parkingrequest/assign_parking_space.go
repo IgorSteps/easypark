@@ -32,12 +32,12 @@ func NewAssignParkingSpace(
 
 // Execute runs the business logic to assign a parking space to a parking request.
 func (s *AssignParkingSpace) Execute(ctx context.Context, requestID uuid.UUID, parkingSpaceID uuid.UUID) error {
-	parkingSpace, err := s.parkingSpaceRepo.GetParkingSpaceByID(ctx, parkingSpaceID)
+	parkingSpace, err := s.parkingSpaceRepo.GetSingle(ctx, parkingSpaceID)
 	if err != nil {
 		return err
 	}
 
-	parkingRequest, err := s.parkingRequestRepo.GetParkingRequestByID(ctx, requestID)
+	parkingRequest, err := s.parkingRequestRepo.GetSingle(ctx, requestID)
 	if err != nil {
 		return err
 	}
@@ -66,16 +66,16 @@ func (s *AssignParkingSpace) Execute(ctx context.Context, requestID uuid.UUID, p
 
 	// Check the parking space status and act accordingly.
 	switch parkingSpace.Status {
-	case entities.StatusBlocked:
+	case entities.ParkingSpaceStatusBlocked:
 		s.logger.Warn("not allowed to assign blocked parking space")
 		return repositories.NewInvalidInputError("not allowed to assign blocked parking space")
-	case entities.StatusReserved:
+	case entities.ParkingSpaceStatusReserved:
 		// TODO: Ideally, we would allow to have reservations for parking spaces like we do with parking requests.
 		// but there a lot of considerations...
 		s.logger.Warn("not allowed to assign reserved parking space")
 		return repositories.NewInvalidInputError("not allowed to assign reserved parking space")
-	case entities.StatusOccupied: // If space is occupied now, it can be available in the future, so still check for overlap.
-	case entities.StatusAvailable:
+	case entities.ParkingSpaceStatusOccupied: // If space is occupied now, it can be available in the future, so still check for overlap.
+	case entities.ParkingSpaceStatusAvailable:
 		if parkingSpace.CheckForOverlap(parkingRequest.StartTime, parkingRequest.EndTime) {
 			s.logger.Warn("there is an overlap with existing parking requests time slots")
 			return repositories.NewInvalidInputError("there is an overlap with existing parking requests time slots")

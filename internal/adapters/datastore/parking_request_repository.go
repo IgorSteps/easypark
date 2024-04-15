@@ -64,8 +64,8 @@ func (s *ParkingRequestPostgresRepository) GetAllParkingRequestsForUser(ctx cont
 	return requests, nil
 }
 
-// GetParkingRequestByID gets a single parking request using its ID.
-func (s *ParkingRequestPostgresRepository) GetParkingRequestByID(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error) {
+// GetSingle gets a single parking request using its ID.
+func (s *ParkingRequestPostgresRepository) GetSingle(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error) {
 	var parkingRequest entities.ParkingRequest
 
 	result := s.DB.WithContext(ctx).First(&parkingRequest, "id = ?", id)

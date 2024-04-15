@@ -31,7 +31,7 @@ func TestParkingLot_OnCreate(t *testing.T) {
 	for i, space := range lot.ParkingSpaces {
 		assert.NotNil(t, space.ID, "Parking space ID must be set")
 		assert.Equal(t, lot.ID, space.ParkingLotID, "Parking space must have a reference to the parking lot")
-		assert.Equal(t, entities.StatusAvailable, space.Status, "Parking space status must be available")
+		assert.Equal(t, entities.ParkingSpaceStatusAvailable, space.Status, "Parking space status must be available")
 
 		// Assert parking space name:
 		assert.Contains(t, space.Name, testName, "Parking space number should include the parking lot name")
@@ -51,9 +51,9 @@ func TestParkingLot_OnGet(t *testing.T) {
 	// Create a lot with 10 spaces.
 	lot.OnCreate(testName, testCapacity)
 	// Set parking space statuses
-	lot.ParkingSpaces[0].Status = entities.StatusBlocked
-	lot.ParkingSpaces[1].Status = entities.StatusOccupied
-	lot.ParkingSpaces[2].Status = entities.StatusReserved
+	lot.ParkingSpaces[0].Status = entities.ParkingSpaceStatusBlocked
+	lot.ParkingSpaces[1].Status = entities.ParkingSpaceStatusOccupied
+	lot.ParkingSpaces[2].Status = entities.ParkingSpaceStatusReserved
 
 	// --------
 	// ACT

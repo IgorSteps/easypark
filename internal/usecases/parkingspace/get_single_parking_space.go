@@ -25,5 +25,5 @@ func NewGetSingleParkingSpace(l *logrus.Logger, r repositories.ParkingSpaceRepos
 
 // Execute runs the business logic.
 func (s *GetSingleParkingSpace) Execute(ctx context.Context, parkingSpaceID uuid.UUID) (entities.ParkingSpace, error) {
-	return s.repo.GetParkingSpaceByID(ctx, parkingSpaceID)
+	return s.repo.GetSingle(ctx, parkingSpaceID)
 }

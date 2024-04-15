@@ -20,7 +20,7 @@ type ParkingLot struct {
 	Blocked   int `gorm:"-"`
 }
 
-// OnCreate sets internally managed fields, name and capcaity and creates parking spaces and sets initial statistics.
+// OnCreate sets internally managed fields, name and capacity and creates parking spaces and sets initial statistics.
 func (s *ParkingLot) OnCreate(name string, capacity int) {
 	s.ID = uuid.New()
 	s.Name = name
@@ -50,13 +50,13 @@ func (s *ParkingLot) OnGet() {
 
 	for _, space := range s.ParkingSpaces {
 		switch space.Status {
-		case StatusAvailable:
+		case ParkingSpaceStatusAvailable:
 			s.Available++
-		case StatusOccupied:
+		case ParkingSpaceStatusOccupied:
 			s.Occupied++
-		case StatusReserved:
+		case ParkingSpaceStatusReserved:
 			s.Reserved++
-		case StatusBlocked:
+		case ParkingSpaceStatusBlocked:
 			s.Blocked++
 		}
 	}

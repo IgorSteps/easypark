@@ -636,6 +636,7 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
+    "requestID": "parking request ID to which the parking space is allocated",
     "parkingSpaceID": "allocated parking space id",
     "location": "cmp-1",
     "notificationType": 0

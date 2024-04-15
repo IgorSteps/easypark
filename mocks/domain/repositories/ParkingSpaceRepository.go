@@ -24,12 +24,71 @@ func (_m *ParkingSpaceRepository) EXPECT() *ParkingSpaceRepository_Expecter {
 	return &ParkingSpaceRepository_Expecter{mock: &_m.Mock}
 }
 
-// GetParkingSpaceByID provides a mock function with given fields: ctx, id
-func (_m *ParkingSpaceRepository) GetParkingSpaceByID(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error) {
+// GetMany provides a mock function with given fields: ctx, query
+func (_m *ParkingSpaceRepository) GetMany(ctx context.Context, query map[string]interface{}) ([]entities.ParkingSpace, error) {
+	ret := _m.Called(ctx, query)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMany")
+	}
+
+	var r0 []entities.ParkingSpace
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, map[string]interface{}) ([]entities.ParkingSpace, error)); ok {
+		return rf(ctx, query)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, map[string]interface{}) []entities.ParkingSpace); ok {
+		r0 = rf(ctx, query)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.ParkingSpace)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, map[string]interface{}) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ParkingSpaceRepository_GetMany_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMany'
+type ParkingSpaceRepository_GetMany_Call struct {
+	*mock.Call
+}
+
+// GetMany is a helper method to define mock.On call
+//   - ctx context.Context
+//   - query map[string]interface{}
+func (_e *ParkingSpaceRepository_Expecter) GetMany(ctx interface{}, query interface{}) *ParkingSpaceRepository_GetMany_Call {
+	return &ParkingSpaceRepository_GetMany_Call{Call: _e.mock.On("GetMany", ctx, query)}
+}
+
+func (_c *ParkingSpaceRepository_GetMany_Call) Run(run func(ctx context.Context, query map[string]interface{})) *ParkingSpaceRepository_GetMany_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(map[string]interface{}))
+	})
+	return _c
+}
+
+func (_c *ParkingSpaceRepository_GetMany_Call) Return(_a0 []entities.ParkingSpace, _a1 error) *ParkingSpaceRepository_GetMany_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ParkingSpaceRepository_GetMany_Call) RunAndReturn(run func(context.Context, map[string]interface{}) ([]entities.ParkingSpace, error)) *ParkingSpaceRepository_GetMany_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetSingle provides a mock function with given fields: ctx, id
+func (_m *ParkingSpaceRepository) GetSingle(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error) {
 	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetParkingSpaceByID")
+		panic("no return value specified for GetSingle")
 	}
 
 	var r0 entities.ParkingSpace
@@ -52,31 +111,31 @@ func (_m *ParkingSpaceRepository) GetParkingSpaceByID(ctx context.Context, id uu
 	return r0, r1
 }
 
-// ParkingSpaceRepository_GetParkingSpaceByID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetParkingSpaceByID'
-type ParkingSpaceRepository_GetParkingSpaceByID_Call struct {
+// ParkingSpaceRepository_GetSingle_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSingle'
+type ParkingSpaceRepository_GetSingle_Call struct {
 	*mock.Call
 }
 
-// GetParkingSpaceByID is a helper method to define mock.On call
+// GetSingle is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id uuid.UUID
-func (_e *ParkingSpaceRepository_Expecter) GetParkingSpaceByID(ctx interface{}, id interface{}) *ParkingSpaceRepository_GetParkingSpaceByID_Call {
-	return &ParkingSpaceRepository_GetParkingSpaceByID_Call{Call: _e.mock.On("GetParkingSpaceByID", ctx, id)}
+func (_e *ParkingSpaceRepository_Expecter) GetSingle(ctx interface{}, id interface{}) *ParkingSpaceRepository_GetSingle_Call {
+	return &ParkingSpaceRepository_GetSingle_Call{Call: _e.mock.On("GetSingle", ctx, id)}
 }
 
-func (_c *ParkingSpaceRepository_GetParkingSpaceByID_Call) Run(run func(ctx context.Context, id uuid.UUID)) *ParkingSpaceRepository_GetParkingSpaceByID_Call {
+func (_c *ParkingSpaceRepository_GetSingle_Call) Run(run func(ctx context.Context, id uuid.UUID)) *ParkingSpaceRepository_GetSingle_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(uuid.UUID))
 	})
 	return _c
 }
 
-func (_c *ParkingSpaceRepository_GetParkingSpaceByID_Call) Return(_a0 entities.ParkingSpace, _a1 error) *ParkingSpaceRepository_GetParkingSpaceByID_Call {
+func (_c *ParkingSpaceRepository_GetSingle_Call) Return(_a0 entities.ParkingSpace, _a1 error) *ParkingSpaceRepository_GetSingle_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *ParkingSpaceRepository_GetParkingSpaceByID_Call) RunAndReturn(run func(context.Context, uuid.UUID) (entities.ParkingSpace, error)) *ParkingSpaceRepository_GetParkingSpaceByID_Call {
+func (_c *ParkingSpaceRepository_GetSingle_Call) RunAndReturn(run func(context.Context, uuid.UUID) (entities.ParkingSpace, error)) *ParkingSpaceRepository_GetSingle_Call {
 	_c.Call.Return(run)
 	return _c
 }

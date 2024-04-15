@@ -37,22 +37,22 @@ func (s *TestUpdateParkingSpaceStatusSuite) TestUpdateParkingSpaceStatusSuite_Ha
 		{
 			name:           "Updating status to Blocked",
 			status:         "blocked",
-			expectedStatus: entities.StatusBlocked,
+			expectedStatus: entities.ParkingSpaceStatusBlocked,
 		},
 		{
 			name:           "Updating status to Reserved",
 			status:         "reserved",
-			expectedStatus: entities.StatusReserved,
+			expectedStatus: entities.ParkingSpaceStatusReserved,
 		},
 		{
 			name:           "Updating status to Occupied",
 			status:         "occupied",
-			expectedStatus: entities.StatusOccupied,
+			expectedStatus: entities.ParkingSpaceStatusOccupied,
 		},
 		{
 			name:           "Updating status to Available",
 			status:         "available",
-			expectedStatus: entities.StatusAvailable,
+			expectedStatus: entities.ParkingSpaceStatusAvailable,
 		},
 	}
 

@@ -6,15 +6,17 @@ import (
 	"github.com/google/uuid"
 )
 
+// ParkingSpaceStatus represents status of a parking space.
 type ParkingSpaceStatus string
 
 const (
-	StatusAvailable ParkingSpaceStatus = "available"
-	StatusOccupied  ParkingSpaceStatus = "occupied"
-	StatusReserved  ParkingSpaceStatus = "reserved"
-	StatusBlocked   ParkingSpaceStatus = "blocked"
+	ParkingSpaceStatusAvailable ParkingSpaceStatus = "available"
+	ParkingSpaceStatusOccupied  ParkingSpaceStatus = "occupied"
+	ParkingSpaceStatusReserved  ParkingSpaceStatus = "reserved"
+	ParkingSpaceStatusBlocked   ParkingSpaceStatus = "blocked"
 )
 
+// ParkingSpace represents a parking space.
 type ParkingSpace struct {
 	ID              uuid.UUID `gorm:"primary_key"`
 	ParkingLotID    uuid.UUID
@@ -23,11 +25,22 @@ type ParkingSpace struct {
 	ParkingRequests []ParkingRequest `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
+// OnCreate sets parking space fields on creation.
 func (s *ParkingSpace) OnCreate(name string, parkingLotID uuid.UUID) {
 	s.ID = uuid.New()
 	s.ParkingLotID = parkingLotID
-	s.Status = StatusAvailable
+	s.Status = ParkingSpaceStatusAvailable
 	s.Name = name
+}
+
+// OnArrival changes the status of parking space to 'occupied'.
+func (s *ParkingSpace) OnArrival() {
+	s.Status = ParkingSpaceStatusOccupied
+}
+
+// OnDeparture changes the status of parking space to 'available'.
+func (s *ParkingSpace) OnDeparture() {
+	s.Status = ParkingSpaceStatusAvailable
 }
 
 // CheckForOverlap checks that the new request's time slot doesn't overlap with existing parking requests' time slots.

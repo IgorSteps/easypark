@@ -28,7 +28,7 @@ func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, 
 		return err
 	}
 
-	parkingRequest, err := s.repo.GetParkingRequestByID(ctx, id)
+	parkingRequest, err := s.repo.GetSingle(ctx, id)
 	if err != nil {
 		return err
 	}

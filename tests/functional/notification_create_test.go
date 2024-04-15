@@ -24,20 +24,27 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Created admin.
+	// Created admin and driver.
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	// Create parking lot.
 	parkingLot := utils.CreateParkingLot(ctx, adminToken, nil, &s.RestClientSuite)
 	parkingSpaceID := parkingLot.ParkingSpaces[0].ID
+	parkingSpaceName := parkingLot.ParkingSpaces[0].Name
 
+	// Create parking request
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, nil, &s.RestClientSuite)
+	// Assign that parking request a space we chose above.
+	utils.AssignParkingSpace(ctx, parkingSpaceID, parkingRequest.ID, adminToken, &s.RestClientSuite)
+
+	// Setup the request to create an arrival notification.
 	testRequest := &models.CreateNotificationRequest{
+		ParkingRequestID: parkingRequest.ID,
 		ParkingSpaceID:   parkingSpaceID,
-		Location:         parkingLot.ParkingSpaces[0].Name,
+		Location:         parkingSpaceName,
 		NotificationType: 0, // arrival
 	}
-
-	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	// --------
 	// ACT
@@ -57,7 +64,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Arrival()
 	s.Require().NoError(err, "Must not return an error")
 
 	// Check status.
-	s.Require().Equal(entities.StatusOccupied, parkingSpace.Status)
+	s.Require().Equal(entities.ParkingSpaceStatusOccupied, parkingSpace.Status)
 
 	s.Require().NotEmpty(targetModel.ID)
 	s.Require().Equal(driver.ID, targetModel.DriverID)
@@ -73,20 +80,26 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Created admin.
+	// Created admin and driver.
 	adminToken := utils.CreateAndLoginAdmin(ctx, &s.RestClientSuite)
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	// Create parking lot.
 	parkingLot := utils.CreateParkingLot(ctx, adminToken, nil, &s.RestClientSuite)
+	// Lets choose the first parking space in that lot.
 	parkingSpaceID := parkingLot.ParkingSpaces[0].ID
 
+	// Create parking request
+	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, nil, &s.RestClientSuite)
+	// Assign that parking request a space we chose above.
+	utils.AssignParkingSpace(ctx, parkingSpaceID, parkingRequest.ID, adminToken, &s.RestClientSuite)
+
+	// Setup the request to create a departure notification.
 	testRequest := &models.CreateNotificationRequest{
 		ParkingSpaceID:   parkingSpaceID,
 		Location:         parkingLot.ParkingSpaces[0].Name,
 		NotificationType: 1, // departure
 	}
-
-	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
 
 	// --------
 	// ACT
@@ -106,7 +119,7 @@ func (s *TestCreateNotificationSuite) TestCreateNotification_HappyPath_Departure
 	s.Require().NoError(err, "Must not return an error")
 
 	// Check status.
-	s.Require().Equal(entities.StatusAvailable, parkingSpace.Status)
+	s.Require().Equal(entities.ParkingSpaceStatusAvailable, parkingSpace.Status)
 
 	s.Require().NotEmpty(targetModel.ID)
 	s.Require().Equal(driver.ID, targetModel.DriverID)

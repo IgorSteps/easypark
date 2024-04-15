@@ -30,11 +30,11 @@ func TestUpdateParkingSpaceStatus_Execute_HappyPath(t *testing.T) {
 		ID:           uuid.New(),
 		ParkingLotID: uuid.New(),
 		Name:         "main lot",
-		Status:       entities.StatusBlocked,
+		Status:       entities.ParkingSpaceStatusBlocked,
 	}
-	mockRepo.EXPECT().GetParkingSpaceByID(testCtx, testID).Return(testParkingSpace, nil).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(testParkingSpace, nil).Once()
 
-	testParkingSpace.Status = entities.StatusAvailable
+	testParkingSpace.Status = entities.ParkingSpaceStatusAvailable
 	mockRepo.EXPECT().Save(testCtx, &testParkingSpace).Return(nil).Once()
 
 	// --------
@@ -46,7 +46,7 @@ func TestUpdateParkingSpaceStatus_Execute_HappyPath(t *testing.T) {
 	// ASSERT
 	// --------
 	assert.Nil(t, err, "Error must be nil")
-	assert.Equal(t, entities.StatusAvailable, space.Status, "Space status must be available")
+	assert.Equal(t, entities.ParkingSpaceStatusAvailable, space.Status, "Space status must be available")
 	mockRepo.AssertExpectations(t)
 }
 
@@ -94,7 +94,7 @@ func TestUpdateParkingSpaceStatus_Execute_UnhappyPath_GetParkingSpaceError(t *te
 	testStatus := "available"
 
 	testError := errors.New("boom")
-	mockRepo.EXPECT().GetParkingSpaceByID(testCtx, testID).Return(entities.ParkingSpace{}, testError).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(entities.ParkingSpace{}, testError).Once()
 
 	// --------
 	// ACT

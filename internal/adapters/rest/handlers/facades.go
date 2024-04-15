@@ -64,7 +64,7 @@ type ParkingRequestFacade interface {
 // NotificationFacade provides an interface implemented by usecasefacades.NotificationFacade.
 type NotificationFacade interface {
 	// CreateNotification is implemented by usecasefacades.NotificationFacade that wraps creating a notification.
-	CreateNotification(ctx context.Context, driverID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error)
+	CreateNotification(ctx context.Context, driverID, parkingReqID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error)
 
 	// GetAll is implemented by usecasefacades.NotificationFacade that wraps getting all notifications usecase.
 	GetAllNotifications(ctx context.Context) ([]entities.Notification, error)

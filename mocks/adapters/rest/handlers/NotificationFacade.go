@@ -25,9 +25,9 @@ func (_m *NotificationFacade) EXPECT() *NotificationFacade_Expecter {
 	return &NotificationFacade_Expecter{mock: &_m.Mock}
 }
 
-// CreateNotification provides a mock function with given fields: ctx, driverID, spaceID, location, notificationType
-func (_m *NotificationFacade) CreateNotification(ctx context.Context, driverID uuid.UUID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error) {
-	ret := _m.Called(ctx, driverID, spaceID, location, notificationType)
+// CreateNotification provides a mock function with given fields: ctx, driverID, parkingReqID, spaceID, location, notificationType
+func (_m *NotificationFacade) CreateNotification(ctx context.Context, driverID uuid.UUID, parkingReqID uuid.UUID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error) {
+	ret := _m.Called(ctx, driverID, parkingReqID, spaceID, location, notificationType)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateNotification")
@@ -35,17 +35,17 @@ func (_m *NotificationFacade) CreateNotification(ctx context.Context, driverID u
 
 	var r0 entities.Notification
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, uuid.UUID, string, int) (entities.Notification, error)); ok {
-		return rf(ctx, driverID, spaceID, location, notificationType)
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, uuid.UUID, uuid.UUID, string, int) (entities.Notification, error)); ok {
+		return rf(ctx, driverID, parkingReqID, spaceID, location, notificationType)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, uuid.UUID, string, int) entities.Notification); ok {
-		r0 = rf(ctx, driverID, spaceID, location, notificationType)
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, uuid.UUID, uuid.UUID, string, int) entities.Notification); ok {
+		r0 = rf(ctx, driverID, parkingReqID, spaceID, location, notificationType)
 	} else {
 		r0 = ret.Get(0).(entities.Notification)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID, uuid.UUID, string, int) error); ok {
-		r1 = rf(ctx, driverID, spaceID, location, notificationType)
+	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID, uuid.UUID, uuid.UUID, string, int) error); ok {
+		r1 = rf(ctx, driverID, parkingReqID, spaceID, location, notificationType)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -61,16 +61,17 @@ type NotificationFacade_CreateNotification_Call struct {
 // CreateNotification is a helper method to define mock.On call
 //   - ctx context.Context
 //   - driverID uuid.UUID
+//   - parkingReqID uuid.UUID
 //   - spaceID uuid.UUID
 //   - location string
 //   - notificationType int
-func (_e *NotificationFacade_Expecter) CreateNotification(ctx interface{}, driverID interface{}, spaceID interface{}, location interface{}, notificationType interface{}) *NotificationFacade_CreateNotification_Call {
-	return &NotificationFacade_CreateNotification_Call{Call: _e.mock.On("CreateNotification", ctx, driverID, spaceID, location, notificationType)}
+func (_e *NotificationFacade_Expecter) CreateNotification(ctx interface{}, driverID interface{}, parkingReqID interface{}, spaceID interface{}, location interface{}, notificationType interface{}) *NotificationFacade_CreateNotification_Call {
+	return &NotificationFacade_CreateNotification_Call{Call: _e.mock.On("CreateNotification", ctx, driverID, parkingReqID, spaceID, location, notificationType)}
 }
 
-func (_c *NotificationFacade_CreateNotification_Call) Run(run func(ctx context.Context, driverID uuid.UUID, spaceID uuid.UUID, location string, notificationType int)) *NotificationFacade_CreateNotification_Call {
+func (_c *NotificationFacade_CreateNotification_Call) Run(run func(ctx context.Context, driverID uuid.UUID, parkingReqID uuid.UUID, spaceID uuid.UUID, location string, notificationType int)) *NotificationFacade_CreateNotification_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(uuid.UUID), args[3].(string), args[4].(int))
+		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(uuid.UUID), args[3].(uuid.UUID), args[4].(string), args[5].(int))
 	})
 	return _c
 }
@@ -80,7 +81,7 @@ func (_c *NotificationFacade_CreateNotification_Call) Return(_a0 entities.Notifi
 	return _c
 }
 
-func (_c *NotificationFacade_CreateNotification_Call) RunAndReturn(run func(context.Context, uuid.UUID, uuid.UUID, string, int) (entities.Notification, error)) *NotificationFacade_CreateNotification_Call {
+func (_c *NotificationFacade_CreateNotification_Call) RunAndReturn(run func(context.Context, uuid.UUID, uuid.UUID, uuid.UUID, string, int) (entities.Notification, error)) *NotificationFacade_CreateNotification_Call {
 	_c.Call.Return(run)
 	return _c
 }

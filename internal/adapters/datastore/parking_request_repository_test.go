@@ -303,7 +303,7 @@ func TestParkingRequestPostgresRepository_GetParkingRequestByID_HappyPath(t *tes
 	// --------
 	// ACT
 	// --------
-	actualParkingRequest, err := repository.GetParkingRequestByID(testCtx, testParkingRequestID)
+	actualParkingRequest, err := repository.GetSingle(testCtx, testParkingRequestID)
 
 	// --------
 	// ASSERT
@@ -332,7 +332,7 @@ func TestParkingRequestPostgresRepository_GetParkingRequestByID_UnhappyPath_NotF
 	// --------
 	// ACT
 	// --------
-	actualParkingRequest, err := repository.GetParkingRequestByID(testCtx, testParkingRequestID)
+	actualParkingRequest, err := repository.GetSingle(testCtx, testParkingRequestID)
 
 	// --------
 	// ASSERT
@@ -369,7 +369,7 @@ func TestParkingRequestPostgresRepository_GetParkingRequestByID_UnhappyPath_Inte
 	// --------
 	// ACT
 	// --------
-	actualParkingRequest, err := repository.GetParkingRequestByID(testCtx, testParkingRequestID)
+	actualParkingRequest, err := repository.GetSingle(testCtx, testParkingRequestID)
 
 	// --------
 	// ASSERT

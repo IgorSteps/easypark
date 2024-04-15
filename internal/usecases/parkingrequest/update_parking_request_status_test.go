@@ -29,7 +29,7 @@ func TestUpdateParkingRequestStatus_Execute_HappyPath(t *testing.T) {
 		ID:     testID,
 		Status: entities.RequestStatusPending,
 	}
-	mockRepo.EXPECT().GetParkingRequestByID(testCtx, testID).Return(*testRequest, nil).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(*testRequest, nil).Once()
 
 	testRequest.Status = entities.RequestStatusApproved
 	mockRepo.EXPECT().Save(testCtx, testRequest).Return(nil).Once()
@@ -60,7 +60,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_GetParkingRequestByIDErr
 
 	testError := errors.New("boom")
 	testRequest := entities.ParkingRequest{}
-	mockRepo.EXPECT().GetParkingRequestByID(testCtx, testID).Return(testRequest, testError).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(testRequest, testError).Once()
 
 	// ----
 	// ACT
@@ -87,7 +87,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_SaveError(t *testing.T) 
 	usecase := usecases.NewUpdateParkingRequestStatus(testLogger, mockRepo)
 
 	testRequest := &entities.ParkingRequest{}
-	mockRepo.EXPECT().GetParkingRequestByID(testCtx, testID).Return(*testRequest, nil).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(*testRequest, nil).Once()
 
 	testError := errors.New("boom")
 	testRequest.Status = entities.RequestStatusApproved

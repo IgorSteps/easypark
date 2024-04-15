@@ -188,12 +188,12 @@ func (_c *ParkingRequestRepository_GetAllParkingRequestsForUser_Call) RunAndRetu
 	return _c
 }
 
-// GetParkingRequestByID provides a mock function with given fields: ctx, id
-func (_m *ParkingRequestRepository) GetParkingRequestByID(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error) {
+// GetSingle provides a mock function with given fields: ctx, id
+func (_m *ParkingRequestRepository) GetSingle(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error) {
 	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetParkingRequestByID")
+		panic("no return value specified for GetSingle")
 	}
 
 	var r0 entities.ParkingRequest
@@ -216,31 +216,31 @@ func (_m *ParkingRequestRepository) GetParkingRequestByID(ctx context.Context, i
 	return r0, r1
 }
 
-// ParkingRequestRepository_GetParkingRequestByID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetParkingRequestByID'
-type ParkingRequestRepository_GetParkingRequestByID_Call struct {
+// ParkingRequestRepository_GetSingle_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSingle'
+type ParkingRequestRepository_GetSingle_Call struct {
 	*mock.Call
 }
 
-// GetParkingRequestByID is a helper method to define mock.On call
+// GetSingle is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id uuid.UUID
-func (_e *ParkingRequestRepository_Expecter) GetParkingRequestByID(ctx interface{}, id interface{}) *ParkingRequestRepository_GetParkingRequestByID_Call {
-	return &ParkingRequestRepository_GetParkingRequestByID_Call{Call: _e.mock.On("GetParkingRequestByID", ctx, id)}
+func (_e *ParkingRequestRepository_Expecter) GetSingle(ctx interface{}, id interface{}) *ParkingRequestRepository_GetSingle_Call {
+	return &ParkingRequestRepository_GetSingle_Call{Call: _e.mock.On("GetSingle", ctx, id)}
 }
 
-func (_c *ParkingRequestRepository_GetParkingRequestByID_Call) Run(run func(ctx context.Context, id uuid.UUID)) *ParkingRequestRepository_GetParkingRequestByID_Call {
+func (_c *ParkingRequestRepository_GetSingle_Call) Run(run func(ctx context.Context, id uuid.UUID)) *ParkingRequestRepository_GetSingle_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(uuid.UUID))
 	})
 	return _c
 }
 
-func (_c *ParkingRequestRepository_GetParkingRequestByID_Call) Return(_a0 entities.ParkingRequest, _a1 error) *ParkingRequestRepository_GetParkingRequestByID_Call {
+func (_c *ParkingRequestRepository_GetSingle_Call) Return(_a0 entities.ParkingRequest, _a1 error) *ParkingRequestRepository_GetSingle_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *ParkingRequestRepository_GetParkingRequestByID_Call) RunAndReturn(run func(context.Context, uuid.UUID) (entities.ParkingRequest, error)) *ParkingRequestRepository_GetParkingRequestByID_Call {
+func (_c *ParkingRequestRepository_GetSingle_Call) RunAndReturn(run func(context.Context, uuid.UUID) (entities.ParkingRequest, error)) *ParkingRequestRepository_GetSingle_Call {
 	_c.Call.Return(run)
 	return _c
 }

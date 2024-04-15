@@ -29,13 +29,13 @@ func TestGetAllParkingLots_Execute_HappyPath(t *testing.T) {
 			Capacity: 10,
 			ParkingSpaces: []entities.ParkingSpace{
 				{
-					Status: entities.StatusBlocked,
+					Status: entities.ParkingSpaceStatusBlocked,
 				},
 				{
-					Status: entities.StatusOccupied,
+					Status: entities.ParkingSpaceStatusOccupied,
 				},
 				{
-					Status: entities.StatusAvailable,
+					Status: entities.ParkingSpaceStatusAvailable,
 				},
 			},
 		},
@@ -45,13 +45,13 @@ func TestGetAllParkingLots_Execute_HappyPath(t *testing.T) {
 			Capacity: 10,
 			ParkingSpaces: []entities.ParkingSpace{
 				{
-					Status: entities.StatusBlocked,
+					Status: entities.ParkingSpaceStatusBlocked,
 				},
 				{
-					Status: entities.StatusOccupied,
+					Status: entities.ParkingSpaceStatusOccupied,
 				},
 				{
-					Status: entities.StatusAvailable,
+					Status: entities.ParkingSpaceStatusAvailable,
 				},
 			},
 		},
@@ -61,13 +61,13 @@ func TestGetAllParkingLots_Execute_HappyPath(t *testing.T) {
 			Capacity: 10,
 			ParkingSpaces: []entities.ParkingSpace{
 				{
-					Status: entities.StatusBlocked,
+					Status: entities.ParkingSpaceStatusBlocked,
 				},
 				{
-					Status: entities.StatusOccupied,
+					Status: entities.ParkingSpaceStatusOccupied,
 				},
 				{
-					Status: entities.StatusAvailable,
+					Status: entities.ParkingSpaceStatusAvailable,
 				},
 			},
 		},

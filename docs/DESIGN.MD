@@ -11,7 +11,7 @@ This document describes the states, rules and assumptions of entities within the
 
 ### Parking Request
 
-States a parking request can be in: `pending`, `approved`, `rejected`.
+States a parking request can be in: `pending`, `approved`, `rejected`, `active` and `approved`.
 
 - **Pending**:
   - All new parking requests are created a 'pending' status.
@@ -25,6 +25,14 @@ States a parking request can be in: `pending`, `approved`, `rejected`.
 - **Rejection**:
   - A parking request will be rejected if the admin cannot find a parking space that suites driver's request, such as:
     - There are no available spaces that match driver's desired time.
+- **Active**:
+  - A parking request is 'active' if:
+    - It received an arrival notification
+    - It was previously 'approved'
+- **Completed**:
+  - A parking request is 'completed' if:
+    - It received a departure notification
+    - It was previously 'active'
 
 ### Parking Space
 

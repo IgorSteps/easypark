@@ -71,7 +71,7 @@ func SetupApp() (*App, error) {
 	notificationPostgresRepository := datastore.NewNotificationPostgresRepository(logrusLogger, gormWrapper)
 	alertPostgresRepository := datastore.NewAlertPostgresRepository(logrusLogger, gormWrapper)
 	createAlert := usecases5.NewCreateAlert(logrusLogger, alertPostgresRepository)
-	createNotification := usecases6.NewCreateNotification(logrusLogger, notificationPostgresRepository, parkingSpacePostgresRepository, createAlert)
+	createNotification := usecases6.NewCreateNotification(logrusLogger, notificationPostgresRepository, parkingSpacePostgresRepository, parkingRequestPostgresRepository, createAlert)
 	getAllNotifications := usecases6.NewGetAllNotifications(logrusLogger, notificationPostgresRepository)
 	notificationFacade := usecasefacades.NewNotificationFacade(createNotification, getAllNotifications)
 	getSingleAlert := usecases5.NewGetSingleAlert(logrusLogger, alertPostgresRepository)

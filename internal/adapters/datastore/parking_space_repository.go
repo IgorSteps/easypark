@@ -24,8 +24,8 @@ func NewParkingSpacePostgresRepository(l *logrus.Logger, db Datastore) *ParkingS
 	}
 }
 
-// GetParkingSpaceByID gets a parking space with a given ID.
-func (s *ParkingSpacePostgresRepository) GetParkingSpaceByID(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error) {
+// GetSingle gets a parking space with a given ID.
+func (s *ParkingSpacePostgresRepository) GetSingle(ctx context.Context, id uuid.UUID) (entities.ParkingSpace, error) {
 	var space entities.ParkingSpace
 
 	result := s.DB.WithContext(ctx).Preload("ParkingRequests").First(&space, "id = ?", id)
@@ -53,4 +53,19 @@ func (s *ParkingSpacePostgresRepository) Save(ctx context.Context, space *entiti
 	}
 
 	return nil
+}
+
+// GetMany gets many parking spaces that match given query.
+func (s *ParkingSpacePostgresRepository) GetMany(ctx context.Context, query map[string]interface{}) ([]entities.ParkingSpace, error) {
+	var spaces []entities.ParkingSpace
+
+	result := s.DB.WithContext(ctx).Where(query).Preload("ParkingRequests").FindAll(&spaces)
+
+	err := result.Error()
+	if err != nil {
+		s.Logger.WithError(err).WithField("query", query).Error("failed to query for parking spaces")
+		return nil, repositories.NewInternalError("failed to query for parking spaces")
+	}
+
+	return spaces, nil
 }
