@@ -1,0 +1,6 @@
+{
+    "go.buildTags": "wireinject",
+    "go.toolsEnvVars": {
+        "GOFLAGS": "-tags=wireinject"
+    }
+}

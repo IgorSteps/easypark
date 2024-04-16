@@ -46,7 +46,7 @@ func TestParkingSpaceUpdateStatusHandler_ServeHTTP_HappyPath(t *testing.T) {
 
 	testSpace := entities.ParkingSpace{
 		ID:     uuid.New(),
-		Status: entities.StatusAvailable,
+		Status: entities.ParkingSpaceStatusAvailable,
 	}
 	mockFacade.EXPECT().UpdateParkingSpaceStatus(req.Context(), testID, "available").Return(testSpace, nil).Once()
 

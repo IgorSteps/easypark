@@ -27,8 +27,42 @@ func TestParkingSpace_OnCreate(t *testing.T) {
 	// --------
 	assert.Equal(t, testName, space.Name, "Parking space names must match")
 	assert.Equal(t, testParkingLotID, space.ParkingLotID, "Parking space's parking lot ids must match")
-	assert.Equal(t, entities.StatusAvailable, space.Status, "Parking space statuses mast match")
+	assert.Equal(t, entities.ParkingSpaceStatusAvailable, space.Status, "Parking space statuses mast match")
 	assert.NotNil(t, space.ID, "Parking space must have ID set")
+}
+
+func TestParkingSpace_OnArrival(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	space := entities.ParkingSpace{}
+
+	// --------
+	// ACT
+	// --------
+	space.OnArrival()
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Equal(t, entities.ParkingSpaceStatusOccupied, space.Status)
+}
+
+func TestParkingSpace_OnDeparture(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	space := entities.ParkingSpace{}
+
+	// --------
+	// ACT
+	// --------
+	space.OnDeparture()
+
+	// --------
+	// ASSERT
+	// --------
+	assert.Equal(t, entities.ParkingSpaceStatusAvailable, space.Status)
 }
 
 func TestParkingSpace_CheckForOverlap(t *testing.T) {
@@ -40,7 +74,6 @@ func TestParkingSpace_CheckForOverlap(t *testing.T) {
 	twoHoursLater := now.Add(2 * time.Hour)
 	threeHoursLater := now.Add(3 * time.Hour)
 
-	// Test setup: create a list of parking requests that simulate different scenarios
 	parkingRequests := []entities.ParkingRequest{
 		// A request that starts now and ends in an hour
 		{StartTime: now, EndTime: oneHourLater},

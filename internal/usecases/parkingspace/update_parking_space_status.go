@@ -31,7 +31,7 @@ func (s *UpdateParkingSpaceStatus) Execute(ctx context.Context, id uuid.UUID, st
 		return entities.ParkingSpace{}, err
 	}
 
-	parkSpace, err := s.repo.GetParkingSpaceByID(ctx, id)
+	parkSpace, err := s.repo.GetSingle(ctx, id)
 	if err != nil {
 		return entities.ParkingSpace{}, err
 	}
@@ -50,13 +50,13 @@ func (s *UpdateParkingSpaceStatus) Execute(ctx context.Context, id uuid.UUID, st
 func parseSpaceStatus(status string) (entities.ParkingSpaceStatus, error) {
 	switch status {
 	case "available":
-		return entities.StatusAvailable, nil
+		return entities.ParkingSpaceStatusAvailable, nil
 	case "occupied":
-		return entities.StatusOccupied, nil
+		return entities.ParkingSpaceStatusOccupied, nil
 	case "blocked":
-		return entities.StatusBlocked, nil
+		return entities.ParkingSpaceStatusBlocked, nil
 	case "reserved":
-		return entities.StatusReserved, nil
+		return entities.ParkingSpaceStatusReserved, nil
 	default:
 		return "", repositories.NewInvalidInputError("failed to parse given status")
 	}

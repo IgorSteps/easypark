@@ -4,7 +4,6 @@ services:
   database:
     container_name: database
     image: postgres:latest
-    restart: always
     environment:
       - POSTGRES_USER=devUser
       - POSTGRES_PASSWORD=devPassword

@@ -36,7 +36,7 @@ func TestParkingSpaceRepository_GetParkingSpaceByID_HappyPath(t *testing.T) {
 	// ----
 	// ACT
 	// ----
-	_, err := repo.GetParkingSpaceByID(context.Background(), testID)
+	_, err := repo.GetSingle(context.Background(), testID)
 
 	// ------
 	// ASSERT
@@ -64,7 +64,7 @@ func TestParkingSpaceRepository_GetParkingSpaceByID_UnhappyPath_NotFound(t *test
 	// ----
 	// ACT
 	// ----
-	_, err := repo.GetParkingSpaceByID(context.Background(), testID)
+	_, err := repo.GetSingle(context.Background(), testID)
 
 	// ------
 	// ASSERT
@@ -94,7 +94,7 @@ func TestParkingSpaceRepository_GetParkingSpaceByID_UnhappyPath_Internal(t *test
 	// ----
 	// ACT
 	// ----
-	_, err := repo.GetParkingSpaceByID(context.Background(), testID)
+	_, err := repo.GetSingle(context.Background(), testID)
 
 	// ------
 	// ASSERT
@@ -154,5 +154,54 @@ func TestParkingSpaceRepository_Save_UnhappyPath_Internal(t *testing.T) {
 	// ------
 	assert.IsType(t, &repositories.InternalError{}, err, "Wrong error type")
 	assert.EqualError(t, err, "Internal error: failed to save updated parking space in the database", "Error message is wrong")
+	mockDB.AssertExpectations(t)
+}
+
+func TestParkingSpaceRepository_GetMany_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDB := &mocks.Datastore{}
+	repo := datastore.NewParkingSpacePostgresRepository(testLogger, mockDB)
+
+	testCtx := context.Background()
+	query := map[string]interface{}{
+		"boom": "bam",
+	}
+	expectedSpaces := []entities.ParkingSpace{
+		{
+			ID:           uuid.New(),
+			ParkingLotID: uuid.New(),
+			Name:         "blol",
+			Status:       entities.ParkingSpaceStatusAvailable,
+		},
+		{
+			ID:           uuid.New(),
+			ParkingLotID: uuid.New(),
+			Name:         "blol",
+			Status:       entities.ParkingSpaceStatusAvailable,
+		},
+	}
+	mockDB.EXPECT().WithContext(testCtx).Return(mockDB).Once()
+	mockDB.EXPECT().Preload("ParkingRequests").Return(mockDB).Once()
+	mockDB.EXPECT().Where(query).Return(mockDB).Once()
+	var spaces []entities.ParkingSpace
+	mockDB.EXPECT().FindAll(&spaces).Return(mockDB).Once().Run(func(args mock.Arguments) {
+		arg := args.Get(0).(*[]entities.ParkingSpace)
+		*arg = expectedSpaces
+	})
+	mockDB.EXPECT().Error().Return(nil).Once()
+
+	// --------
+	// ACT
+	// --------
+	actualSpaces, err := repo.GetMany(testCtx, query)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.NoError(t, err)
+	assert.Equal(t, expectedSpaces, actualSpaces)
 	mockDB.AssertExpectations(t)
 }

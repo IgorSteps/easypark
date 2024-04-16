@@ -17,7 +17,7 @@ type TestApproveParkingRequestSuite struct {
 	client.RestClientSuite
 }
 
-func (s *TestApproveParkingRequestSuite) TestApproveParkingRequest_HappyPath() {
+func (s *TestApproveParkingRequestSuite) TestUpdateParkingRequestStatus_UnhappyPath_StatusNotAllowed() {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -43,15 +43,9 @@ func (s *TestApproveParkingRequestSuite) TestApproveParkingRequest_HappyPath() {
 	// ASSERT
 	// --------
 	s.Require().NoError(err, "Updating status of the parking request shouldn't return error")
-	s.Require().Equal(http.StatusOK, respCode, "Must return 200")
+	s.Require().Equal(http.StatusBadRequest, respCode, "Must return 400")
 
-	// Unmarshall response body.
-	var tModel models.UpdateParkingRequestStatusResponse
-	err = s.UnmarshalHTTPResponse(respBody, &tModel)
-	if err != nil {
-		s.T().Fail()
-	}
-	s.Require().Equal("successfully updated parking request status", tModel.Message, "Resposne message is wrong")
+	s.Require().Equal("unknown or not allowed parking request status\n", string(respBody), "Response message is wrong")
 }
 
 func (s *TestApproveParkingRequestSuite) TestRejectParkingRequest_HappyPath() {
@@ -118,7 +112,7 @@ func (s *TestApproveParkingRequestSuite) TestUpdateParkingRequest_UnhappyPath_Un
 	// --------
 	s.Require().NoError(err, "Updating status of the parking request shouldn't return error")
 	s.Require().Equal(http.StatusBadRequest, respCode, "Must return 400")
-	s.Require().Equal("unknown parking request status\n", string(respBody), "Response message is wrong")
+	s.Require().Equal("unknown or not allowed parking request status\n", string(respBody), "Response message is wrong")
 }
 
 func TestApproveParkingRequestSuiteInit(t *testing.T) {

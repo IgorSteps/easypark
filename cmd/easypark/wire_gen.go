@@ -17,6 +17,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	"github.com/IgorSteps/easypark/internal/drivers/scheduler"
 	usecases5 "github.com/IgorSteps/easypark/internal/usecases/alert"
 	usecases6 "github.com/IgorSteps/easypark/internal/usecases/notification"
 	usecases3 "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
@@ -71,18 +72,22 @@ func SetupApp() (*App, error) {
 	notificationPostgresRepository := datastore.NewNotificationPostgresRepository(logrusLogger, gormWrapper)
 	alertPostgresRepository := datastore.NewAlertPostgresRepository(logrusLogger, gormWrapper)
 	createAlert := usecases5.NewCreateAlert(logrusLogger, alertPostgresRepository)
-	createNotification := usecases6.NewCreateNotification(logrusLogger, notificationPostgresRepository, parkingSpacePostgresRepository, createAlert)
+	createNotification := usecases6.NewCreateNotification(logrusLogger, notificationPostgresRepository, parkingSpacePostgresRepository, parkingRequestPostgresRepository, createAlert)
 	getAllNotifications := usecases6.NewGetAllNotifications(logrusLogger, notificationPostgresRepository)
 	notificationFacade := usecasefacades.NewNotificationFacade(createNotification, getAllNotifications)
 	getSingleAlert := usecases5.NewGetSingleAlert(logrusLogger, alertPostgresRepository)
-	alertFacade := usecasefacades.NewAlertFacade(getSingleAlert)
+	checkLateArrival := usecases5.NewCheckLateArrival(logrusLogger, parkingRequestPostgresRepository, createAlert)
+	alertFacade := usecasefacades.NewAlertFacade(getSingleAlert, checkLateArrival)
 	facade := handlers.NewFacade(userFacade, parkingRequestFacade, parkingLotFacade, parkingSpaceFacade, notificationFacade, alertFacade)
 	handlerFactory := handlers.NewHandlerFactory(logrusLogger, facade)
 	checkDriverStatus := usecases.NewCheckDriverStatus(logrusLogger, userPostgresRepository)
 	middlewareMiddleware := middleware.NewMiddleware(jwtTokenService, logrusLogger, checkDriverStatus)
 	router := routes.NewRouter(handlerFactory, middlewareMiddleware, logrusLogger)
 	httpConfig := configConfig.HTTP
-	server := httpserver.NewServerFromConfig(router, httpConfig)
-	app := NewApp(server, logrusLogger)
+	server := httpserver.NewServerFromConfig(router, httpConfig, logrusLogger)
+	schedulerConfig := configConfig.Scheduler
+	alertConfig := configConfig.Alert
+	schedulerScheduler := scheduler.NewSchedulerFromConfig(logrusLogger, alertFacade, schedulerConfig, alertConfig)
+	app := NewApp(server, logrusLogger, schedulerScheduler)
 	return app, nil
 }

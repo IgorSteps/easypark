@@ -39,7 +39,14 @@ func (s *NotificationCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Req
 		http.Error(w, "invalid driver id", http.StatusBadRequest)
 		return
 	}
-	notification, err := s.facade.CreateNotification(r.Context(), parsedID, createReq.ParkingSpaceID, createReq.Location, createReq.NotificationType)
+	notification, err := s.facade.CreateNotification(
+		r.Context(),
+		parsedID,
+		createReq.ParkingRequestID,
+		createReq.ParkingSpaceID,
+		createReq.Location,
+		createReq.NotificationType,
+	)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to create a notification")
 

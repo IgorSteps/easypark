@@ -20,7 +20,7 @@ func TestAlert_OnCreate(t *testing.T) {
 	// ---
 	// ACT
 	// ---
-	alert.OnLocationMismatchAlertCreate(msg, driverID, spaceID)
+	alert.CreateLocationMismatchAlert(msg, driverID, spaceID)
 
 	// ------
 	// ASSERT

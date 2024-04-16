@@ -9,17 +9,14 @@ import (
 
 // ParkingRequestRepository provides an interface for CRUD operations on parking requests.
 type ParkingRequestRepository interface {
-	// CreateParkingRequest creates a parking request.
-	CreateParkingRequest(ctx context.Context, parkReq *entities.ParkingRequest) error
+	// Create creates a parking request.
+	Create(ctx context.Context, parkReq *entities.ParkingRequest) error
 
-	// GetAllParkingRequests gets all parking requests.
-	GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error)
+	// GetMany gets many parking requests that match given query.
+	GetMany(ctx context.Context, query map[string]interface{}) ([]entities.ParkingRequest, error)
 
-	// GetParkingRequestByID gets a single parking request using its ID.
-	GetParkingRequestByID(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error)
-
-	// GetAllParkingRequests gets all parking requests for a particular user.
-	GetAllParkingRequestsForUser(ctx context.Context, userID uuid.UUID) ([]entities.ParkingRequest, error)
+	// GetSingle gets a single parking request using its ID.
+	GetSingle(ctx context.Context, id uuid.UUID) (entities.ParkingRequest, error)
 
 	// Save saves the parking request when performing any updating.
 	Save(ctx context.Context, request *entities.ParkingRequest) error

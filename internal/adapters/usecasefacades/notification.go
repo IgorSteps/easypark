@@ -9,7 +9,7 @@ import (
 
 // NotificationCreator provides an interface implemented by CreateNotification usecase.
 type NotificationCreator interface {
-	Execute(ctx context.Context, driverID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error)
+	Execute(ctx context.Context, driverID, parkingReqID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error)
 }
 
 // NotificationGetter provides an interface implemented by GetAllNotifications usecase.
@@ -32,8 +32,8 @@ func NewNotificationFacade(creator NotificationCreator, getter NotificationGette
 }
 
 // CreateNotification wraps the CreateNotification usecase.
-func (s *NotificationFacade) CreateNotification(ctx context.Context, driverID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error) {
-	return s.notificationCreator.Execute(ctx, driverID, spaceID, location, notificationType)
+func (s *NotificationFacade) CreateNotification(ctx context.Context, driverID, parkingReqID, spaceID uuid.UUID, location string, notificationType int) (entities.Notification, error) {
+	return s.notificationCreator.Execute(ctx, driverID, parkingReqID, spaceID, location, notificationType)
 }
 
 // GetAllNotifications wraps the GetAllNotifications usecase.

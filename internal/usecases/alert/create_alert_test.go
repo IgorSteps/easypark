@@ -28,7 +28,7 @@ func TestCreateAlert_Execute_LocationMismatchAlert(t *testing.T) {
 	driverID := uuid.New()
 	spaceID := uuid.New()
 	locationMisMatchAlert := &entities.Alert{}
-	locationMisMatchAlert.OnLocationMismatchAlertCreate(msg, driverID, spaceID)
+	locationMisMatchAlert.CreateLocationMismatchAlert(msg, driverID, spaceID)
 
 	mockRepo.EXPECT().Create(testCtx, mock.Anything).Return(nil).Once()
 

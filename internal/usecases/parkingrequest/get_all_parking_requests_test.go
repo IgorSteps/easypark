@@ -38,7 +38,7 @@ func TestGetAllParkingRequests_HappyPath(t *testing.T) {
 		},
 	}
 
-	mockRepo.EXPECT().GetAllParkingRequests(testCtx).Return(testParkRequests, nil).Once()
+	mockRepo.EXPECT().GetMany(testCtx, map[string]interface{}(nil)).Return(testParkRequests, nil).Once()
 
 	// ------
 	// ACT
@@ -62,7 +62,7 @@ func TestGetAllParkingRequests_UnhappyPath(t *testing.T) {
 	usecase := usecases.NewGetAllParkingRequests(testLogger, mockRepo)
 
 	testErr := errors.New("boom")
-	mockRepo.EXPECT().GetAllParkingRequests(testCtx).Return([]entities.ParkingRequest{}, testErr).Once()
+	mockRepo.EXPECT().GetMany(testCtx, map[string]interface{}(nil)).Return([]entities.ParkingRequest{}, testErr).Once()
 
 	// ------
 	// ACT

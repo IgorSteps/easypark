@@ -119,8 +119,8 @@ func CreateParkingRequest(
 	if createRequest == nil {
 		createRequest = &models.CreateParkingRequestRequest{
 			DestinationParkingLotID: destinationLotID,
-			StartTime:               time.Now(),
-			EndTime:                 time.Now().Add(555),
+			StartTime:               time.Now().Add(5 * time.Minute),
+			EndTime:                 time.Now().Add(15 * time.Minute),
 		}
 	}
 
@@ -189,7 +189,7 @@ func BlockParkingSpace(ctx context.Context, adminToken string, parkingSpaceID uu
 	err = s.UnmarshalHTTPResponse(respBody, &targetSpaceModel)
 	s.Require().NoError(err, "failed to unmarshall response")
 
-	s.Require().Equal(entities.StatusBlocked, targetSpaceModel.Status, "Wrong status")
+	s.Require().Equal(entities.ParkingSpaceStatusBlocked, targetSpaceModel.Status, "Wrong status")
 }
 
 func GetAllParkingLots(ctx context.Context, adminToken string, s *client.RestClientSuite) []entities.ParkingLot {
@@ -235,4 +235,19 @@ func CreateNotification(
 	err = s.UnmarshalHTTPResponse(respBody, &targetModel)
 	s.Require().NoError(err, "Must not return an error")
 	return targetModel
+}
+
+func AssignParkingSpace(ctx context.Context, parkingSpaceID, parkingRequestID uuid.UUID, adminToken string, s *client.RestClientSuite) {
+	testUpdateRequestSpace := &models.ParkingRequestSpaceUpdateRequest{
+		ParkingSpaceID: parkingSpaceID,
+	}
+
+	respBody, respCode, err := s.UpdateParkingRequestSpace(ctx, adminToken, parkingRequestID, testUpdateRequestSpace)
+	s.Require().NoError(err, "Updating a parking request shouldn't return an error")
+	s.Require().Equal(http.StatusOK, respCode, "Updating parking request should return 200 code")
+
+	var updateParkingRequestResp models.ParkingRequestSpaceUpdateResponse
+	err = s.UnmarshalHTTPResponse(respBody, &updateParkingRequestResp)
+	s.Require().NoError(err, "Must not return error")
+	s.Require().Equal("successfully assigned a space to a parking request", updateParkingRequestResp.Message, "Response body is wrong.")
 }

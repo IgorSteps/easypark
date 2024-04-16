@@ -38,7 +38,10 @@ func TestGetDriversParkingRequests_HappyPath(t *testing.T) {
 		},
 	}
 	testID := uuid.New()
-	mockRepo.EXPECT().GetAllParkingRequestsForUser(testCtx, testID).Return(testParkRequests, nil).Once()
+	query := map[string]interface{}{
+		"user_id": testID.String(),
+	}
+	mockRepo.EXPECT().GetMany(testCtx, query).Return(testParkRequests, nil).Once()
 
 	// ------
 	// ACT
@@ -62,8 +65,10 @@ func TestGetDriversParkingRequests_UnhappyPath(t *testing.T) {
 	usecase := usecases.NewGetDriversParkingRequests(testLogger, mockRepo)
 	testID := uuid.New()
 	testErr := errors.New("boom")
-	mockRepo.EXPECT().GetAllParkingRequestsForUser(testCtx, testID).Return([]entities.ParkingRequest{}, testErr).Once()
-
+	query := map[string]interface{}{
+		"user_id": testID.String(),
+	}
+	mockRepo.EXPECT().GetMany(testCtx, query).Return(nil, testErr).Once()
 	// ------
 	// ACT
 	// ------

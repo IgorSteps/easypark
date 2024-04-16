@@ -60,6 +60,10 @@ func (s *TestGetDriversParkingRequestsSuite) TestGetDriversParkingRequests_Happy
 	s.Require().NoError(err, "Unmarshalling response body must not error")
 
 	s.Require().Equal(5, len(targetModel), "Must have 5 parking requests")
+	// Check that the driver id matches
+	for _, parkReq := range targetModel {
+		s.Require().Equal(driver.ID, parkReq.UserID)
+	}
 }
 
 func TestGetDriversParkingRequestsSuiteInit(t *testing.T) {

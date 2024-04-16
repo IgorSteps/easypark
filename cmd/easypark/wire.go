@@ -1,13 +1,6 @@
 //go:build wireinject
 // +build wireinject
 
-/***********************************************************************************
-If you want to edit/activate InteliSense in this file:
- 1) remove the build constraints above,
- 2) edit file,
- 3) put constraints back in
-***********************************************************************************/
-
 package main
 
 import (
@@ -22,6 +15,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
+	"github.com/IgorSteps/easypark/internal/drivers/scheduler"
 	alertUsecases "github.com/IgorSteps/easypark/internal/usecases/alert"
 	notificationUsecases "github.com/IgorSteps/easypark/internal/usecases/notification"
 	parkingLotUsecases "github.com/IgorSteps/easypark/internal/usecases/parkinglot"
@@ -35,7 +29,7 @@ func SetupApp() (*App, error) {
 	wire.Build(
 		// config
 		config.LoadConfig,
-		wire.FieldsOf(new(*config.Config), "Database", "Auth", "Logging", "HTTP"),
+		wire.FieldsOf(new(*config.Config), "Database", "Auth", "Logging", "HTTP", "Scheduler", "Alert"),
 
 		// logger
 		logger.NewLoggerFromConfig,
@@ -104,6 +98,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(repositories.AlertCreator), new(*alertUsecases.CreateAlert)),
 		alertUsecases.NewGetSingleAlert,
 		wire.Bind(new(usecasefacades.AlertSingleGetter), new(*alertUsecases.GetSingleAlert)),
+		alertUsecases.NewCheckLateArrival,
+		wire.Bind(new(usecasefacades.AlertLateArrivalChecker), new(*alertUsecases.CheckLateArrival)),
 		// notification
 		notificationUsecases.NewCreateNotification,
 		wire.Bind(new(usecasefacades.NotificationCreator), new(*notificationUsecases.CreateNotification)),
@@ -124,6 +120,9 @@ func SetupApp() (*App, error) {
 		usecasefacades.NewAlertFacade,
 		wire.Bind(new(handlers.AlertFacade), new(*usecasefacades.AlertFacade)),
 		handlers.NewFacade,
+
+		// scheduler
+		scheduler.NewSchedulerFromConfig,
 
 		// rest handlers and middleware
 		middleware.NewMiddleware,

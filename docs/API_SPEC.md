@@ -217,17 +217,13 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 - **400 BAD REQUEST**
 
   ```json
-  {
-    "meaningful error message"
-  }
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {
-    "meaningful error message"
-  }
+  {"error": "meaningful error message"}
   ```
 
 ### 2. Get All Parking Request API Endpoint
@@ -272,11 +268,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
 
 - **500 INTERNAL SERVER ERROR**
 
-```json
-  {
-   "meaningful error message"
-  }
-```
+  ```json
+  {"error": "meaningful error message"}
+  ```
 
 ### 3. Get All Parking Requests for Driver API Endpoint
 
@@ -320,28 +314,26 @@ curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/drivers/{i
 
 - **500 INTERNAL SERVER ERROR**
 
-```json
-  {
-    "meaningful error message"
-  }
-```
+  ```json
+  {"error": "meaningful error message"}
+  ```
 
 ### 4. Update Parking Request Status API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/status`
 
-**Description**: Updated a parking request status.
+**Description**: Updated a parking request status to `rejected` or `pending`.
 
 **Request Body**:
 
-Ensure that the status is one of the following: `approved, rejected, pending`.
+Ensure that the status is one of the following: `rejected` or `pending`.
 
 ```bash
 curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <ADMIN_TOKEN>" \
 -d '{
-    "status": "approved"
+    "status": "rejected"
 }'
 ```
 
@@ -358,17 +350,13 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
 - **400 BAD REQUEST**
 
   ```json
-  {
-   "meaningful error message"
-  }
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {
-   "meaningful error message"
-  }
+  {"error": "meaningful error message"}
   ```
 
 ### 5. Assign Parking Request a Space API Endpoint
@@ -393,25 +381,13 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
 - **400 BAD REQUEST**
 
   ```json
-  {
-   "meaningful error message"
-  }
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER**
 
   ```json
-  {
-   "meaningful error message"
-  }
-  ```
-
-- **400 BAD REQUEST**
-
-  ```json
-  {
-   "start time cannot be after the end time"
-  }
+  {"error": "meaningful error message"}
   ```
 
 ## Parking Lot
@@ -456,6 +432,18 @@ curl -X POST http://localhost:8080/parking-lots \
   }
 ```
 
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
 ### 2. Get All Parking Lots API Endpoint
 
 **Endpoint**: `GET /parking-lots`
@@ -498,9 +486,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
   ```
 
 - **500 INTERNAL SERVER ERROR**
-
+  
   ```json
-    {"Internal error: meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 ### 3. Delete a Parking Lot API Endpoint
@@ -527,13 +515,13 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 - **400 BAD REQUEST**
 
   ```json
-  {"meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-    {"Internal error: meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 ## Parking Space
@@ -567,13 +555,13 @@ curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spac
   - **400 BAD REQUEST**
 
   ```json
-  {"meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"Internal error: meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 ### 2. Update Parking Space Status API Endpoint
@@ -612,13 +600,13 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
 - **400 BAD REQUEST**
 
   ```json
-  {"meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"Internal error: meaningful error message"}
+  {"error": "meaningful error message"}
   ```
 
 ## Notification
@@ -636,6 +624,7 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
+    "requestID": "parking request ID to which the parking space is allocated",
     "parkingSpaceID": "allocated parking space id",
     "location": "cmp-1",
     "notificationType": 0
@@ -659,14 +648,14 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
 
 - **400 BAD REQUEST**
 
-  ```json
-  {"meaningful error message"}
+    ```json
+  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
-  ```json
-  {"Internal error: meaningful error message"}
+    ```json
+  {"error": "meaningful error message"}
   ```
 
 ### 2. Get All Notifications API Endpoint
@@ -701,10 +690,8 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/notificatio
 
 - **500 INTERNAL SERVER ERROR**
 
-  ```json
-  {
-    "Internal error: meaningful message"
-  }
+    ```json
+  {"error": "meaningful error message"}
   ```
   
 ## Alert
@@ -734,5 +721,63 @@ Returns an error of one of these types: `0 - Location mismatch alert`.
       "Message": "some message",
       "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
       "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
-    },
+  },
   ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+### 2. Check Late Arrivals API Endpoint
+
+**Endpoint**: `POST /alerts/late-arrivals`
+
+**Description**: Runs a workflow to check if arrival notifications have not been received within the given threshold. Returns created alerts as result of the check. Note, that this check is performed automatically by the [Scheduler](./DESIGN.MD#alerts) at constant intervals. This endpoint is for if the admin wants to do it manually and with a different threshold.
+
+**Request Body**:
+
+```bash
+curl -X POST http://localhost:8080/alerts/late-arrivals \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "threshold": "1h"
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+    [
+      {
+      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "Type": 0,
+      "Message": "some message",
+      "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+      },
+      {"other alerts..."}
+    ]
+  ```
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+

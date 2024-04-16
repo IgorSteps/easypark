@@ -49,10 +49,11 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().GetSingleParkingSpace().Return(testHandler).Twice()
 	mockHandlerFactory.EXPECT().GetAllNotifications().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetSingleAlert().Return(testHandler).Once()
+	mockHandlerFactory.EXPECT().CheckForLateArrivals().Return(testHandler).Once()
 
-	// This middlware will get executed for very route invocation.
+	// This middleware will get executed for very route invocation.
 	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(17)
-	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(5)
+	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(4)
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
 

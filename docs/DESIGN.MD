@@ -11,7 +11,7 @@ This document describes the states, rules and assumptions of entities within the
 
 ### Parking Request
 
-States a parking request can be in: `pending`, `approved`, `rejected`.
+States a parking request can be in: `pending`, `approved`, `rejected`, `active` and `approved`.
 
 - **Pending**:
   - All new parking requests are created a 'pending' status.
@@ -25,6 +25,14 @@ States a parking request can be in: `pending`, `approved`, `rejected`.
 - **Rejection**:
   - A parking request will be rejected if the admin cannot find a parking space that suites driver's request, such as:
     - There are no available spaces that match driver's desired time.
+- **Active**:
+  - A parking request is 'active' if:
+    - It received an arrival notification
+    - It was previously 'approved'
+- **Completed**:
+  - A parking request is 'completed' if:
+    - It received a departure notification
+    - It was previously 'active'
 
 ### Parking Space
 
@@ -49,9 +57,21 @@ States a parking space can be in: `available`, `occupied`, `reserved`, `blocked`
 - **Unblocking**:
   - When a space is unblocked by the admin, its status immediately returns to 'available'.
 
-### Notifications
-
 ### Alerts
+
+**Scheduling**:
+
+Checks for alerts are scheduled using the [Scheduler](../internal/drivers/scheduler/scheduler.go) to run at [constant intervals of 5 minutes](../config.yaml).
+
+**Late arrival alert**:
+
+All parking requests are one of these:
+    - in the past and have status 'completed'.
+    - current, but have received an arrival notification and as a result have status 'active'.
+    - 'rejected' and 'pending
+    - future 'approved' requests.
+  
+When checking for late arrivals, we look at parking requests that are before the chosen [threshold](../config.yaml) in the past and of status 'approved'.
 
 ## Assumptions
 
@@ -59,11 +79,13 @@ States a parking space can be in: `available`, `occupied`, `reserved`, `blocked`
 - If the admin 'rejects' a parking request, it is their responsibility to notify the driver of the reason, so that the driver can make another parking request that can get approved.
 - If multiple parking requests compete for the same time slot, it falls onto the admin to choose which request gets approved and which gets rejected.
 - If the admin receives an alert that location mismatch has happened on arrival, it is assumed the admin will respond to the alert to prevent operational disruptions using our messaging system to guide the driver to the correct parking space.
-- If the admin receives an alert that an arrival notification has not been received within one hour from the booked arrival time, it is assumed they will act accordingly to prevent operational disruptions, such as:
+- If the admin receives an alert that an arrival notification has not been received within the chosen threshold from the booked arrival time, it is assumed they will act accordingly to prevent operational disruptions, such as:
   - Driver has arrived but forgot to send a notification:
     - Admin updates space status to 'occupied'
+    - Admin updates parking request status to 'active'
   - Driver hasn't arrived:
     - No action needed, as the space status is 'available'.
+    - Admin updates parking request status to 'completed'.
 - If the admin receives an alert that a departure notification has not been received within one hour after the booked departure time, it is assumed they will act accordingly to prevent operational disruptions, such as:
   - Driver has left, but forgot to send a notification:
     - Admin updates space status to 'available'

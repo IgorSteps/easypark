@@ -1,13 +1,19 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"time"
+
+	"github.com/spf13/viper"
+)
 
 // Config represents config for Easypark app.
 type Config struct {
-	Database DatabaseConfig
-	HTTP     HTTPConfig
-	Auth     AuthConfig
-	Logging  LoggingConfig
+	Database  DatabaseConfig
+	HTTP      HTTPConfig
+	Auth      AuthConfig
+	Logging   LoggingConfig
+	Scheduler SchedulerConfig
+	Alert     AlertConfig
 }
 
 // DatabaseConfig represents a config for our Database.
@@ -34,6 +40,17 @@ type AuthConfig struct {
 type LoggingConfig struct {
 	Level     string
 	GormLevel string
+	Format    string
+}
+
+// SchedulerConfig represents a config for our Scheduler.
+type SchedulerConfig struct {
+	Interval string
+}
+
+// AlertConfig represents a config for alerts.
+type AlertConfig struct {
+	LateArrivalThresholdMinutes time.Duration
 }
 
 // LoadConfig reads configuration from ./config.yaml file.

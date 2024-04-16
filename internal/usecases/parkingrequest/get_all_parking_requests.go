@@ -25,7 +25,7 @@ func NewGetAllParkingRequests(l *logrus.Logger, r repositories.ParkingRequestRep
 
 // Execute runs the business logic to get all parking requests.
 func (s *GetAllParkingRequests) Execute(ctx context.Context) ([]entities.ParkingRequest, error) {
-	parkingRequests, err := s.repo.GetAllParkingRequests(ctx)
+	parkingRequests, err := s.repo.GetMany(ctx, nil)
 	if err != nil {
 		return []entities.ParkingRequest{}, err
 	}

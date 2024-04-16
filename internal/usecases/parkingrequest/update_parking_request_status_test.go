@@ -18,7 +18,7 @@ func TestUpdateParkingRequestStatus_Execute_HappyPath(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
-	testStatus := "approved"
+	testStatus := "rejected"
 	testCtx := context.Background()
 	testID := uuid.New()
 	testLogger, _ := test.NewNullLogger()
@@ -29,9 +29,9 @@ func TestUpdateParkingRequestStatus_Execute_HappyPath(t *testing.T) {
 		ID:     testID,
 		Status: entities.RequestStatusPending,
 	}
-	mockRepo.EXPECT().GetParkingRequestByID(testCtx, testID).Return(*testRequest, nil).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(*testRequest, nil).Once()
 
-	testRequest.Status = entities.RequestStatusApproved
+	testRequest.Status = entities.RequestStatusRejected
 	mockRepo.EXPECT().Save(testCtx, testRequest).Return(nil).Once()
 
 	// ----
@@ -43,7 +43,7 @@ func TestUpdateParkingRequestStatus_Execute_HappyPath(t *testing.T) {
 	// ASSERT
 	// ------
 	assert.Nil(t, err, "Must not error")
-	assert.Equal(t, entities.RequestStatusApproved, testRequest.Status, "Status is wrong")
+	assert.Equal(t, entities.RequestStatusRejected, testRequest.Status, "Status is wrong")
 	mockRepo.AssertExpectations(t)
 }
 
@@ -51,7 +51,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_GetParkingRequestByIDErr
 	// --------
 	// ASSEMBLE
 	// --------
-	testStatus := "approved"
+	testStatus := "rejected"
 	testCtx := context.Background()
 	testID := uuid.New()
 	testLogger, _ := test.NewNullLogger()
@@ -60,7 +60,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_GetParkingRequestByIDErr
 
 	testError := errors.New("boom")
 	testRequest := entities.ParkingRequest{}
-	mockRepo.EXPECT().GetParkingRequestByID(testCtx, testID).Return(testRequest, testError).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(testRequest, testError).Once()
 
 	// ----
 	// ACT
@@ -79,7 +79,7 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_SaveError(t *testing.T) 
 	// --------
 	// ASSEMBLE
 	// --------
-	testStatus := "approved"
+	testStatus := "rejected"
 	testCtx := context.Background()
 	testID := uuid.New()
 	testLogger, _ := test.NewNullLogger()
@@ -87,10 +87,10 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_SaveError(t *testing.T) 
 	usecase := usecases.NewUpdateParkingRequestStatus(testLogger, mockRepo)
 
 	testRequest := &entities.ParkingRequest{}
-	mockRepo.EXPECT().GetParkingRequestByID(testCtx, testID).Return(*testRequest, nil).Once()
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(*testRequest, nil).Once()
 
 	testError := errors.New("boom")
-	testRequest.Status = entities.RequestStatusApproved
+	testRequest.Status = entities.RequestStatusRejected
 	mockRepo.EXPECT().Save(testCtx, testRequest).Return(testError).Once()
 
 	// ----
@@ -125,12 +125,12 @@ func TestUpdateParkingRequestStatus_Execute_UnhappyPath_InvalidStatus(t *testing
 	// ASSERT
 	// ------
 	assert.IsType(t, &repositories.InvalidInputError{}, err, "Error type is wrong")
-	assert.EqualError(t, err, "unknown parking request status", "Errors are not equal")
+	assert.EqualError(t, err, "unknown or not allowed parking request status", "Errors are not equal")
 	mockRepo.AssertExpectations(t)
 
 	// Assert logger
 	assert.Equal(t, 1, len(hook.Entries), "Must be 1 log entry in the logger")
-	assert.Equal(t, "unknown parking request status", hook.LastEntry().Message, "Log message is wrong")
+	assert.Equal(t, "unknown or not allowed parking request status", hook.LastEntry().Message, "Log message is wrong")
 	assert.Equal(t, testStatus, hook.LastEntry().Data["status"], "ID field is incorrect")
 	assert.Equal(t, err, hook.LastEntry().Data["error"], "Error field is incorrect")
 }

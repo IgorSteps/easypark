@@ -27,6 +27,7 @@ func TestNotificationCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	handler := handlers.NewNotificationCreateHandler(testLogger, mockFacade)
 
 	testCreateRequest := models.CreateNotificationRequest{
+		ParkingRequestID: uuid.New(),
 		ParkingSpaceID:   uuid.New(),
 		Location:         "ldddd",
 		NotificationType: 0,
@@ -51,6 +52,7 @@ func TestNotificationCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	mockFacade.EXPECT().CreateNotification(
 		reqCtx,
 		testID,
+		testCreateRequest.ParkingRequestID,
 		testCreateRequest.ParkingSpaceID,
 		testCreateRequest.Location,
 		testCreateRequest.NotificationType,

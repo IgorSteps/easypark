@@ -40,6 +40,7 @@ type HandlerFactory interface {
 
 	// Alert handlers
 	GetSingleAlert() http.Handler
+	CheckForLateArrivals() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -63,13 +64,12 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 	// Driver routes
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.Authorise, middleware.RequireRole(entities.RoleDriver), middleware.CheckStatus)
-		// Placeholder:
-		r.Get("/driver", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Welcome, Driver!"))
-		})
+		// Parking requests
 		r.Method(http.MethodPost, "/drivers/{id}/parking-requests", handlerFactory.ParkingRequestCreate())
 		r.Method(http.MethodGet, "/drivers/{id}/parking-requests", handlerFactory.GetAllParkingRequestsForDriver())
+		// Notifications
 		r.Method(http.MethodPost, "/drivers/{id}/notifications", handlerFactory.CreateNotification())
+		// Parking spaces
 		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
 	})
 
@@ -79,21 +79,22 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		// Drivers
 		r.Method(http.MethodGet, "/drivers", handlerFactory.GetAllDrivers())
 		r.Method(http.MethodPatch, "/drivers/{id}/status", handlerFactory.DriverBan())
-		// Park lots
+		// Parking lots
 		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
 		r.Method(http.MethodGet, "/parking-lots", handlerFactory.GetAllParkingLots())
 		r.Method(http.MethodDelete, "/parking-lots/{id}", handlerFactory.DeleteParkingLot())
-		// Park requests
+		// Parking requests
 		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
 		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
 		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
-		// Park spaces
+		// Parking spaces
 		r.Method(http.MethodPatch, "/parking-spaces/{id}/status", handlerFactory.UpdateParkingSpaceStatus())
 		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
 		// Notifications
 		r.Method(http.MethodGet, "/notifications", handlerFactory.GetAllNotifications())
 		// Alerts
 		r.Method(http.MethodGet, "/alerts/{id}", handlerFactory.GetSingleAlert())
+		r.Method(http.MethodPost, "/alerts/late-arrivals", handlerFactory.CheckForLateArrivals())
 	})
 
 	return router

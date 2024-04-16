@@ -39,13 +39,13 @@ func TestAssignParkingSpace_HappyPath_Available(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:              testParkingSpaceID,
 		ParkingLotID:    testParkingLotID,
-		Status:          entities.StatusAvailable,
+		Status:          entities.ParkingSpaceStatusAvailable,
 		ParkingRequests: NewTestParkRequests(),
 	}
 
 	// Setup mocks.
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// Update parking request like we do in the usecase.
 	testRequest.OnSpaceAssign(testParkingSpaceID)
@@ -89,13 +89,13 @@ func TestAssignParkingSpace_HappyPath_Occupied(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:              testParkingSpaceID,
 		ParkingLotID:    testParkingLotID,
-		Status:          entities.StatusOccupied,
+		Status:          entities.ParkingSpaceStatusOccupied,
 		ParkingRequests: NewTestParkRequests(),
 	}
 
 	// Setup mocks.
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// Update parking request like we do in the usecase.
 	testRequest.OnSpaceAssign(testParkingSpaceID)
@@ -140,13 +140,13 @@ func TestAssignParkingSpace_UnhappyPath_OutdatedParkingRequest(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:              testParkingSpaceID,
 		ParkingLotID:    testParkingLotID,
-		Status:          entities.StatusAvailable,
+		Status:          entities.ParkingSpaceStatusAvailable,
 		ParkingRequests: NewTestParkRequests(),
 	}
 
 	// Setup mocks.
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// ------
 	// ACT
@@ -187,13 +187,13 @@ func TestAssignParkingSpace_UnhappyPath_Overlap(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:              testParkingSpaceID,
 		ParkingLotID:    testParkingLotID,
-		Status:          entities.StatusAvailable,
+		Status:          entities.ParkingSpaceStatusAvailable,
 		ParkingRequests: NewTestParkRequests(),
 	}
 
 	// Setup mocks.
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// ------
 	// ACT
@@ -234,13 +234,13 @@ func TestAssignParkingSpace_UnhappyPath_RejectedParkingRequest(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:              testParkingSpaceID,
 		ParkingLotID:    testParkingLotID,
-		Status:          entities.StatusAvailable,
+		Status:          entities.ParkingSpaceStatusAvailable,
 		ParkingRequests: NewTestParkRequests(),
 	}
 
 	// Setup mocks.
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// ------
 	// ACT
@@ -280,12 +280,12 @@ func TestAssignParkingSpace_UnhappyPath_WrongParkingSpace(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:           testParkingSpaceID,
 		ParkingLotID: uuid.New(), // different ID to the one in the testRequest
-		Status:       entities.StatusAvailable,
+		Status:       entities.ParkingSpaceStatusAvailable,
 	}
 
 	// Setup mocks
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// ------
 	// ACT
@@ -330,12 +330,12 @@ func TestAssignParkingSpace_UnhappyPath_ParkingSpaceBlocked(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:           testParkingSpaceID,
 		ParkingLotID: testParkingLotID,
-		Status:       entities.StatusBlocked, // blocked status
+		Status:       entities.ParkingSpaceStatusBlocked, // blocked status
 	}
 
 	// Setup mocks
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// ------
 	// ACT
@@ -378,12 +378,12 @@ func TestAssignParkingSpace_UnhappyPath_ParkingSpaceReserved(t *testing.T) {
 	testParkSpace := entities.ParkingSpace{
 		ID:           testParkingSpaceID,
 		ParkingLotID: testParkingLotID,
-		Status:       entities.StatusReserved, // reserved status
+		Status:       entities.ParkingSpaceStatusReserved, // reserved status
 	}
 
 	// Setup mocks
-	mockRequestRepository.EXPECT().GetParkingRequestByID(testCtx, testRequestID).Return(testRequest, nil).Once()
-	mockSpaceRepository.EXPECT().GetParkingSpaceByID(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
+	mockRequestRepository.EXPECT().GetSingle(testCtx, testRequestID).Return(testRequest, nil).Once()
+	mockSpaceRepository.EXPECT().GetSingle(testCtx, testParkingSpaceID).Return(testParkSpace, nil).Once()
 
 	// ------
 	// ACT

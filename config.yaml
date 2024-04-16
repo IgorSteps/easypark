@@ -16,3 +16,10 @@ auth:
 logging:
   level: debug
   gormlevel: error
+  format: text
+
+scheduler:
+  interval: "*/5 * * * *" # Every 5 minutes.
+
+alert:
+  LateArrivalThresholdMinutes: "60m" # 60 minutes.
