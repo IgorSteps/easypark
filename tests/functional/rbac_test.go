@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
 	"github.com/stretchr/testify/suite"
 )
@@ -38,9 +39,16 @@ func (s *TestRBACSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
 	// ACT
 	// --------
 	// Create driver
-	_, responseCode, err := s.CreateUser(ctx, createUserReq)
+	respBody, responseCode, err := s.CreateUser(ctx, createUserReq)
 	s.Require().NoError(err, "Creating user should not return an error")
 	s.Require().Equal(http.StatusCreated, responseCode, "Response code should be 201")
+
+	// Unmarshal response to get the user.
+	var targetUserModel entities.User
+	err = s.UnmarshalHTTPResponse(respBody, &targetUserModel)
+	if err != nil {
+		s.T().Fail()
+	}
 
 	// Login driver
 	responseBody, responseCode, err := s.LoginUser(ctx, loginReq)
@@ -50,11 +58,12 @@ func (s *TestRBACSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
 	var targetModel models.LoginUserResponse
 	err = s.UnmarshalHTTPResponse(responseBody, &targetModel)
 	if err != nil {
+
 		s.T().Fail()
 	}
-	s.T().Log(targetModel.Token)
+
 	// Make request to driver route
-	respB, respC, err := s.PlaceholderDriverRoute(ctx, targetModel.Token)
+	_, respC, err := s.CreateParkingRequest(ctx, targetModel.Token, targetUserModel.ID.String(), nil)
 	s.Require().NoError(err, "Making request to driver route should not return an error")
 
 	// --------
@@ -64,8 +73,7 @@ func (s *TestRBACSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
 	s.Require().Equal("User logged in successfully", targetModel.Message, "Response messages don't match")
 	s.Require().NotEmpty(targetModel.Token, "Token must not be empty")
 
-	s.Require().Equal(http.StatusOK, respC, "request to driver route should return 200")
-	s.Require().Equal("Welcome, Driver!", string(respB))
+	s.Require().Equal(http.StatusCreated, respC, "request to create park request should return 201")
 }
 
 func (s *TestRBACSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() {

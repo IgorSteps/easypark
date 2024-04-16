@@ -57,9 +57,19 @@ States a parking space can be in: `available`, `occupied`, `reserved`, `blocked`
 - **Unblocking**:
   - When a space is unblocked by the admin, its status immediately returns to 'available'.
 
-### Notifications
-
 ### Alerts
+
+**Scheduling**:
+
+Checks for alerts are scheduled using the [Scheduler](../internal/drivers/scheduler/scheduler.go) to run at constant intervals of 5 minutes.
+
+**Late arrival alert**:
+
+All parking requests:
+    - in past must have status 'completed'.
+    - current but that have received an arrival notification have status 'active'.
+  
+So when checking for late arrivals, we look at parking requests that are before 1 hour in the past and of status 'approved'.
 
 ## Assumptions
 

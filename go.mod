@@ -10,6 +10,8 @@ require (
 	gorm.io/driver/postgres v1.5.7
 )
 
+require github.com/robfig/cron/v3 v3.0.1
+
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect

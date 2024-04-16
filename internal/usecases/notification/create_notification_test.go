@@ -414,7 +414,7 @@ func (s *CreateNotificationTestSuite) TestCreateNotification_Execute_HappyPath_L
 
 	testAlert := &entities.Alert{}
 	testAlertMsg := "driver arrived at wrong parking space"
-	testAlert.OnLocationMismatchAlertCreate(testAlertMsg, testDriverID, testSpaceID)
+	testAlert.CreateLocationMismatchAlert(testAlertMsg, testDriverID, testSpaceID)
 	s.mockAlertCreator.EXPECT().Execute(testCtx, entities.LocationMismatch, testAlertMsg, testDriverID, testSpaceID).Return(testAlert, nil).Once()
 
 	// --------

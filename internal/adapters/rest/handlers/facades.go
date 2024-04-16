@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/google/uuid"
@@ -74,6 +75,9 @@ type NotificationFacade interface {
 type AlertFacade interface {
 	// GetAlert is implemented by usecasefacades.AlertFacade that wraps get a single alert usecase.
 	GetAlert(ctx context.Context, id uuid.UUID) (entities.Alert, error)
+
+	// CheckForLateArrivals is implemented by usecasefacades.AlertFacade that wraps checking for late arrivals usecase.
+	CheckForLateArrivals(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
 }
 
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.

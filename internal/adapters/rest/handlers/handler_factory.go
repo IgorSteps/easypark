@@ -105,3 +105,8 @@ func (s *HandlerFactory) GetAllNotifications() http.Handler {
 func (s *HandlerFactory) GetSingleAlert() http.Handler {
 	return NewAlertGetSingleHandler(s.logger, s.facade.alertFacade)
 }
+
+// CheckForLateArrivals returns a new REST handler to check for late arrivals.
+func (s *HandlerFactory) CheckForLateArrivals() http.Handler {
+	return NewCheckLateArrivalHandler(s.logger, s.facade.alertFacade)
+}

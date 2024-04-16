@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/IgorSteps/easypark/internal/drivers/httpserver"
+	"github.com/sirupsen/logrus/hooks/test"
 
 	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/go-chi/chi/v5"
@@ -16,11 +17,11 @@ func TestNewServer(t *testing.T) {
 	// --------
 	router := chi.NewRouter()
 	config := config.HTTPConfig{Address: ":8080"}
-
+	logger, _ := test.NewNullLogger()
 	// ----
 	// ACT
 	// ----
-	server := httpserver.NewServerFromConfig(router, config)
+	server := httpserver.NewServerFromConfig(router, config, logger)
 
 	// -------
 	// ASSERT

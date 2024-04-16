@@ -9,6 +9,8 @@ import (
 
 	mock "github.com/stretchr/testify/mock"
 
+	time "time"
+
 	uuid "github.com/google/uuid"
 )
 
@@ -23,6 +25,65 @@ type AlertFacade_Expecter struct {
 
 func (_m *AlertFacade) EXPECT() *AlertFacade_Expecter {
 	return &AlertFacade_Expecter{mock: &_m.Mock}
+}
+
+// CheckForLateArrivals provides a mock function with given fields: ctx, threshold
+func (_m *AlertFacade) CheckForLateArrivals(ctx context.Context, threshold time.Duration) ([]entities.Alert, error) {
+	ret := _m.Called(ctx, threshold)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CheckForLateArrivals")
+	}
+
+	var r0 []entities.Alert
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, time.Duration) ([]entities.Alert, error)); ok {
+		return rf(ctx, threshold)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, time.Duration) []entities.Alert); ok {
+		r0 = rf(ctx, threshold)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.Alert)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, time.Duration) error); ok {
+		r1 = rf(ctx, threshold)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// AlertFacade_CheckForLateArrivals_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckForLateArrivals'
+type AlertFacade_CheckForLateArrivals_Call struct {
+	*mock.Call
+}
+
+// CheckForLateArrivals is a helper method to define mock.On call
+//   - ctx context.Context
+//   - threshold time.Duration
+func (_e *AlertFacade_Expecter) CheckForLateArrivals(ctx interface{}, threshold interface{}) *AlertFacade_CheckForLateArrivals_Call {
+	return &AlertFacade_CheckForLateArrivals_Call{Call: _e.mock.On("CheckForLateArrivals", ctx, threshold)}
+}
+
+func (_c *AlertFacade_CheckForLateArrivals_Call) Run(run func(ctx context.Context, threshold time.Duration)) *AlertFacade_CheckForLateArrivals_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(time.Duration))
+	})
+	return _c
+}
+
+func (_c *AlertFacade_CheckForLateArrivals_Call) Return(_a0 []entities.Alert, _a1 error) *AlertFacade_CheckForLateArrivals_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *AlertFacade_CheckForLateArrivals_Call) RunAndReturn(run func(context.Context, time.Duration) ([]entities.Alert, error)) *AlertFacade_CheckForLateArrivals_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 // GetAlert provides a mock function with given fields: ctx, id

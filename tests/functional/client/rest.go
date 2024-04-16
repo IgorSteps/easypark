@@ -51,11 +51,6 @@ func (s *RestClientSuite) LoginUser(ctx context.Context, req *models.LoginUserRe
 	return s.sendRequest(ctx, http.MethodPost, "/login", req)
 }
 
-// PlaceholderDriverRoute interacts with the REST API to a placeholder for driver routrs.
-func (s *RestClientSuite) PlaceholderDriverRoute(ctx context.Context, token string) ([]byte, int, error) {
-	return s.sendRequestWithToken(ctx, http.MethodGet, "/driver", nil, token)
-}
-
 // GetAllDrivers interacts with the REST API to get get all drivers.
 func (s *RestClientSuite) GetAllDrivers(ctx context.Context, token string) ([]byte, int, error) {
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/drivers", nil, token)
@@ -126,8 +121,9 @@ func (s *RestClientSuite) GetAllNotifications(ctx context.Context, adminToken st
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/notifications", nil, adminToken)
 }
 
-func (s *RestClientSuite) GetSingleAlert(ctx context.Context, adminToken string, id uuid.UUID) {
-
+// CheckForLateArrivals interacts with the REST API to check for late arrivals.
+func (s *RestClientSuite) CheckForLateArrivals(ctx context.Context, adminToken string, body *models.CheckForLateArrivalsRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/alerts/late-arrivals", body, adminToken)
 }
 
 // sendRequest sends a HTTP request via provided method and path.

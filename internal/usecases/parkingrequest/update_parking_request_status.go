@@ -9,11 +9,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// UpdateParkingRequestStatus provides business logic to update the status of a parking request to
+// 'rejected' or 'pending'
 type UpdateParkingRequestStatus struct {
 	logger *logrus.Logger
 	repo   repositories.ParkingRequestRepository
 }
 
+// NewUpdateParkingRequestStatus returns a new instance of UpdateParkingRequestStatus.
 func NewUpdateParkingRequestStatus(lgr *logrus.Logger, r repositories.ParkingRequestRepository) *UpdateParkingRequestStatus {
 	return &UpdateParkingRequestStatus{
 		logger: lgr,
@@ -21,10 +24,11 @@ func NewUpdateParkingRequestStatus(lgr *logrus.Logger, r repositories.ParkingReq
 	}
 }
 
+// Execute runs the business logic.
 func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, status string) error {
 	domainStatus, err := parkingRequestFromString(status)
 	if err != nil {
-		s.logger.WithField("status", status).WithError(err).Error("unknown parking request status")
+		s.logger.WithField("status", status).WithError(err).Error("unknown or not allowed parking request status")
 		return err
 	}
 
@@ -43,16 +47,13 @@ func (s *UpdateParkingRequestStatus) Execute(ctx context.Context, id uuid.UUID, 
 	return nil
 }
 
-// TODO: Move to domain?
 func parkingRequestFromString(status string) (entities.ParkingRequestStatus, error) {
 	switch status {
-	case "approved":
-		return entities.RequestStatusApproved, nil
 	case "rejected":
 		return entities.RequestStatusRejected, nil
 	case "pending":
 		return entities.RequestStatusRejected, nil
 	default:
-		return "", repositories.NewInvalidInputError("unknown parking request status")
+		return "", repositories.NewInvalidInputError("unknown or not allowed parking request status")
 	}
 }

@@ -73,7 +73,7 @@ func (s *TestBanDriverSuite) TestBannedDriver_CannotAccessAnyRoutes() {
 	// ACT
 	// ------
 	// Try accessing an endpoint.
-	respBody, respCode, err = s.PlaceholderDriverRoute(ctx, driverToken)
+	respBody, respCode, err = s.CreateParkingRequest(ctx, driverToken, driver.ID.String(), nil)
 
 	// ------
 	// ASSERT

@@ -68,6 +68,53 @@ func (_c *HandlerFactory_AssignParkingSpace_Call) RunAndReturn(run func() http.H
 	return _c
 }
 
+// CheckForLateArrivals provides a mock function with given fields:
+func (_m *HandlerFactory) CheckForLateArrivals() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for CheckForLateArrivals")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_CheckForLateArrivals_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckForLateArrivals'
+type HandlerFactory_CheckForLateArrivals_Call struct {
+	*mock.Call
+}
+
+// CheckForLateArrivals is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) CheckForLateArrivals() *HandlerFactory_CheckForLateArrivals_Call {
+	return &HandlerFactory_CheckForLateArrivals_Call{Call: _e.mock.On("CheckForLateArrivals")}
+}
+
+func (_c *HandlerFactory_CheckForLateArrivals_Call) Run(run func()) *HandlerFactory_CheckForLateArrivals_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_CheckForLateArrivals_Call) Return(_a0 http.Handler) *HandlerFactory_CheckForLateArrivals_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_CheckForLateArrivals_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_CheckForLateArrivals_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateNotification provides a mock function with given fields:
 func (_m *HandlerFactory) CreateNotification() http.Handler {
 	ret := _m.Called()
