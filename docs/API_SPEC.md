@@ -740,7 +740,7 @@ Returns an error of one of these types: `0 - Location mismatch alert`.
 
 **Endpoint**: `POST /alerts/late-arrivals`
 
-**Description**: Runs a workflow to check if arrival notifications have not been received withing given threshold. Returns created alerts as result of the check. Note, that this check is performed automatically by the [Scheduler](./DESIGN.MD#alerts) at constant intervals. This endpoint is if the admin wants to do it manually.
+**Description**: Runs a workflow to check if arrival notifications have not been received within the given threshold. Returns created alerts as result of the check. Note, that this check is performed automatically by the [Scheduler](./DESIGN.MD#alerts) at constant intervals. This endpoint is for if the admin wants to do it manually and with a different threshold.
 
 **Request Body**:
 

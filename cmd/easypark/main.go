@@ -22,7 +22,7 @@ func main() {
 	app.scheduler.Start()
 	defer app.scheduler.Stop()
 
-	// Start t heREST server.
+	// Start the REST server.
 	go func() {
 		if err := app.server.Run(); err != nil {
 			log.Fatalf("failed to start REST server: %v", err)
