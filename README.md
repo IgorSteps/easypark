@@ -2,11 +2,11 @@
 
 [Task tracking](https://trello.com/invite/b/lGdfavnm/ATTI15a8afbd1ced04b229e8f2380279ac156CE4A0AF/easypark)
 
-EasPark is a backend built with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) principles. It provides REST API endpoints for drivers and admins to be able to use and manage parking through our UI.
+EasyPark is a backend built with [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) principles. It provides REST API endpoints for drivers and admins to be able to use and manage parking through our [UI](https://github.com/IgorSteps/easypark-ui).
 
 ## API Specification and Design
 
-Before reading the API Specification, read our [design docs](./docs/DESIGN.MD) to understand the states, rules and assumptions within the EasyPark system.
+Before reading the API Specification, read our [design docs](./docs/DESIGN.MD) to understand the states, rules and assumptions regarding entities within the EasyPark system.
 
 API Specification can be found [here](docs/API_SPEC.md).
 
