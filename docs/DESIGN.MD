@@ -86,12 +86,7 @@ When checking for late arrivals, we look at parking requests that are before the
   - Driver hasn't arrived:
     - No action needed, as the space status is 'available'.
     - Admin updates parking request status to 'completed'.
-- If the admin receives an alert that a departure notification has not been received within one hour after the booked departure time, it is assumed they will act accordingly to prevent operational disruptions, such as:
-  - Driver has left, but forgot to send a notification:
-    - Admin updates space status to 'available'
-  - Driver hasn't left:
-    - Admin contacts the driver to tell him to leave and to send a departure notification.
-    - Admin reassigns the spaces of the affected parking requests.
+- If the admin receives an alert that a departure notification has not been received within one hour after the booked departure time, it is assumed they will act accordingly to prevent operational disruptions, such as: TODO
 
 ## Future work
 
