@@ -31,6 +31,11 @@ API Specification can be found [here](docs/API_SPEC.md).
 - [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) (Download for Windows and [enable integration with WSL2 in the settings](https://docs.docker.com/desktop/wsl/))
 - [GoLang](https://go.dev/doc/install) (Follow instructions for Linux and install in your WSL2)
 
+#### Tools
+- [Wire](https://github.com/google/wire) for Dependecy Injection code generation.
+- [Mockery](https://vektra.github.io/mockery/latest/installation/) for Mocks generation for unit testing.
+- PSQL(depends on what package manager your Linux distro uses, but if you try runnining `psql` it should give you a commad back to install it) for running scripts that interact with the database.
+
 ### Setting up environment
 
 Git clone to your Linux environment using `git clone https://github.com/IgorSteps/easypark.git`.
