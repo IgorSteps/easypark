@@ -76,6 +76,8 @@ type AlertFacade interface {
 	// GetAlert is implemented by usecasefacades.AlertFacade that wraps get a single alert usecase.
 	GetAlert(ctx context.Context, id uuid.UUID) (entities.Alert, error)
 
+	GetAllAlerts(ctx context.Context) ([]entities.Alert, error)
+
 	// CheckForLateArrivals is implemented by usecasefacades.AlertFacade that wraps checking for late arrivals usecase.
 	CheckForLateArrivals(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
 }

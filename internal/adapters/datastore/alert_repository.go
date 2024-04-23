@@ -55,3 +55,16 @@ func (s *AlertPostgresRepository) GetSingle(ctx context.Context, id uuid.UUID) (
 
 	return alert, nil
 }
+
+func (s *AlertPostgresRepository) GetAll(ctx context.Context) ([]entities.Alert, error) {
+	var alerts []entities.Alert
+	result := s.db.WithContext(ctx).FindAll(&alerts)
+
+	err := result.Error()
+	if err != nil {
+		s.logger.WithError(err).Error("failed to get all alerts in the database")
+		return nil, repositories.NewInternalError("failed to get all alerts in the database")
+	}
+
+	return alerts, nil
+}
