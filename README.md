@@ -53,7 +53,9 @@ If changes to dependecy graph have been made, you must edit `wire.go` file and r
 
 ### Troubleshooting
 
-Will be edited once problems appear.
+#### Failed to run `make wire` or `make mocks`
+1. Make sure you have `wire`(https://github.com/google/wire) and `mockery`(https://vektra.github.io/mockery/latest/installation/) installed.
+2. If after installation it still doesn't work, add `GO BIN` to your PATH, run `export PATH="$HOME/go/bin:$PATH"`(given that your GO BIN is go/bin which it usuall is).
 
 ## Testing
 
