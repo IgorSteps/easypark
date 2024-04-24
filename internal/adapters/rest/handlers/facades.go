@@ -80,6 +80,10 @@ type AlertFacade interface {
 	CheckForLateArrivals(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
 }
 
+type MessageFacade interface {
+	CreateMessage(ctx context.Context, msg entities.Message) (entities.Message, error)
+}
+
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.
 type Facade struct {
 	userFacade           UserFacade

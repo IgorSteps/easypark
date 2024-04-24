@@ -26,7 +26,7 @@ func NewBanDriver(l *logrus.Logger, r repositories.UserRepository) *BanDriver {
 // Execute runs the business logic to ban a driver.
 func (s *BanDriver) Execute(ctx context.Context, id uuid.UUID) error {
 	var userToUpdate entities.User
-	err := s.repo.GetDriverByID(ctx, id, &userToUpdate)
+	err := s.repo.GetSingle(ctx, id, &userToUpdate)
 	if err != nil {
 		return err
 	}

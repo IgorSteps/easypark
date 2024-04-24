@@ -378,7 +378,7 @@ func Test_UserRepository_GetDriverByID_HappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := repository.GetDriverByID(ctx, testID, &user)
+	err := repository.GetSingle(ctx, testID, &user)
 
 	// --------
 	// ASSERT
@@ -408,7 +408,7 @@ func Test_UserRepository_GetDriverByID_UnhappyPath_NotFound(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := repository.GetDriverByID(ctx, testID, &user)
+	err := repository.GetSingle(ctx, testID, &user)
 
 	// --------
 	// ASSERT
@@ -443,7 +443,7 @@ func Test_UserRepository_GetDriverByID_UnhappyPath_InternalError(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := repository.GetDriverByID(ctx, testID, &user)
+	err := repository.GetSingle(ctx, testID, &user)
 
 	// --------
 	// ASSERT

@@ -24,7 +24,7 @@ func TestBanDriver_HappyPath(t *testing.T) {
 	testID := uuid.New()
 
 	var testUser entities.User
-	mockRepo.EXPECT().GetDriverByID(ctx, testID, &testUser).Return(nil).Once()
+	mockRepo.EXPECT().GetSingle(ctx, testID, &testUser).Return(nil).Once()
 
 	var testUserBanned entities.User
 	testUserBanned.Ban()
@@ -54,7 +54,7 @@ func TestBanDriver_UnhappyPath_GetDriverByID(t *testing.T) {
 	testErr := errors.New("boom")
 
 	var testUser entities.User
-	mockRepo.EXPECT().GetDriverByID(ctx, testID, &testUser).Return(testErr).Once()
+	mockRepo.EXPECT().GetSingle(ctx, testID, &testUser).Return(testErr).Once()
 
 	// --------
 	// ACT
@@ -81,7 +81,7 @@ func TestBanDriver_UnhappyPath_Save(t *testing.T) {
 	testErr := errors.New("boom")
 
 	var testUser entities.User
-	mockRepo.EXPECT().GetDriverByID(ctx, testID, &testUser).Return(nil).Once()
+	mockRepo.EXPECT().GetSingle(ctx, testID, &testUser).Return(nil).Once()
 
 	var testUserBanned entities.User
 	testUserBanned.Ban()

@@ -91,8 +91,8 @@ func (s *UserPostgresRepository) GetAllDriverUsers(ctx context.Context) ([]entit
 	return users, nil
 }
 
-// GetDriverByID queries the DB to find a user by their ID.
-func (s *UserPostgresRepository) GetDriverByID(ctx context.Context, id uuid.UUID, user *entities.User) error {
+// GetSingle queries the DB to find a user by their ID.
+func (s *UserPostgresRepository) GetSingle(ctx context.Context, id uuid.UUID, user *entities.User) error {
 	result := s.DB.WithContext(ctx).First(user, "id = ?", id)
 	err := result.Error()
 	if err != nil {

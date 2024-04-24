@@ -25,7 +25,7 @@ func TestCheckDriverStatus_HappyPath_Active(t *testing.T) {
 	testID := uuid.New()
 
 	var testUser entities.User
-	mockRepo.EXPECT().GetDriverByID(ctx, testID, &testUser).Return(nil).Once().Run(func(args mock.Arguments) {
+	mockRepo.EXPECT().GetSingle(ctx, testID, &testUser).Return(nil).Once().Run(func(args mock.Arguments) {
 		arg := args.Get(2).(*entities.User)                 // Get the argument passed to FindAll
 		*arg = entities.User{Status: entities.StatusActive} // Set it to the expected users
 	})
@@ -54,7 +54,7 @@ func TestCheckDriverStatus_HappyPath_Banned(t *testing.T) {
 	testID := uuid.New()
 
 	var testUser entities.User
-	mockRepo.EXPECT().GetDriverByID(ctx, testID, &testUser).Return(nil).Once().Run(func(args mock.Arguments) {
+	mockRepo.EXPECT().GetSingle(ctx, testID, &testUser).Return(nil).Once().Run(func(args mock.Arguments) {
 		arg := args.Get(2).(*entities.User)                 // Get the argument passed to FindAll
 		*arg = entities.User{Status: entities.StatusBanned} // Set it to the expected users
 	})
@@ -83,7 +83,7 @@ func TestCheckDriverStatus_UnhappyPath(t *testing.T) {
 	testID := uuid.New()
 	testErr := errors.New("boom")
 	var testUser entities.User
-	mockRepo.EXPECT().GetDriverByID(ctx, testID, &testUser).Return(testErr).Once()
+	mockRepo.EXPECT().GetSingle(ctx, testID, &testUser).Return(testErr).Once()
 
 	// --------
 	// ACT

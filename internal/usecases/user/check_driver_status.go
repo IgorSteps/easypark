@@ -27,7 +27,7 @@ func NewCheckDriverStatus(l *logrus.Logger, r repositories.UserRepository) *Chec
 func (s *CheckDriverStatus) Execute(ctx context.Context, id uuid.UUID) (bool, error) {
 	var driver entities.User
 
-	err := s.repo.GetDriverByID(ctx, id, &driver)
+	err := s.repo.GetSingle(ctx, id, &driver)
 	if err != nil {
 		return true, err
 	}

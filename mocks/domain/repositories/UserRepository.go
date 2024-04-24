@@ -187,54 +187,6 @@ func (_c *UserRepository_GetAllDriverUsers_Call) RunAndReturn(run func(context.C
 	return _c
 }
 
-// GetDriverByID provides a mock function with given fields: ctx, id, user
-func (_m *UserRepository) GetDriverByID(ctx context.Context, id uuid.UUID, user *entities.User) error {
-	ret := _m.Called(ctx, id, user)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetDriverByID")
-	}
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, *entities.User) error); ok {
-		r0 = rf(ctx, id, user)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// UserRepository_GetDriverByID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetDriverByID'
-type UserRepository_GetDriverByID_Call struct {
-	*mock.Call
-}
-
-// GetDriverByID is a helper method to define mock.On call
-//   - ctx context.Context
-//   - id uuid.UUID
-//   - user *entities.User
-func (_e *UserRepository_Expecter) GetDriverByID(ctx interface{}, id interface{}, user interface{}) *UserRepository_GetDriverByID_Call {
-	return &UserRepository_GetDriverByID_Call{Call: _e.mock.On("GetDriverByID", ctx, id, user)}
-}
-
-func (_c *UserRepository_GetDriverByID_Call) Run(run func(ctx context.Context, id uuid.UUID, user *entities.User)) *UserRepository_GetDriverByID_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(*entities.User))
-	})
-	return _c
-}
-
-func (_c *UserRepository_GetDriverByID_Call) Return(_a0 error) *UserRepository_GetDriverByID_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *UserRepository_GetDriverByID_Call) RunAndReturn(run func(context.Context, uuid.UUID, *entities.User) error) *UserRepository_GetDriverByID_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // GetDriverByUsername provides a mock function with given fields: ctx, username
 func (_m *UserRepository) GetDriverByUsername(ctx context.Context, username string) (*entities.User, error) {
 	ret := _m.Called(ctx, username)
@@ -290,6 +242,54 @@ func (_c *UserRepository_GetDriverByUsername_Call) Return(_a0 *entities.User, _a
 }
 
 func (_c *UserRepository_GetDriverByUsername_Call) RunAndReturn(run func(context.Context, string) (*entities.User, error)) *UserRepository_GetDriverByUsername_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetSingle provides a mock function with given fields: ctx, id, user
+func (_m *UserRepository) GetSingle(ctx context.Context, id uuid.UUID, user *entities.User) error {
+	ret := _m.Called(ctx, id, user)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSingle")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, *entities.User) error); ok {
+		r0 = rf(ctx, id, user)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// UserRepository_GetSingle_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSingle'
+type UserRepository_GetSingle_Call struct {
+	*mock.Call
+}
+
+// GetSingle is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id uuid.UUID
+//   - user *entities.User
+func (_e *UserRepository_Expecter) GetSingle(ctx interface{}, id interface{}, user interface{}) *UserRepository_GetSingle_Call {
+	return &UserRepository_GetSingle_Call{Call: _e.mock.On("GetSingle", ctx, id, user)}
+}
+
+func (_c *UserRepository_GetSingle_Call) Run(run func(ctx context.Context, id uuid.UUID, user *entities.User)) *UserRepository_GetSingle_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(*entities.User))
+	})
+	return _c
+}
+
+func (_c *UserRepository_GetSingle_Call) Return(_a0 error) *UserRepository_GetSingle_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *UserRepository_GetSingle_Call) RunAndReturn(run func(context.Context, uuid.UUID, *entities.User) error) *UserRepository_GetSingle_Call {
 	_c.Call.Return(run)
 	return _c
 }

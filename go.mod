@@ -12,6 +12,8 @@ require (
 
 require github.com/robfig/cron/v3 v3.0.1
 
+require golang.org/x/net v0.20.0 // indirect
+
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -46,6 +48,7 @@ require (
 require (
 	github.com/chi-middleware/logrus-logger v0.3.0
 	github.com/google/wire v0.6.0
+	github.com/gorilla/websocket v1.5.1
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sys v0.16.0 // indirect
 	gorm.io/gorm v1.25.7
