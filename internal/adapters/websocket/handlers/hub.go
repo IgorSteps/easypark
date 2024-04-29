@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/IgorSteps/easypark/internal/adapters/websocket/models"
 	"github.com/google/uuid"
@@ -55,6 +56,17 @@ func (h *Hub) Run() {
 				default:
 					close(client.send)
 					delete(h.clients, client.userID)
+				}
+			} else {
+				// No recipient found, notify sender.
+				if sender, ok := h.clients[modelMsg.SenderID]; ok {
+					h.logger.WithFields(logrus.Fields{
+						"sender":    modelMsg.SenderID,
+						"recipient": modelMsg.ReceiverID,
+					}).Warn("failed to find recipient")
+
+					errorMsg := fmt.Sprintf("Message to %s could not be delivered: recipient user is not connected.", modelMsg.ReceiverID)
+					sender.send <- []byte(errorMsg)
 				}
 			}
 		}
