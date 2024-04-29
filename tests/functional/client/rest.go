@@ -126,6 +126,11 @@ func (s *RestClientSuite) CheckForLateArrivals(ctx context.Context, adminToken s
 	return s.sendRequestWithToken(ctx, http.MethodPost, "/alerts/late-arrivals", body, adminToken)
 }
 
+// GetAllAlers interacts with the REST API to get all alerts.
+func (s *RestClientSuite) GetAllAlerts(ctx context.Context, adminToken string) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodGet, "/alerts", nil, adminToken)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)
