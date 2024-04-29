@@ -82,3 +82,30 @@ func TestAlertRepository_GetSingle(t *testing.T) {
 	assert.Equal(t, testAlert, actualAlert)
 	mockDB.AssertExpectations(t)
 }
+
+func TestAlertRepository_GetAll(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockDB := &mocks.Datastore{}
+	repo := datastore.NewAlertPostgresRepository(testLogger, mockDB)
+
+	testCtx := context.Background()
+
+	mockDB.EXPECT().WithContext(testCtx).Return(mockDB).Once()
+	var alerts []entities.Alert
+	mockDB.EXPECT().FindAll(&alerts).Return(mockDB).Once()
+	mockDB.EXPECT().Error().Return(nil).Once()
+
+	// ---
+	// ACT
+	// ---
+	_, err := repo.GetAll(testCtx)
+
+	// ------
+	// ASSERT
+	// ------
+	assert.NoError(t, err)
+	mockDB.AssertExpectations(t)
+}
