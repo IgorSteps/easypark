@@ -7,7 +7,7 @@ import (
 )
 
 type Client struct {
-	logger *logrus.Logger
+	Logger *logrus.Logger
 	Hub    *Hub
 	Conn   *websocket.Conn
 	Send   chan []byte
@@ -23,7 +23,7 @@ func (c *Client) ReadPump() {
 		_, message, err := c.Conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				c.logger.WithError(err).Error("unexpected websocket closure")
+				c.Logger.WithError(err).Error("unexpected websocket closure")
 			}
 			break
 		}
@@ -31,6 +31,7 @@ func (c *Client) ReadPump() {
 	}
 }
 
+// TODO: Add a timeout or rate limiting for message sending to prevent abuse or resource exhaustion.
 func (c *Client) WritePump() {
 	defer func() {
 		c.Conn.Close()
@@ -38,10 +39,14 @@ func (c *Client) WritePump() {
 	for {
 		message, ok := <-c.Send
 		if !ok {
-			c.logger.Info("hub closed the channel")
+			c.Logger.WithField("client id", c.UserID).Debug("hub closed the channel for client")
 			c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 			break
 		}
-		c.Conn.WriteMessage(websocket.TextMessage, message)
+		err := c.Conn.WriteMessage(websocket.TextMessage, message)
+		if err != nil {
+			c.Logger.WithError(err).WithField("client id", c.UserID).Error("failed to send websocket message")
+			break
+		}
 	}
 }

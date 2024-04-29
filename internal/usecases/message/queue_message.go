@@ -46,6 +46,7 @@ func (s *QueueMessage) Execute(ctx context.Context, senderID, receiverID uuid.UU
 	}
 
 	message := entities.Message{
+		ID:         uuid.New(),
 		SenderID:   senderID,
 		ReceiverID: receiverID,
 		Content:    content,

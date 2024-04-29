@@ -23,8 +23,8 @@ run:
 	./dist/easypark
 
 ## run-websocket: run easypark-websocket
-.PHONY: run-websocket
-run-websocket:
+.PHONY: run-ws
+run-ws:
 	./dist/easypark-websocket
 
 ## unit: runs unit tests and creates test coverage report.

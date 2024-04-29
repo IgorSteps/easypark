@@ -34,7 +34,7 @@ func (s *MessagePostgresRepository) Create(message *entities.Message) error {
 func (s *MessagePostgresRepository) GetManyForUser(userID uuid.UUID) ([]entities.Message, error) {
 	var messages []entities.Message
 
-	result := s.db.Where("user_id = ?").FindAll(&messages)
+	result := s.db.Where("receiver_id = ?", userID).FindAll(&messages)
 	err := result.Error()
 	if err != nil {
 		s.logger.WithError(err).WithField("user id", userID).Error("failed to query for many messages in the database")
@@ -45,7 +45,17 @@ func (s *MessagePostgresRepository) GetManyForUser(userID uuid.UUID) ([]entities
 }
 
 func (s *MessagePostgresRepository) Delete(messages []entities.Message) error {
-	result := s.db.Delete(messages)
+	if messages == nil {
+		return nil
+	}
+
+	// Extract IDs from the messages slice
+	var ids []uuid.UUID
+	for _, message := range messages {
+		ids = append(ids, message.ID)
+	}
+
+	result := s.db.Where("id IN ?", ids).Delete(&messages)
 
 	err := result.Error()
 	if err != nil {

@@ -48,7 +48,6 @@ func (h *Hub) Run() {
 				client.Send <- []byte(err.Error())
 			}
 
-			h.logger.WithField("user id", client.UserID).Debug("registered new user client with the Hub")
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client.UserID]; ok {
 				delete(h.Clients, client.UserID)
@@ -60,7 +59,7 @@ func (h *Hub) Run() {
 		case message := <-h.Broadcast:
 			var modelMsg models.Message
 			if err := json.Unmarshal(message, &modelMsg); err != nil {
-				h.logger.WithField("raw message", message).WithError(err).Error("failed to unmarshal received message")
+				h.logger.WithField("raw message", string(message)).WithError(err).Error("failed to unmarshal received message")
 				continue // TODO: Find out how to handle this error appropriately.
 			}
 
@@ -73,7 +72,7 @@ func (h *Hub) Run() {
 					delete(h.Clients, client.UserID)
 				}
 			} else {
-				// Persist message if the user is not registered with the Hub(they're offline).
+				// Persist message if the user is not registered with the Hub(ie. they're offline).
 				_, err := h.facade.EnqueueMessage(context.TODO(), modelMsg.SenderID, modelMsg.ReceiverID, modelMsg.Content)
 				if err != nil {
 					h.logger.WithError(err).Error("failed to enqueue message")
@@ -87,7 +86,10 @@ func (h *Hub) Run() {
 					}
 				}
 
-				h.logger.WithField("recipient id", modelMsg.ReceiverID).Debug("recipient is offline, enqueued this message")
+				h.logger.WithFields(logrus.Fields{
+					"recipient id": modelMsg.ReceiverID,
+					"message":      modelMsg.Content,
+				}).Debug("recipient is offline, enqueued this message")
 			}
 		}
 	}
@@ -99,12 +101,15 @@ func (h *Hub) dequeueMessages(client *Client) error {
 		h.logger.WithError(err).Error("failed to dequeue messages")
 		return err
 	}
+	h.logger.WithFields(logrus.Fields{
+		"userID":   client.UserID,
+		"messages": messages,
+	}).Debug("dequeued messages for user")
 
 	// Send each message to the client's send channel.
 	for _, msg := range messages {
 		client.Send <- []byte(msg.Content)
 	}
 
-	h.logger.WithField("userID", client.UserID).Debug("dequeued messages for user")
 	return nil
 }

@@ -45,6 +45,7 @@ func (s *WebsocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Create a client for the sender.
 	client := &client.Client{
+		Logger: s.logger,
 		Hub:    s.hub,
 		Conn:   conn,
 		Send:   make(chan []byte, 256),
