@@ -15,11 +15,17 @@ clean-db:
 .PHONY: build
 build:
 	$(GO) build -o $(DIST_DIR)/easypark $(CMD_DIR)/easypark
+	$(GO) build -o $(DIST_DIR)/easypark-websocket $(CMD_DIR)/easypark-websocket
 
 ## run: run easypark 
 .PHONY: run
 run:
 	./dist/easypark
+
+## run-websocket: run easypark-websocket
+.PHONY: run-websocket
+run-websocket:
+	./dist/easypark-websocket
 
 ## unit: runs unit tests and creates test coverage report.
 .PHONY: unit
@@ -46,6 +52,7 @@ mocks:
 .PHONY: wire
 wire:
 	$(WIRE) $(CMD_DIR)/easypark
+	$(WIRE) $(CMD_DIR)/easypark-websocket
 
 ## coverage-report: generate test coverage report.
 .PHONY: coverage-report

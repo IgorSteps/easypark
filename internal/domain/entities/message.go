@@ -1,11 +1,15 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Message struct {
-	ID         string
-	SenderID   string
-	ReceiverID string
+	ID         uuid.UUID
+	SenderID   uuid.UUID
+	ReceiverID uuid.UUID
 	Content    string
 	Timestamp  time.Time
 }
