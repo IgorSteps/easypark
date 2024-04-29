@@ -18,7 +18,10 @@ func main() {
 
 	app.logger.Info("starting Easypark-webscoket")
 
-	// Start the REST server.
+	// Start the Hub.
+	go app.hub.Run()
+
+	// Start the Websockets server.
 	go func() {
 		if err := app.server.Run(); err != nil {
 			log.Fatalf("failed to start Websocket server: %v", err)

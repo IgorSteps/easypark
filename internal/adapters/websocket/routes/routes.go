@@ -9,12 +9,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func NewRouter(logger *logrus.Logger) chi.Router {
+func NewRouter(logger *logrus.Logger, hub *handlers.Hub) chi.Router {
 	router := chi.NewRouter()
 	router.Use(chiLogger.Logger("router", logger))
 
 	// TODO: Add auth middleware.
-	router.Method(http.MethodPost, "/ws", handlers.NewWebsocketHandler(logger))
+	router.Method(http.MethodGet, "/ws/{id}", handlers.NewWebsocketHandler(logger, nil, hub))
 
 	return router
 }

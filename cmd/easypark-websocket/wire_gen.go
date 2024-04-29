@@ -7,6 +7,7 @@
 package main
 
 import (
+	"github.com/IgorSteps/easypark/internal/adapters/websocket/handlers"
 	"github.com/IgorSteps/easypark/internal/adapters/websocket/routes"
 	"github.com/IgorSteps/easypark/internal/drivers/config"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
@@ -22,9 +23,10 @@ func SetupApp() (*App, error) {
 	}
 	loggingConfig := configConfig.Logging
 	logrusLogger := logger.NewLoggerFromConfig(loggingConfig)
-	router := routes.NewRouter(logrusLogger)
+	hub := handlers.NewHub(logrusLogger)
+	router := routes.NewRouter(logrusLogger, hub)
 	httpConfig := configConfig.HTTP
 	server := websocketserver.NewServerFromConfig(router, httpConfig, logrusLogger)
-	app := NewApp(server, logrusLogger)
+	app := NewApp(server, logrusLogger, hub)
 	return app, nil
 }
