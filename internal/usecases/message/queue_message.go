@@ -10,21 +10,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type CreateMessage struct {
+// QueueMessage provides business logic to save messages.
+type QueueMessage struct {
 	logger      *logrus.Logger
 	userRepo    repositories.UserRepository
 	messageRepo repositories.MessageRepository
 }
 
-func NewCreateMessage(lgr *logrus.Logger, userRepo repositories.UserRepository, messageRepo repositories.MessageRepository) *CreateMessage {
-	return &CreateMessage{
+// NewQueueMessage returns a new instance of QueueMessage.
+func NewQueueMessage(lgr *logrus.Logger, userRepo repositories.UserRepository, messageRepo repositories.MessageRepository) *QueueMessage {
+	return &QueueMessage{
 		logger:      lgr,
 		userRepo:    userRepo,
 		messageRepo: messageRepo,
 	}
 }
 
-func (s *CreateMessage) Execute(ctx context.Context, senderID, receiverID uuid.UUID, content string) (entities.Message, error) {
+// Execute runs the business logic.
+func (s *QueueMessage) Execute(ctx context.Context, senderID, receiverID uuid.UUID, content string) (entities.Message, error) {
 	var sender entities.User
 	err := s.userRepo.GetDriverByID(ctx, senderID, &sender)
 	if err != nil {
@@ -46,6 +49,7 @@ func (s *CreateMessage) Execute(ctx context.Context, senderID, receiverID uuid.U
 		SenderID:   senderID,
 		ReceiverID: receiverID,
 		Content:    content,
+		Delivered:  false,
 		Timestamp:  time.Now(),
 	}
 

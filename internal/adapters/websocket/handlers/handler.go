@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	usecases "github.com/IgorSteps/easypark/internal/usecases/message"
+	"github.com/IgorSteps/easypark/internal/adapters/websocket/client"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -17,16 +17,14 @@ var upgrader = websocket.Upgrader{
 }
 
 type WebsocketHandler struct {
-	logger         *logrus.Logger
-	messageCreator *usecases.CreateMessage
-	hub            *Hub
+	logger *logrus.Logger
+	hub    *client.Hub
 }
 
-func NewWebsocketHandler(l *logrus.Logger, mc *usecases.CreateMessage, hub *Hub) *WebsocketHandler {
+func NewWebsocketHandler(l *logrus.Logger, hub *client.Hub) *WebsocketHandler {
 	return &WebsocketHandler{
-		logger:         l,
-		messageCreator: mc,
-		hub:            hub,
+		logger: l,
+		hub:    hub,
 	}
 }
 
@@ -46,17 +44,17 @@ func (s *WebsocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a client for the sender.
-	client := &Client{
-		hub:    s.hub,
-		conn:   conn,
-		send:   make(chan []byte, 256),
-		userID: parsedID,
+	client := &client.Client{
+		Hub:    s.hub,
+		Conn:   conn,
+		Send:   make(chan []byte, 256),
+		UserID: parsedID,
 	}
 	// Register client with the Hub.
-	client.hub.register <- client
+	client.Hub.Register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
-	go client.writePump()
-	go client.readPump()
+	go client.WritePump()
+	go client.ReadPump()
 }

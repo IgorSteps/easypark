@@ -7,11 +7,15 @@
 package main
 
 import (
-	"github.com/IgorSteps/easypark/internal/adapters/websocket/handlers"
+	"github.com/IgorSteps/easypark/internal/adapters/datastore"
+	"github.com/IgorSteps/easypark/internal/adapters/usecasefacades"
+	"github.com/IgorSteps/easypark/internal/adapters/websocket/client"
 	"github.com/IgorSteps/easypark/internal/adapters/websocket/routes"
 	"github.com/IgorSteps/easypark/internal/drivers/config"
+	"github.com/IgorSteps/easypark/internal/drivers/db"
 	"github.com/IgorSteps/easypark/internal/drivers/logger"
 	"github.com/IgorSteps/easypark/internal/drivers/websocketserver"
+	"github.com/IgorSteps/easypark/internal/usecases/message"
 )
 
 // Injectors from wire.go:
@@ -23,7 +27,19 @@ func SetupApp() (*App, error) {
 	}
 	loggingConfig := configConfig.Logging
 	logrusLogger := logger.NewLoggerFromConfig(loggingConfig)
-	hub := handlers.NewHub(logrusLogger)
+	databaseConfig := configConfig.Database
+	gormLogrusLogger := db.NewGormLogrusLoggerFromConfig(loggingConfig, logrusLogger)
+	gormDB, err := db.NewDatabaseFromConfig(databaseConfig, gormLogrusLogger)
+	if err != nil {
+		return nil, err
+	}
+	gormWrapper := db.NewGormWrapper(gormDB)
+	userPostgresRepository := datastore.NewUserPostgresRepository(gormWrapper, logrusLogger)
+	messagePostgresRepository := datastore.NewMessagePostgresRepository(logrusLogger, gormWrapper)
+	queueMessage := usecases.NewQueueMessage(logrusLogger, userPostgresRepository, messagePostgresRepository)
+	dequeueMessages := usecases.NewDequeueMessages(logrusLogger, messagePostgresRepository)
+	messageFacade := usecasefacades.NewMessageFacade(queueMessage, dequeueMessages)
+	hub := client.NewHub(logrusLogger, messageFacade)
 	router := routes.NewRouter(logrusLogger, hub)
 	httpConfig := configConfig.HTTP
 	server := websocketserver.NewServerFromConfig(router, httpConfig, logrusLogger)

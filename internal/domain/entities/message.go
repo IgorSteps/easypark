@@ -11,5 +11,6 @@ type Message struct {
 	SenderID   uuid.UUID
 	ReceiverID uuid.UUID
 	Content    string
+	Delivered  bool
 	Timestamp  time.Time
 }
