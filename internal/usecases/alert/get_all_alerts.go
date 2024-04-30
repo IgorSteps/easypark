@@ -8,13 +8,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// GetAllAlert provides business logic to get a all alerts.
+// GetAllAlerts provides business logic to get all alerts.
 type GetAllAlerts struct {
 	logger    *logrus.Logger
 	alertRepo repositories.AlertRepository
 }
 
-// NewGetAllAlert returns a new instance of GetSingleAlert
+// NewGetAllAlerts returns a new instance of GetAllAlerts
 func NewGetAllAlerts(l *logrus.Logger, repo repositories.AlertRepository) *GetAllAlerts {
 	return &GetAllAlerts{
 		logger:    l,

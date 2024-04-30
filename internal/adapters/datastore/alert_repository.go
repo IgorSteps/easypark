@@ -56,6 +56,7 @@ func (s *AlertPostgresRepository) GetSingle(ctx context.Context, id uuid.UUID) (
 	return alert, nil
 }
 
+// GetAll returns all the alerts in the database
 func (s *AlertPostgresRepository) GetAll(ctx context.Context) ([]entities.Alert, error) {
 	var alerts []entities.Alert
 	result := s.db.WithContext(ctx).FindAll(&alerts)
