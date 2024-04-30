@@ -39,7 +39,7 @@ jobs:
 
     - name: Install Mockery
       run:  |
-        go install github.com/vektra/mockery/v2@v2.42.0
+        go install github.com/vektra/mockery/v2@v2.43.0
 
     - name: Cache Go modules
       uses: actions/cache@v3
