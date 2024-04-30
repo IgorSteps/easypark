@@ -14,6 +14,7 @@ type Client struct {
 	UserID uuid.UUID
 }
 
+// TODO: Add a timeout or rate limiting for message sending to prevent abuse or resource exhaustion.
 func (c *Client) ReadPump() {
 	defer func() {
 		c.Hub.Unregister <- c

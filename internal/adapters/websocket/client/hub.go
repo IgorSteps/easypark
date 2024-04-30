@@ -13,7 +13,6 @@ import (
 type Hub struct {
 	logger *logrus.Logger
 	facade MessageFacade
-
 	// Registered Clients by their user ids.
 	Clients map[uuid.UUID]*Client
 	// Inbound messages from the clients.
@@ -24,6 +23,7 @@ type Hub struct {
 	Unregister chan *Client
 }
 
+// NewHub returns a new instance of Hub.
 func NewHub(l *logrus.Logger, f MessageFacade) *Hub {
 	return &Hub{
 		logger:     l,
@@ -67,32 +67,36 @@ func (h *Hub) Run() {
 			if client, ok := h.Clients[modelMsg.ReceiverID]; ok {
 				select {
 				case client.Send <- []byte(modelMsg.Content):
-				default:
+				default: // If send buffer is full.
+					// Unregister the client and close the connection.
 					close(client.Send)
 					delete(h.Clients, client.UserID)
 				}
 			} else {
 				// Persist message if the user is not registered with the Hub(ie. they're offline).
-				_, err := h.facade.EnqueueMessage(context.TODO(), modelMsg.SenderID, modelMsg.ReceiverID, modelMsg.Content)
-				if err != nil {
-					h.logger.WithError(err).Error("failed to enqueue message")
-
-					// Notify the sender enqueueing failed.
-					if sender, ok := h.Clients[modelMsg.SenderID]; ok {
-						sender.Send <- []byte("failed to enqueue message")
-					} else {
-						h.logger.Warn("sender is not found in registered clients")
-						continue
-					}
-				}
-
-				h.logger.WithFields(logrus.Fields{
-					"recipient id": modelMsg.ReceiverID,
-					"message":      modelMsg.Content,
-				}).Debug("recipient is offline, enqueued this message")
+				h.enqueueMessage(modelMsg)
 			}
 		}
 	}
+}
+
+func (h *Hub) enqueueMessage(modelMsg models.Message) {
+	_, err := h.facade.EnqueueMessage(context.TODO(), modelMsg.SenderID, modelMsg.ReceiverID, modelMsg.Content)
+	if err != nil {
+		h.logger.WithError(err).Error("failed to enqueue message")
+
+		// Notify the sender enqueueing failed.
+		if sender, ok := h.Clients[modelMsg.SenderID]; ok {
+			sender.Send <- []byte("failed to enqueue message")
+		} else {
+			h.logger.Warn("sender is not found in registered clients")
+		}
+	}
+
+	h.logger.WithFields(logrus.Fields{
+		"recipient id": modelMsg.ReceiverID,
+		"message":      modelMsg.Content,
+	}).Debug("recipient is offline, enqueued this message")
 }
 
 func (h *Hub) dequeueMessages(client *Client) error {
