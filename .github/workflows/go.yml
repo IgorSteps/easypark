@@ -21,12 +21,8 @@ jobs:
     - name: Set up Docker environment
       run: docker-compose up -d
 
-    - name: Wait for services to be ready
-      run: |
-        until curl -s http://localhost:8080/health -o /dev/null; do
-          echo "Waiting for web service"
-          sleep 5
-        done
+    - name: Wait for services to be ready, sleep 15 secs
+      run: sleep 15
 
     - name: Run Checks
       run: |
