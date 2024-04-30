@@ -26,18 +26,18 @@ jobs:
 
     - name: Run Checks
       run: |
-        docker-compose exec go-dev make checks
+        docker-compose exec easypark_go-dev_1  make checks
         git diff --exit-code || (echo 'Auto-generated and vendor files are out of date or not committed. Please update them and commit the changes.' && exit 1)
 
     - name: Build
-      run: docker-compose exec go-dev make build
+      run: docker-compose exec easypark_go-dev_1  make build
 
     - name: Run Unit Tests
-      run: docker-compose exec go-dev make unit
+      run: docker-compose exec easypark_go-dev_1  make unit
 
     - name: Test Coverage
       run: |
-        COVERAGE=$(docker-compose exec go-dev make coverage-report | grep total: | awk '{print substr($3, 1, length($3)-1)}')
+        COVERAGE=$(docker-compose exec easypark_go-dev_1  make coverage-report | grep total: | awk '{print substr($3, 1, length($3)-1)}')
         echo "Coverage: $COVERAGE%"
         echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
         if (( $(echo "$COVERAGE < 70" |bc -l) )); then
@@ -47,10 +47,10 @@ jobs:
 
     - name: Run Functional Tests
       run: |
-        docker-compose exec go-dev make run &
+        docker-compose exec easypark_go-dev_1  make run &
         APP_PID=$!
         sleep 5
-        docker-compose exec go-dev make functional
+        docker-compose exec easypark_go-dev_1  make functional
         kill $APP_PID
 
     - name: Clean up
