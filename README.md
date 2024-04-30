@@ -17,35 +17,22 @@ API Specification can be found [here](docs/API_SPEC.md).
 #### Mac
 
 - Linux environment(normal terminal on MacOS)
-- VS Code with:
-  - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
 - [Docker Desktop for Mac](https://docs.docker.com/desktop/install/mac-install/)
-- [GoLang](https://go.dev/doc/install) (Follow instructions for Mac)
+- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
 
 #### Windows
 
 - Linux environment([WSL2](https://learn.microsoft.com/en-us/windows/wsl/install))
-- VS Code with:
-  - [GoLang extension](https://marketplace.visualstudio.com/items?itemName=golang.Go)
-  - [Remote extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) (need to connect VS Code to WSL2)
 - [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) (Download for Windows and [enable integration with WSL2 in the settings](https://docs.docker.com/desktop/wsl/))
-- [GoLang](https://go.dev/doc/install) (Follow instructions for Linux and install in your WSL2)
+- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
 
-#### Tools
-- [Wire](https://github.com/google/wire) for Dependecy Injection code generation.
-- [Mockery](https://vektra.github.io/mockery/latest/installation/) for Mocks generation for unit testing.
-- PSQL(depends on what package manager your Linux distro uses, but if you try runnining `psql` it should give you a commad back to install it) for running scripts that interact with the database.
-
-### Setting up environment
+### Setting up dev environment
 
 Git clone to your Linux environment using `git clone https://github.com/IgorSteps/easypark.git`.
 
-Open the project in VS Code:
+Run `make dev-env` from project root to bring up the `igorsteps/go-dev:latest` development container with all required tooling. Subsequently you can run `make dev-env-down` to bring it down.
 
-- On Mac: just open it like you would any project.
-- On Windows: use your VS Code Remote Extension to connect to your WSL2 and locate your cloned project there.
-
-From project root in your Linux Environment, run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
+Attach to it using VS Code's [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
 
 ### Starting the app
 
@@ -54,13 +41,11 @@ From project root, run:
 1. Build the app, run `make build`.
 2. To run the app, run `make run`.
 
-If changes to dependecy graph have been made, you must edit `wire.go` file and run `make wire` to regenerate dependecy injection code(`wire_gen.go` file).
+If changes to dependency graph have been made, you must edit `wire.go` file and run `make wire` to regenerate dependency injection code(`wire_gen.go` file).
 
 ### Troubleshooting
 
-#### Failed to run `make wire` or `make mocks`
-1. Make sure you have `wire`(https://github.com/google/wire) and `mockery`(https://vektra.github.io/mockery/latest/installation/) installed.
-2. If after installation it still doesn't work, add `GO BIN` to your PATH, run `export PATH="$HOME/go/bin:$PATH"`(given that your GO BIN is go/bin which it usuall is).
+TODO
 
 ## Testing
 

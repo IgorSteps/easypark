@@ -77,6 +77,12 @@ create-admin:
 create-driver:
 	./build/createdriver.sh
 
+## dev-env: brings dev environemnt up.
 .PHONY: make dev-env
 dev-env:
 	docker-compose up -d
+
+## dev-env-down: brings dev environemnt down.
+.PHONY: make dev-env-down
+dev-env-down:
+	docker-compose down
