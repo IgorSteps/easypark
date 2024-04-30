@@ -1,6 +1,6 @@
 # Has to mirror the config in docker-compose.yml.
+# TODO: choose 1 source of truth.
 database:
-  host: database
   port: 5432
   user: devUser
   password: devPassword

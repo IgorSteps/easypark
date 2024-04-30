@@ -1,3 +1,6 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
 name: Easypark CI
 
 on:
@@ -7,52 +10,75 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
+
+  build:
     runs-on: ubuntu-latest
+    services:
+      database:
+        image: postgres:latest
+        # Same as in docker-compose file
+        env:
+          POSTGRES_USER: devUser
+          POSTGRES_PASSWORD: devPassword
+          POSTGRES_DB: easypark
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install Docker Compose
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22.1'
+
+    - name: Install Mockery
+      run:  |
+        go install github.com/vektra/mockery/v2@v2.42.3
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Make checks
       run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-
-    - name: Set up Docker environment
-      run: docker-compose up -d
-
-    - name: Wait for services to be ready, sleep 15 secs
-      run: sleep 15
-
-    - name: Run Checks
-      run: |
-        docker-compose exec easypark_go-dev_1  make checks
+        make checks 
         git diff --exit-code || (echo 'Auto-generated and vendor files are out of date or not committed. Please update them and commit the changes.' && exit 1)
 
     - name: Build
-      run: docker-compose exec easypark_go-dev_1  make build
+      run: make build
 
-    - name: Run Unit Tests
-      run: docker-compose exec easypark_go-dev_1  make unit
+    - name: Unit Test
+      run: make unit
 
     - name: Test Coverage
+      id: coverage-report
       run: |
-        COVERAGE=$(docker-compose exec easypark_go-dev_1  make coverage-report | grep total: | awk '{print substr($3, 1, length($3)-1)}')
+        COVERAGE=$(make coverage-report | grep total: | awk '{print substr($3, 1, length($3)-1)}')
         echo "Coverage: $COVERAGE%"
         echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-        if (( $(echo "$COVERAGE < 70" |bc -l) )); then
+         if (( $(echo "$COVERAGE < 70" |bc -l) )); then
           echo "Code coverage below 70%. Failing..."
           exit 1
         fi
+    
+    - name: Wait for PostgreSQL
+      run: until pg_isready -h localhost -p 5432; do sleep 1; done
 
-    - name: Run Functional Tests
+    - name: Functional Tests
       run: |
-        docker-compose exec easypark_go-dev_1  make run &
+        export DB_HOST=localhost
+        make run &
         APP_PID=$!
         sleep 5
-        docker-compose exec easypark_go-dev_1  make functional
+        make functional
         kill $APP_PID
-
-    - name: Clean up
-      if: always()
-      run: docker-compose down

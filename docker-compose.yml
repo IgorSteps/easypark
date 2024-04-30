@@ -7,11 +7,11 @@ services:
       - "8080:8080"
       - "8081:8081"
     environment:
-      PGHOST: postgres
-      PGUSER: postgres
-      PGPASSWORD: example
-      PGDATABASE: postgres
-      PGPORT: 5432
+      DB_USER: "devUser"
+      DB_PASSWORD: "devPassword"
+      DB_NAME: "easypark"
+      DB_HOST: "database"
+      DB_PORT: 5432
     depends_on:
       - database
     stdin_open: true
@@ -25,7 +25,7 @@ services:
       POSTGRES_PASSWORD: devPassword
       POSTGRES_DB: easypark
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Listen on localhost
     volumes:
       - db:/var/lib/postgresql/data
 
