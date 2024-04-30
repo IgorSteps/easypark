@@ -10,12 +10,20 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func NewRouter(logger *logrus.Logger, hub *client.Hub) chi.Router {
+// Middleware defines an interfaces for middleware that authorises users' tokens.
+type Middleware interface {
+	Authorise(next http.Handler) http.Handler
+}
+
+// NewRouter constructs routes for our Websocket API.
+func NewRouter(logger *logrus.Logger, hub *client.Hub, middleware Middleware) chi.Router {
 	router := chi.NewRouter()
 	router.Use(chiLogger.Logger("router", logger))
 
-	// TODO: Add auth middleware.
-	router.Method(http.MethodGet, "/ws/{id}", handlers.NewWebsocketHandler(logger, hub))
+	router.Group(func(r chi.Router) {
+		r.Use(middleware.Authorise)
+		r.Method(http.MethodGet, "/ws/{id}", handlers.NewWebsocketHandler(logger, hub))
+	})
 
 	return router
 }
