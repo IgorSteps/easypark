@@ -795,7 +795,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/alerts
 
 **RESPONSES**:
 
-Returns an error of one of these types: `0 - Location mismatch alert`.
+Returns an alert of one of these types: `Late arrival alert or Location mismatch alert`.
 
 - **200 OK**
 
@@ -810,12 +810,6 @@ Returns an error of one of these types: `0 - Location mismatch alert`.
       },
       {"other alerts..."}
     ]
-  ```
-
-- **400 BAD REQUEST**
-
-  ```json
-  {"error": "meaningful error message"}
   ```
 
 - **500 INTERNAL SERVER**
