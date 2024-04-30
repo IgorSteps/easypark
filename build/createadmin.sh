@@ -3,7 +3,7 @@
 DB_USER="devUser"
 DB_PASSWORD="devPassword"
 DB_NAME="easypark"
-DB_HOST="localhost"
+DB_HOST="database"
 DB_PORT="5432"
 
 

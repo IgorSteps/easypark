@@ -1,6 +1,6 @@
 # Has to mirror the config in docker-compose.yml.
 database:
-  host: localhost
+  host: database
   port: 5432
   user: devUser
   password: devPassword
