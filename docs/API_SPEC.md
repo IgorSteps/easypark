@@ -781,3 +781,40 @@ curl -X POST http://localhost:8080/alerts/late-arrivals \
   {"error": "meaningful error message"}
   ```
 
+### 3. Get All Alerts API Endpoint
+
+**Endpoint**: `GET /alerts`
+
+**Description**: Gets all alerts from the database.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/alerts
+```
+
+**RESPONSES**:
+
+Returns an alert of one of these types: `Late arrival alert or Location mismatch alert`.
+
+- **200 OK**
+
+    ```json
+    [
+      {
+      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "Type": 0,
+      "Message": "some message",
+      "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+      },
+      {"other alerts..."}
+    ]
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+  
