@@ -115,3 +115,8 @@ func (s *HandlerFactory) GetAllAlerts() http.Handler {
 func (s *HandlerFactory) CheckForLateArrivals() http.Handler {
 	return NewCheckLateArrivalHandler(s.logger, s.facade.alertFacade)
 }
+
+// CheckForOverStays returns a new REST handler to check for over staying users.
+func (s *HandlerFactory) CheckForOverStays() http.Handler {
+	return NewCheckOverStaysHandler(s.logger, s.facade.alertFacade)
+}

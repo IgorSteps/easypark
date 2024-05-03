@@ -131,6 +131,11 @@ func (s *RestClientSuite) GetAllAlerts(ctx context.Context, adminToken string) (
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/alerts", nil, adminToken)
 }
 
+// CheckForOverStays interacts with the REST API to check for overdue stays.
+func (s *RestClientSuite) CheckForOverStays(ctx context.Context, adminToken string, body *models.CheckForOverStaysRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/alerts/overstays", body, adminToken)
+}
+
 // sendRequest sends a HTTP request via provided method and path.
 func (s *RestClientSuite) sendRequest(ctx context.Context, method, path string, body interface{}) ([]byte, int, error) {
 	requestBody, err := json.Marshal(body)

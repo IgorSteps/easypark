@@ -32,6 +32,7 @@ API Specification can be found [here](docs/API_SPEC.md).
 - [GoLang](https://go.dev/doc/install) (Follow instructions for Linux and install in your WSL2)
 
 #### Tools
+
 - [Wire](https://github.com/google/wire) for Dependecy Injection code generation.
 - [Mockery](https://vektra.github.io/mockery/latest/installation/) for Mocks generation for unit testing.
 - PSQL(depends on what package manager your Linux distro uses, but if you try runnining `psql` it should give you a commad back to install it) for running scripts that interact with the database.
@@ -59,6 +60,7 @@ If changes to dependecy graph have been made, you must edit `wire.go` file and r
 ### Troubleshooting
 
 #### Failed to run `make wire` or `make mocks`
+
 1. Make sure you have `wire`(https://github.com/google/wire) and `mockery`(https://vektra.github.io/mockery/latest/installation/) installed.
 2. If after installation it still doesn't work, add `GO BIN` to your PATH, run `export PATH="$HOME/go/bin:$PATH"`(given that your GO BIN is go/bin which it usuall is).
 
@@ -67,6 +69,7 @@ If changes to dependecy graph have been made, you must edit `wire.go` file and r
 - To regenerate mocks for unit tests, run `make mocks`.
 
 - To run unit tests, run `make unit`.
+
   - To see unit test coverage, run `make coverage-report`. This will output a `unit-test-coverage.out` report that can be viewed in the browser using `make coverage-interactive`.
 
 - To run functional tests, run `make functional`.
@@ -99,13 +102,13 @@ This creates an admin with the following details:
 
 ```json
 {
-  "id":"a131a9a0-8d09-4166-b6fc-f8a08ba549e9",
-  "username":"adminUsername",
-  "email":"admin@example.com", 
-  "password":"securePassword",
-  "firstname":"Admin",
-  "lastname":"User",
-  "role":"admin"
+  "id": "a131a9a0-8d09-4166-b6fc-f8a08ba549e9",
+  "username": "adminUsername",
+  "email": "admin@example.com",
+  "password": "securePassword",
+  "firstname": "Admin",
+  "lastname": "User",
+  "role": "admin"
 }
 ```
 
@@ -116,8 +119,8 @@ PgAdming provides a nice UI for DB management and debugging.
 1. Go to `http://localhost:5050` to access PgAdmin
 2. Log in with the `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in the [docker-compose.yml](./docker-compose.yml) file
 3. To connect to our PostgreSQL database from PgAdmin:
-    - Right-click on "Servers" in the left panel and choose "Create > Server".
-    - In the "Create Server" dialog, go to the "Connection" tab.
-    - Set "Hostname/address" to `database`, which is the name of our PostgreSQL service defined in our [docker-compose.yml](./docker-compose.yml).
-    - Fill in the "Username" and "Password" fields with the POSTGRES_USER and POSTGRES_PASSWORD specified in [docker-compose.yml](./docker-compose.yml).
-    - Click "Save" to establish the connection.
+   - Right-click on "Servers" in the left panel and choose "Create > Server".
+   - In the "Create Server" dialog, go to the "Connection" tab.
+   - Set "Hostname/address" to `database`, which is the name of our PostgreSQL service defined in our [docker-compose.yml](./docker-compose.yml).
+   - Fill in the "Username" and "Password" fields with the POSTGRES_USER and POSTGRES_PASSWORD specified in [docker-compose.yml](./docker-compose.yml).
+   - Click "Save" to establish the connection.

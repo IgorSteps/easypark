@@ -27,36 +27,36 @@ curl -X POST http://localhost:8080/login \
 
 - **200 OK**
 
-    ```json
-    {
-      "message": "User logged in successfully",
-      "token": "jwt token here redacted"
-    }
-    ```
+  ```json
+  {
+    "message": "User logged in successfully",
+    "token": "jwt token here redacted"
+  }
+  ```
 
 - **400 Bad Request**
 
-    ```json
-    {
-      "error": "invalid request body"
-    }
-    ```
+  ```json
+  {
+    "error": "invalid request body"
+  }
+  ```
 
 - **401 Unauthorized**
-  
-    ```json
-    {
-      "error": "Invalid credentials"
-    }
-    ```
+
+  ```json
+  {
+    "error": "Invalid credentials"
+  }
+  ```
 
 - **500 Internal Server Error**
 
-    ```json
-    {
-      "error": "An unexpected error occurred"
-    }
-    ```
+  ```json
+  {
+    "error": "An unexpected error occurred"
+  }
+  ```
 
 ### 2. User Creation API Endpoint
 
@@ -82,34 +82,34 @@ curl -X POST http://localhost:8080/register \
 
 - **201 Created**
 
-    ```json
-    {
-      "ID":"3149cc94-3f9e-49f3-8dc8-516cdd03852d",
-      "Username":"johndoe",
-      "Email":"john.doe@example.com",
-      "Password":"securepassword",
-      "FirstName":"John",
-      "LastName":"Doe",
-      "Status":"active",
-      "Role":"driver"
-    }
-    ```
+  ```json
+  {
+    "ID": "3149cc94-3f9e-49f3-8dc8-516cdd03852d",
+    "Username": "johndoe",
+    "Email": "john.doe@example.com",
+    "Password": "securepassword",
+    "FirstName": "John",
+    "LastName": "Doe",
+    "Status": "active",
+    "Role": "driver"
+  }
+  ```
 
 - **400 Bad Request**
 
-    ```json
-    {
-      "error": "User already exists"
-    }
-    ```
+  ```json
+  {
+    "error": "User already exists"
+  }
+  ```
 
 - **500 Internal Server Error**
 
-    ```json
-    {
-      "error": "An unexpected error occurred"
-    }
-    ```
+  ```json
+  {
+    "error": "An unexpected error occurred"
+  }
+  ```
 
 ### 3. Get All Drivers API Endpoint
 
@@ -127,29 +127,29 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 - **200 OK**
 
-    ```json
-    [
-      {
-        "ID":"910e78c8-d2eb-41e8-aec6-c70a33b692df",
-        "Username":"user1",
-        "Email":"user1@example.com",
-        "Password":"securepassword",
-        "FirstName":"test",
-        "LastName":"user1",
-        "Role":"driver",
-        "Status":"active",
-      },
-      {"other users..."}
-    ]
-    ```
+  ```json
+  [
+    {
+      "ID":"910e78c8-d2eb-41e8-aec6-c70a33b692df",
+      "Username":"user1",
+      "Email":"user1@example.com",
+      "Password":"securepassword",
+      "FirstName":"test",
+      "LastName":"user1",
+      "Role":"driver",
+      "Status":"active",
+    },
+    {"other users..."}
+  ]
+  ```
 
 - **500 Internal Server Error**
 
-    ```json
-    {
-      "error": "An unexpected error occurred"
-    }
-    ```
+  ```json
+  {
+    "error": "An unexpected error occurred"
+  }
+  ```
 
 ### 4. Update Driver Status API Endpoint
 
@@ -160,7 +160,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 **Request Body**:
 
 - Banning:
-  
+
   ```bash
   curl -X PATCH http://localhost:8080/drivers/{id}/status \
   -H "Content-Type: application/json" \
@@ -170,11 +170,11 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
 
 **Responses**:
 
-- **200 OK***
+- **200 OK\***
 
   ```json
   {
-    "message":"successfully updated user status"
+    "message": "successfully updated user status"
   }
   ```
 
@@ -217,13 +217,13 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 2. Get All Parking Request API Endpoint
@@ -269,7 +269,7 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 3. Get All Parking Requests for Driver API Endpoint
@@ -315,7 +315,7 @@ curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/drivers/{i
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 4. Update Parking Request Status API Endpoint
@@ -350,13 +350,13 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/status \
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 5. Assign Parking Request a Space API Endpoint
@@ -381,13 +381,13 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ## Parking Lot
@@ -435,13 +435,13 @@ curl -X POST http://localhost:8080/parking-lots \
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 2. Get All Parking Lots API Endpoint
@@ -486,9 +486,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
   ```
 
 - **500 INTERNAL SERVER ERROR**
-  
+
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 3. Delete a Parking Lot API Endpoint
@@ -515,13 +515,13 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ## Parking Space
@@ -555,13 +555,13 @@ curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spac
   - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 2. Update Parking Space Status API Endpoint
@@ -600,13 +600,13 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ## Notification
@@ -637,25 +637,25 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
 
   ```json
   {
-    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ID": "a678f5a6-9731-4741-ad0b-de5efbbffc9b",
     "Type": 0,
-    "DriverID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-    "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-    "Location":"cmp-1",
-    "Timestamp":"0000-12-31T23:58:45-00:01",
+    "DriverID": "a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingSpaceID": "a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "Location": "cmp-1",
+    "Timestamp": "0000-12-31T23:58:45-00:01"
   }
   ```
 
 - **400 BAD REQUEST**
 
-    ```json
-  {"error": "meaningful error message"}
+  ```json
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
-    ```json
-  {"error": "meaningful error message"}
+  ```json
+  { "error": "meaningful error message" }
   ```
 
 ### 2. Get All Notifications API Endpoint
@@ -674,26 +674,26 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/notificatio
 
 - **200 OK**
 
- ```json
-  [ 
-    {
-      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "Type": 0,
-      "DriverID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "Location":"cmp-1",
-      "Timestamp":"0000-12-31T23:58:45-00:01",
-    },
-    {"other notifications"}
-  ]
- ```
+```json
+ [
+   {
+     "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+     "Type": 0,
+     "DriverID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+     "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+     "Location":"cmp-1",
+     "Timestamp":"0000-12-31T23:58:45-00:01",
+   },
+   {"other notifications"}
+ ]
+```
 
 - **500 INTERNAL SERVER ERROR**
 
-    ```json
-  {"error": "meaningful error message"}
+  ```json
+  { "error": "meaningful error message" }
   ```
-  
+
 ## Alert
 
 ### 1. Get Single Alert API Endpoint
@@ -727,13 +727,13 @@ Returns an error of one of these types: `0 - Location mismatch alert`.
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 2. Check Late Arrivals API Endpoint
@@ -769,16 +769,17 @@ curl -X POST http://localhost:8080/alerts/late-arrivals \
       {"other alerts..."}
     ]
   ```
+
 - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 3. Get All Alerts API Endpoint
@@ -799,7 +800,47 @@ Returns an alert of one of these types: `Late arrival alert or Location mismatch
 
 - **200 OK**
 
-    ```json
+  ```json
+  [
+    {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "Type": 0,
+    "Message": "some message",
+    "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+    },
+    {"other alerts..."}
+  ]
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  { "error": "meaningful error message" }
+  ```
+
+### 4. Check over staying users API Endpoint
+
+**Endpoint**: `POST /alerts/overstays`
+
+**Description**: Runs a workflow to check if exit notifications have not been received within the given threshold. Returns created alerts as result of the check. Note, that this check is performed automatically by the [Scheduler](./DESIGN.MD#alerts) at constant intervals. This endpoint is for if the admin wants to do it manually and with a different threshold.
+
+**Request Body**:
+
+```bash
+curl -X POST http://localhost:8080/alerts/overstays \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "threshold": "30m"
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
     [
       {
       "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
@@ -812,9 +853,14 @@ Returns an alert of one of these types: `Late arrival alert or Location mismatch
     ]
   ```
 
+- **400 BAD REQUEST**
+
+  ```json
+  { "error": "meaningful error message" }
+  ```
+
 - **500 INTERNAL SERVER**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
-  

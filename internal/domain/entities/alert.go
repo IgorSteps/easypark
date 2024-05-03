@@ -13,6 +13,10 @@ const (
 	// LateArrival alert type is when an arrival notification hasn't been received within one hour
 	// from the requests start time.
 	LateArrival
+
+	// OverStay alert type is when an exit notification hasn't been received after 30 minutes
+	// from the requests end time.
+	OverStay
 )
 
 // Alert represents an alert that is sent to the admin.
@@ -35,6 +39,14 @@ func (s *Alert) CreateLocationMismatchAlert(msg string, driverID, spaceID uuid.U
 func (s *Alert) CreateLateArrivalAlert(msg string, driverID, spaceID uuid.UUID) {
 	s.ID = uuid.New()
 	s.Type = LateArrival
+	s.Message = msg
+	s.UserID = driverID
+	s.ParkingSpaceID = spaceID
+}
+
+func (s *Alert) CreateOverStayAlert(msg string, driverID, spaceID uuid.UUID) {
+	s.ID = uuid.New()
+	s.Type = OverStay
 	s.Message = msg
 	s.UserID = driverID
 	s.ParkingSpaceID = spaceID

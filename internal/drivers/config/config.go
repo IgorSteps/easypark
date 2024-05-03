@@ -51,6 +51,7 @@ type SchedulerConfig struct {
 // AlertConfig represents a config for alerts.
 type AlertConfig struct {
 	LateArrivalThresholdMinutes time.Duration
+	OverStayThresholdMinutes    time.Duration
 }
 
 // LoadConfig reads configuration from ./config.yaml file.

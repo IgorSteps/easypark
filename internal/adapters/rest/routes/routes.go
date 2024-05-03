@@ -42,6 +42,7 @@ type HandlerFactory interface {
 	GetSingleAlert() http.Handler
 	CheckForLateArrivals() http.Handler
 	GetAllAlerts() http.Handler
+	CheckForOverStays() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -97,6 +98,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodGet, "/alerts/{id}", handlerFactory.GetSingleAlert())
 		r.Method(http.MethodGet, "/alerts", handlerFactory.GetAllAlerts())
 		r.Method(http.MethodPost, "/alerts/late-arrivals", handlerFactory.CheckForLateArrivals())
+		r.Method(http.MethodPost, "/alerts/overstays", handlerFactory.CheckForOverStays())
 	})
 
 	return router

@@ -6,3 +6,8 @@ import "time"
 type CheckForLateArrivalsRequest struct {
 	Threshold time.Duration `json:"threshold"`
 }
+
+// CheckForOverStaysRequest represents a body of incoming HTTP request to check for over staying users.
+type CheckForOverStaysRequest struct {
+	Threshold time.Duration `json:"threshold"`
+}
