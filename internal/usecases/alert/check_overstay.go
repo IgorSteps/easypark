@@ -21,8 +21,8 @@ func NewCheckOverStays(
 	l *logrus.Logger,
 	r repositories.ParkingRequestRepository,
 	aCreator repositories.AlertCreator,
-) *CheckLateArrival {
-	return &CheckLateArrival{
+) *CheckOverStays {
+	return &CheckOverStays{
 		logger:             l,
 		parkingRequestRepo: r,
 		alertCreator:       aCreator,

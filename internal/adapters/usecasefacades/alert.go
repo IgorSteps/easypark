@@ -57,7 +57,7 @@ func (s *AlertFacade) CheckForLateArrivals(ctx context.Context, threshold time.D
 }
 
 // CheckForOverStay wraps the CheckOverStay usecase.
-func (s *AlertFacade) CheckForOverStay(ctx context.Context, threshold time.Duration) ([]entities.Alert, error) {
+func (s *AlertFacade) CheckForOverStays(ctx context.Context, threshold time.Duration) ([]entities.Alert, error) {
 	return s.overStayChecker.Execute(ctx, threshold)
 }
 
