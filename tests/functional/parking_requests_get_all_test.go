@@ -32,8 +32,8 @@ func (s *TestGetAllParkingRequestsSuite) TestGetAllParkingRequests_HappyPath() {
 	for i := 0; i < 10; i++ {
 		testRequest := &models.CreateParkingRequestRequest{
 			DestinationParkingLotID: uuid.New(),
-			StartTime:               time.Now(),
-			EndTime:                 time.Now().Add(555),
+			StartTime:               time.Now().Add(3 * time.Second),
+			EndTime:                 time.Now().Add(5 * time.Second),
 		}
 		_, respCode, err := s.CreateParkingRequest(ctx, driverToken, driver.ID.String(), testRequest)
 		s.Require().NoError(err, "Creating new parking request must not return an error")

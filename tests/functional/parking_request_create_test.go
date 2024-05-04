@@ -29,8 +29,8 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_HappyPath() {
 
 	testRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(555),
+		StartTime:               time.Now().Add(3 * time.Second),
+		EndTime:                 time.Now().Add(8 * time.Second),
 	}
 
 	// --------
@@ -64,7 +64,7 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidI
 
 	testRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now().Add(500000), // start time is bigger than end time.
+		StartTime:               time.Now().Add(5 * time.Second), // start time is bigger than end time.
 		EndTime:                 time.Now(),
 	}
 
@@ -78,6 +78,34 @@ func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidI
 	// --------
 	s.Require().NoError(err, "Creating parking request should not return an error")
 	s.Require().Equal("start time cannot be after the end time\n", string(respBody), "Response body is wrong")
+	s.Require().Equal(http.StatusBadRequest, respCode, "Response code is wrong")
+}
+
+func (s *TestCreateParkingRequest) TestCreateParkingRequest_UnhappyPath_InvalidInput_StartTimeInPast() {
+	// --------
+	// ASSEMBLE
+	// --------
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	driver, driverToken := utils.CreateAndLoginDriver(ctx, &s.RestClientSuite, nil)
+
+	testRequest := &models.CreateParkingRequestRequest{
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now().Add(-5 * time.Second), // start time is bigger than end time.
+		EndTime:                 time.Now(),
+	}
+
+	// --------
+	// ACT
+	// --------
+	respBody, respCode, err := s.CreateParkingRequest(ctx, driverToken, driver.ID.String(), testRequest)
+
+	// --------
+	// ASSERT
+	// --------
+	s.Require().NoError(err, "Creating parking request should not return an error")
+	s.Require().Equal("start time cannot be in the past\n", string(respBody), "Response body is wrong")
 	s.Require().Equal(http.StatusBadRequest, respCode, "Response code is wrong")
 }
 

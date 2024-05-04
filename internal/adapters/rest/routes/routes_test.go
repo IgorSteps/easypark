@@ -42,7 +42,7 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().ParkingLotCreate().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllParkingRequests().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllParkingRequestsForDriver().Return(testHandler).Once()
-	mockHandlerFactory.EXPECT().GetAllParkingLots().Return(testHandler).Once()
+	mockHandlerFactory.EXPECT().GetAllParkingLots().Return(testHandler).Twice()
 	mockHandlerFactory.EXPECT().DeleteParkingLot().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().UpdateParkingSpaceStatus().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().CreateNotification().Return(testHandler).Once()
@@ -53,8 +53,8 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().CheckForLateArrivals().Return(testHandler).Once()
 
 	// This middleware will get executed for very route invocation.
-	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(18)
-	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(4)
+	mockMiddleware.EXPECT().Authorise(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(19)
+	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(5)
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
 
