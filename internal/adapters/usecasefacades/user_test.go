@@ -118,12 +118,12 @@ func TestUsecasefacade_AuthoriseUser_HappyPath(t *testing.T) {
 	testPwd := "tpwd"
 	token := "token"
 
-	s.mockUserAuthoriser.EXPECT().Execute(ctx, testEmail, testPwd).Return(token, nil).Once()
+	s.mockUserAuthoriser.EXPECT().Execute(ctx, testEmail, testPwd).Return(nil, token, nil).Once()
 
 	// --------
 	// ACT
 	// --------
-	actualToken, err := facade.AuthoriseUser(ctx, testEmail, testPwd)
+	_, actualToken, err := facade.AuthoriseUser(ctx, testEmail, testPwd)
 
 	// --------
 	// ASSERT
@@ -149,12 +149,12 @@ func TestUsecasefacade_AuthoriseUser_UnhappyPath(t *testing.T) {
 	testPwd := "tpwd"
 	emptyToken := ""
 	testErr := errors.New("boom")
-	s.mockUserAuthoriser.EXPECT().Execute(ctx, testEmail, testPwd).Return(emptyToken, testErr).Once()
+	s.mockUserAuthoriser.EXPECT().Execute(ctx, testEmail, testPwd).Return(nil, emptyToken, testErr).Once()
 
 	// --------
 	// ACT
 	// --------
-	actualToken, err := facade.AuthoriseUser(ctx, testEmail, testPwd)
+	_, actualToken, err := facade.AuthoriseUser(ctx, testEmail, testPwd)
 
 	// --------
 	// ASSERT

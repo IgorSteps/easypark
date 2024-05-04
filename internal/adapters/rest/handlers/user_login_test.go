@@ -33,7 +33,8 @@ func TestUserLoginHandler_ServeHTTP_HappyPath(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(testToken, nil).Once()
+	user := CreateTestUser()
+	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(user, testToken, nil).Once()
 
 	// --------
 	// ACT
@@ -43,8 +44,12 @@ func TestUserLoginHandler_ServeHTTP_HappyPath(t *testing.T) {
 	// --------
 	// ASSERT
 	// --------
+	var target models.LoginUserResponse
+	err := json.Unmarshal(rr.Body.Bytes(), &target)
+	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rr.Code, "Response codes don't match, should be 200")
-	assert.Contains(t, rr.Body.String(), `{"message":"User logged in successfully","token":"haha"}`, "Reponse bodies don't match")
+	assert.Equal(t, target.User, user, "User bodies don't match")
+	assert.Equal(t, target.Token, testToken, "Token bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
 
@@ -67,7 +72,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_InvalidCredentials(t *testing.T)
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(emptyToken, testError).Once()
+	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(nil, emptyToken, testError).Once()
 
 	// --------
 	// ACT
@@ -101,7 +106,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_UserNotFoundError(t *testing.T) 
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(emptyToken, testError).Once()
+	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(nil, emptyToken, testError).Once()
 
 	// --------
 	// ACT
@@ -135,7 +140,7 @@ func TestUserLoginHandler_ServeHTTP_UnhappyPath_InternalError(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
-	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(emptyToken, testError).Once()
+	mockFacade.EXPECT().AuthoriseUser(req.Context(), testUserReq.Username, testUserReq.Password).Return(nil, emptyToken, testError).Once()
 
 	// --------
 	// ACT

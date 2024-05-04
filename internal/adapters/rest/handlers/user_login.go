@@ -35,7 +35,7 @@ func (s *UserLoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := s.facade.AuthoriseUser(r.Context(), request.Username, request.Password)
+	user, token, err := s.facade.AuthoriseUser(r.Context(), request.Username, request.Password)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to login user")
 		switch err.(type) {
@@ -56,6 +56,6 @@ func (s *UserLoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	resp := models.LoginUserResponse{Message: "User logged in successfully", Token: token}
+	resp := models.LoginUserResponse{User: *user, Token: token}
 	json.NewEncoder(w).Encode(resp)
 }
