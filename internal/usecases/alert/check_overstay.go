@@ -42,7 +42,7 @@ func (s *CheckOverStays) Execute(ctx context.Context, threshold time.Duration) (
 
 	var timeFilteredReqs []entities.ParkingRequest
 	for _, req := range reqs {
-		if (time.Now().Second() - req.EndTime.Second()) > int(threshold.Seconds()) { //filter overstays
+		if time.Since(req.EndTime) > threshold { //filter overstays
 			timeFilteredReqs = append(timeFilteredReqs, req)
 		}
 	}
@@ -57,7 +57,7 @@ func (s *CheckOverStays) Execute(ctx context.Context, threshold time.Duration) (
 		alert, err := s.alertCreator.Execute(
 			ctx,
 			entities.OverStay,
-			"exit notification hasn't been received within one hour from the parking request end time",
+			"exit notification hasn't been received after 30 minutes from the parking request end time",
 			req.UserID,
 			*req.ParkingSpaceID,
 		)

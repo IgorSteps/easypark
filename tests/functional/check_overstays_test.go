@@ -88,5 +88,5 @@ func (s *CheckOverStaysTestSuite) TestCheckOverStays() {
 }
 
 func TestCheckOverStaysTestSuiteInit(t *testing.T) {
-	suite.Run(t, new(CheckLateArrivalsTestSuite))
+	suite.Run(t, new(CheckOverStaysTestSuite))
 }

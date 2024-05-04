@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckOverStays_Execute_HappyPath(t *testing.T) {
+func TestCheckOverStays(t *testing.T) {
 	// --------
 	// ASSEMBLE
 	// --------
@@ -33,8 +33,8 @@ func TestCheckOverStays_Execute_HappyPath(t *testing.T) {
 			UserID:                  uuid.New(),
 			DestinationParkingLotID: uuid.New(),
 			ParkingSpaceID:          &parkSpaceID,
-			StartTime:               time.Now(),
-			EndTime:                 time.Now().Add(time.Hour * 2), // 2 hours after reservation end
+			StartTime:               time.Now().Add(-3 * time.Hour),
+			EndTime:                 time.Now().Add(-2 * time.Hour), // 2 hours after reservation end
 			Status:                  entities.RequestStatusActive,
 		},
 		{
@@ -42,8 +42,8 @@ func TestCheckOverStays_Execute_HappyPath(t *testing.T) {
 			UserID:                  uuid.New(),
 			DestinationParkingLotID: uuid.New(),
 			ParkingSpaceID:          &parkSpaceID,
-			StartTime:               time.Now(),
-			EndTime:                 time.Now().Add(time.Hour * 2),
+			StartTime:               time.Now().Add(-3 * time.Hour),
+			EndTime:                 time.Now().Add(-2 * time.Hour),
 			Status:                  entities.RequestStatusActive,
 		},
 		// this one should get filtered out
@@ -52,8 +52,8 @@ func TestCheckOverStays_Execute_HappyPath(t *testing.T) {
 			UserID:                  uuid.New(),
 			DestinationParkingLotID: uuid.New(),
 			ParkingSpaceID:          &parkSpaceID,
-			StartTime:               time.Now(),
-			EndTime:                 time.Now().Add(20 * time.Minute), // 20 minutes after reservation end
+			StartTime:               time.Now().Add(-1 * time.Hour),
+			EndTime:                 time.Now().Add(-25 * time.Minute), // 25 minutes after reservation end
 			Status:                  entities.RequestStatusActive,
 		},
 	}
