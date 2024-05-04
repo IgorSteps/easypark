@@ -36,20 +36,16 @@ jobs:
         with:
           go-version: "1.22.1"
 
-      - name: Install Mockery
-        run: |
-          go install github.com/vektra/mockery/v2@v2.42.3
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
 
-      - name: Cache Go modules
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      - name: Build
-        run: make build
+    - name: Build
+      run: make build
 
       - name: Unit Test
         run: make unit

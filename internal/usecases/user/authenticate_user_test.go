@@ -43,7 +43,7 @@ func TestAuthenticateUser_HappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	token, err := usecase.Execute(ctx, testUsername, testPassword)
+	user, token, err := usecase.Execute(ctx, testUsername, testPassword)
 
 	// --------
 	// ASSERT
@@ -73,7 +73,7 @@ func TestAuthenticateUser_UnhappyPath_GetDriverByUsername(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	token, err := usecase.Execute(ctx, testUsername, testPassword)
+	user, token, err := usecase.Execute(ctx, testUsername, testPassword)
 
 	// --------
 	// ASSERT
@@ -111,7 +111,7 @@ func TestAuthenticateUser_UnhappyPath_Credentials(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	token, err := usecase.Execute(ctx, testUsername, testPassword)
+	user, token, err := usecase.Execute(ctx, testUsername, testPassword)
 
 	// --------
 	// ASSERT
@@ -159,7 +159,7 @@ func TestAuthenticateUser_UnhappyPath_Token(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	token, err := usecase.Execute(ctx, testUsername, testPassword)
+	user, token, err := usecase.Execute(ctx, testUsername, testPassword)
 
 	// --------
 	// ASSERT

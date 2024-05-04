@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 
+	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
 	"github.com/sirupsen/logrus"
 )
@@ -24,23 +25,23 @@ func NewAuthenticateUser(l *logrus.Logger, repo repositories.UserRepository, tSe
 }
 
 // Execute runs business logic to authenticate users. Returns auth token.
-func (s *AuthenticateUser) Execute(ctx context.Context, username, password string) (string, error) {
+func (s *AuthenticateUser) Execute(ctx context.Context, username, password string) (*entities.User, string, error) {
 	user, err := s.userRepository.GetDriverByUsername(ctx, username)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
-	// Not how it should be done in real world.
+	// TODO: Use hashing.
 	if user.Password != password {
 		s.logger.WithField("username", username).Warn("provided invalid credentials")
-		return "", repositories.NewInvalidInputError("invalid password")
+		return nil, "", repositories.NewInvalidInputError("invalid password")
 	}
 
 	token, err := s.tokenService.GenerateToken(user)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to generate auth token")
-		return "", repositories.NewInternalError("failed to generate auth token")
+		return nil, "", repositories.NewInternalError("failed to generate auth token")
 	}
 
-	return token, nil
+	return user, token, nil
 }

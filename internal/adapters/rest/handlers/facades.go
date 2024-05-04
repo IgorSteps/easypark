@@ -14,7 +14,7 @@ type UserFacade interface {
 	CreateDriver(ctx context.Context, driver *entities.User) (*entities.User, error)
 
 	// AuthoriseUser is implemented by usecasefacades.UserFacade that wraps user login usecase.
-	AuthoriseUser(ctx context.Context, username, password string) (string, error)
+	AuthoriseUser(ctx context.Context, username, password string) (*entities.User, string, error)
 
 	// GetAllDriverUsers is implemented by the usecasefacades.Userfacade that wraps getting all driver users usecase.
 	GetAllDriverUsers(ctx context.Context) ([]entities.User, error)

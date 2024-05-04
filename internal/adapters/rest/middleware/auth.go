@@ -41,6 +41,8 @@ func NewMiddleware(ts repositories.TokenRepository, l *logrus.Logger, sc StatusC
 func (s *Middleware) Authorise(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenStr := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
+		s.logger.WithField("auth header", r.Header.Get("Authorization")).Debug("auth header received")
+		s.logger.WithField("token", tokenStr).Debug("token trimmed")
 		claims, err := s.tokenService.ParseToken(tokenStr)
 		if err != nil {
 			s.logger.WithError(err).Warn("failed to parse and validate auth token")
@@ -96,6 +98,20 @@ func (s *Middleware) CheckStatus(next http.Handler) http.Handler {
 		}
 
 		// Move to the next middleware...
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (s *Middleware) CorsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+		// Check if the request is for a preflight (OPTIONS)
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 		next.ServeHTTP(w, r)
 	})
 }
