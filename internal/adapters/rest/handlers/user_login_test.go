@@ -48,7 +48,7 @@ func TestUserLoginHandler_ServeHTTP_HappyPath(t *testing.T) {
 	err := json.Unmarshal(rr.Body.Bytes(), &target)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rr.Code, "Response codes don't match, should be 200")
-	assert.Equal(t, target.User, user, "User bodies don't match")
+	assert.Equal(t, target.User, *user, "User bodies don't match")
 	assert.Equal(t, target.Token, testToken, "Token bodies don't match")
 	mockFacade.AssertExpectations(t)
 }
