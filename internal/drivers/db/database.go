@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/drivers/config"
@@ -11,9 +12,12 @@ import (
 
 // NewDatabaseFromConfig creates our database from config.
 func NewDatabaseFromConfig(config config.DatabaseConfig, logger *GormLogrusLogger) (*gorm.DB, error) {
+	host := os.Getenv("DB_HOST")
+	logger.Logrus.WithField("db host", host).Debug("got db host from os env")
+
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=UTC",
-		config.Host, config.User, config.Password, config.DBName, config.Port, config.SSLMode,
+		host, config.User, config.Password, config.DBName, config.Port, config.SSLMode,
 	)
 
 	// Init db session and configure GORM to use our logger.

@@ -1,26 +1,43 @@
-version: "3.8"
-
 services:
+  go-dev:
+    image: igorsteps/go-dev:latest
+    volumes:
+      - .:/ws
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      DB_USER: "devUser"
+      DB_PASSWORD: "devPassword"
+      DB_NAME: "easypark"
+      DB_HOST: "database"
+      DB_PORT: 5432
+    depends_on:
+      - database
+    stdin_open: true
+    tty: true
+
   database:
     container_name: database
     image: postgres:latest
     environment:
-      - POSTGRES_USER=devUser
-      - POSTGRES_PASSWORD=devPassword
-      - POSTGRES_DB=easypark
+      POSTGRES_USER: devUser
+      POSTGRES_PASSWORD: devPassword
+      POSTGRES_DB: easypark
     ports:
-      - 5432:5432
+      - "5432:5432"  # Listen on localhost
     volumes:
-      - db:/var/lib/postgresql/data 
+      - db:/var/lib/postgresql/data
 
   pgadmin:
-      image: dpage/pgadmin4
-      environment:
-        PGADMIN_DEFAULT_EMAIL: admin@admin.com
-        PGADMIN_DEFAULT_PASSWORD: admin
-      ports:
-        - "5050:80"
-      depends_on:
-        - database
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - database
+
 volumes:
   db:

@@ -31,12 +31,12 @@ unit:
 vendor:
 	$(GO) mod vendor
 
-## tidy: tidy up mod file
+## tidy: tidy up go mod file
 .PHONY: tidy
 tidy:
 	$(GO) mod tidy
 
-## mocks: generate mocks
+## mocks: generate mocks for unit tests
 .PHONY: mocks
 mocks:
 	rm -rf mocks
@@ -76,3 +76,13 @@ create-admin:
 .PHONY: create-driver
 create-driver:
 	./build/createdriver.sh
+
+## dev-env: brings dev environemnt up.
+.PHONY: make dev-env
+dev-env:
+	docker-compose up -d
+
+## dev-env-down: brings dev environemnt down.
+.PHONY: make dev-env-down
+dev-env-down:
+	docker-compose down

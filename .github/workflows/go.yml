@@ -67,6 +67,12 @@ jobs:
 
     - name: Functional Tests
       run: |
+        export DB_HOST=localhost
+        export DB_USER=devUser
+        export DB_PASSWORD=devPassword
+        export DB_NAME=easypark
+        export DB_PORT=5432
+        
         make run &
         APP_PID=$!
         sleep 5
