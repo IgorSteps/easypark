@@ -115,3 +115,8 @@ func (s *HandlerFactory) GetAllAlerts() http.Handler {
 func (s *HandlerFactory) CheckForLateArrivals() http.Handler {
 	return NewCheckLateArrivalHandler(s.logger, s.facade.alertFacade)
 }
+
+// PaymentCreate returns a new REST handler to create payments
+func (s *HandlerFactory) PaymentCreate() http.Handler {
+	return NewPaymentCreateHandler(s.logger)
+}

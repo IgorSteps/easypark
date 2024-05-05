@@ -4,8 +4,8 @@ import (
 	"time"
 )
 
-// CreatePaymentRequestRequest represent the data in an incoming HTTP request to create a payment request.
-type CreatePaymentRequestRequest struct {
+// CreatePaymentRequest represent the data in an incoming HTTP request to create a payment request.
+type CreatePaymentRequest struct {
 	Name           string
 	BillingAddress string
 	CardNumber     int

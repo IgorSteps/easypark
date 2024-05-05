@@ -22,9 +22,9 @@ func TestPaymentRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	// ASSEMBLE
 	// --------
 	testLogger, _ := test.NewNullLogger()
-	handler := handlers.NewPaymentRequestCreateHandler(testLogger)
+	handler := handlers.NewPaymentCreateHandler(testLogger)
 
-	testCreatePaymentRequestRequest := models.CreatePaymentRequestRequest{
+	testCreatePaymentRequest := models.CreatePaymentRequest{
 		Name:           "John Doe",
 		BillingAddress: "123 Street Name, City, Postcode",
 		CardNumber:     1111222233334444,
@@ -32,7 +32,7 @@ func TestPaymentRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 		CVC:            123,
 	}
 
-	requestBody, err := json.Marshal(testCreatePaymentRequestRequest)
+	requestBody, err := json.Marshal(testCreatePaymentRequest)
 	assert.NoError(t, err, "Marshalling payment request to json must not return error")
 
 	testID := uuid.New()
@@ -44,7 +44,7 @@ func TestPaymentRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 
 	// Create our request context with the formatted chi context.
 	reqCtx := context.WithValue(context.Background(), chi.RouteCtxKey, rctx)
-	req, _ := http.NewRequestWithContext(reqCtx, "POST", "/drivers/"+testID.String()+"/payment-requests", bytes.NewBuffer(requestBody))
+	req, _ := http.NewRequestWithContext(reqCtx, "POST", "/drivers/"+testID.String()+"/payments", bytes.NewBuffer(requestBody))
 	rr := httptest.NewRecorder()
 
 	// --------
