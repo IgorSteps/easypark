@@ -29,8 +29,8 @@ curl -X POST http://localhost:8080/login \
 
   ```json
   {
-    "message": "User logged in successfully",
-    "token": "jwt token here redacted"
+    "user": {"user details"},
+    "token": "JWT token"
   }
   ```
 
@@ -195,7 +195,8 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "destination": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotID": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotName": "the name",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z"
 }'
@@ -207,7 +208,8 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 
   ```json
   {
-    "destination": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotId": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotName": "the name",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z",
     "status": "pending"

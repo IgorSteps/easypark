@@ -59,7 +59,7 @@ type Middleware interface {
 func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *logrus.Logger) chi.Router {
 	router := chi.NewRouter()
 	router.Use(lgr.Logger("router", logger))
-	//router.Use(middleware.CorsMiddleware)
+	router.Use(middleware.CorsMiddleware)
 
 	// Public routes
 	router.Method(http.MethodPost, "/register", handlerFactory.DriverCreate())
