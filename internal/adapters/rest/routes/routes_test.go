@@ -57,6 +57,7 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(5)
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
+	mockMiddleware.EXPECT().CorsMiddleware(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Once()
 
 	// --------
 	// ACT
