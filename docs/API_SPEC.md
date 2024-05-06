@@ -29,8 +29,8 @@ curl -X POST http://localhost:8080/login \
 
     ```json
     {
-      "message": "User logged in successfully",
-      "token": "jwt token here redacted"
+      "user": {"user details"},
+      "token": "JWT token"
     }
     ```
 
@@ -195,7 +195,8 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "destination": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotID": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotName": "the name",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z"
 }'
@@ -207,7 +208,8 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
 
   ```json
   {
-    "destination": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotId": "d56541a1-335b-49cb-84bb-672009ecf580",
+    "destinationLotName": "the name",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z",
     "status": "pending"
@@ -526,7 +528,7 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 
 ## Parking Space
 
-### 1. Get Single Parking Space API Endpoint
+### 1. Admin Get Single Parking Space API Endpoint
 
 **Endpoint**: `GET /parking-spaces/{id}`
 
@@ -535,7 +537,7 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 **Request Body**:
 
 ```bash
-curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spaces/{id}
+curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-spaces/{id}
 ```
 
 **Response**:
@@ -564,7 +566,45 @@ curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spac
   {"error": "meaningful error message"}
   ```
 
-### 2. Update Parking Space Status API Endpoint
+### 2. Driver Get Single Parking Space API Endpoint
+
+**Endpoint**: `GET /driver/parking-spaces/{id}`
+
+**Description**: Gets a parking space status with the given ID.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/driver/parking-spaces/{id}
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+  {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
+    "Name":"cmp-1",
+    "Status":"blocked",
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+  }
+  ```
+
+  - **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+### 3. Update Parking Space Status API Endpoint
 
 **Endpoint**: `PATCH /parking-spaces/{id}/status`
 
@@ -781,3 +821,40 @@ curl -X POST http://localhost:8080/alerts/late-arrivals \
   {"error": "meaningful error message"}
   ```
 
+### 3. Get All Alerts API Endpoint
+
+**Endpoint**: `GET /alerts`
+
+**Description**: Gets all alerts from the database.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/alerts
+```
+
+**RESPONSES**:
+
+Returns an alert of one of these types: `Late arrival alert or Location mismatch alert`.
+
+- **200 OK**
+
+    ```json
+    [
+      {
+      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "Type": 0,
+      "Message": "some message",
+      "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+      },
+      {"other alerts..."}
+    ]
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+  

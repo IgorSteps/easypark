@@ -98,6 +98,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(repositories.AlertCreator), new(*alertUsecases.CreateAlert)),
 		alertUsecases.NewGetSingleAlert,
 		wire.Bind(new(usecasefacades.AlertSingleGetter), new(*alertUsecases.GetSingleAlert)),
+		alertUsecases.NewGetAllAlerts,
+		wire.Bind(new(usecasefacades.AlertAllGetter), new(*alertUsecases.GetAllAlerts)),
 		alertUsecases.NewCheckLateArrival,
 		wire.Bind(new(usecasefacades.AlertLateArrivalChecker), new(*alertUsecases.CheckLateArrival)),
 		// notification

@@ -71,6 +71,64 @@ func (_c *AlertRepository_Create_Call) RunAndReturn(run func(context.Context, *e
 	return _c
 }
 
+// GetAll provides a mock function with given fields: ctx
+func (_m *AlertRepository) GetAll(ctx context.Context) ([]entities.Alert, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAll")
+	}
+
+	var r0 []entities.Alert
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]entities.Alert, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []entities.Alert); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.Alert)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// AlertRepository_GetAll_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAll'
+type AlertRepository_GetAll_Call struct {
+	*mock.Call
+}
+
+// GetAll is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *AlertRepository_Expecter) GetAll(ctx interface{}) *AlertRepository_GetAll_Call {
+	return &AlertRepository_GetAll_Call{Call: _e.mock.On("GetAll", ctx)}
+}
+
+func (_c *AlertRepository_GetAll_Call) Run(run func(ctx context.Context)) *AlertRepository_GetAll_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *AlertRepository_GetAll_Call) Return(_a0 []entities.Alert, _a1 error) *AlertRepository_GetAll_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *AlertRepository_GetAll_Call) RunAndReturn(run func(context.Context) ([]entities.Alert, error)) *AlertRepository_GetAll_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetSingle provides a mock function with given fields: ctx, alertID
 func (_m *AlertRepository) GetSingle(ctx context.Context, alertID uuid.UUID) (entities.Alert, error) {
 	ret := _m.Called(ctx, alertID)

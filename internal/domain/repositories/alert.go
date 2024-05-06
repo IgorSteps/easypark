@@ -14,6 +14,9 @@ type AlertRepository interface {
 
 	// GetSingle returns a specific alert using its ID.
 	GetSingle(ctx context.Context, alertID uuid.UUID) (entities.Alert, error)
+
+	// GetAll returns an array if all alerts
+	GetAll(ctx context.Context) ([]entities.Alert, error)
 }
 
 // AlertCreator provides an interface implemented by the CreateAlert usecase.

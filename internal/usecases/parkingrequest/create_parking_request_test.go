@@ -22,8 +22,8 @@ func TestCreateParkingRequest_HappyPath(t *testing.T) {
 	testContext := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
 		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(5),
+		StartTime:               time.Now().Add(2 * time.Second),
+		EndTime:                 time.Now().Add(5 * time.Second),
 	}
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingRequestRepository{}
@@ -80,8 +80,8 @@ func TestCreateParkingRequest_UnhappyPath_RepositoryError(t *testing.T) {
 	testContext := context.Background()
 	testParkingRequest := &entities.ParkingRequest{
 		DestinationParkingLotID: uuid.New(),
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(50),
+		StartTime:               time.Now().Add(5 * time.Second),
+		EndTime:                 time.Now().Add(10 * time.Second),
 	}
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingRequestRepository{}

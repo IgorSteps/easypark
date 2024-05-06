@@ -9,6 +9,7 @@ import (
 	"github.com/IgorSteps/easypark/internal/adapters/rest/models"
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/tests/functional/client"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -61,16 +62,20 @@ func (s *TestRBACSuite) TestRBAC_HappyPath_DriverAccessesDriverRoutes() {
 
 		s.T().Fail()
 	}
-
+	req := &models.CreateParkingRequestRequest{
+		DestinationParkingLotID: uuid.New(),
+		StartTime:               time.Now().Add(5 * time.Minute),
+		EndTime:                 time.Now().Add(15 * time.Minute),
+	}
 	// Make request to driver route
-	_, respC, err := s.CreateParkingRequest(ctx, targetModel.Token, targetUserModel.ID.String(), nil)
+	_, respC, err := s.CreateParkingRequest(ctx, targetModel.Token, targetUserModel.ID.String(), req)
 	s.Require().NoError(err, "Making request to driver route should not return an error")
 
 	// --------
 	// ASSERT
 	// --------
 	s.Require().Equal(http.StatusOK, responseCode, "Login request should return 200 code")
-	s.Require().Equal("User logged in successfully", targetModel.Message, "Response messages don't match")
+	s.Require().NotEmpty(targetModel.User, "User must not be empty")
 	s.Require().NotEmpty(targetModel.Token, "Token must not be empty")
 
 	s.Require().Equal(http.StatusCreated, respC, "request to create park request should return 201")
@@ -122,7 +127,7 @@ func (s *TestRBACSuite) TestRBAC_HappyPath_DriverCannotAccessAdminRoutes() {
 	// ASSERT
 	// --------
 	s.Require().Equal(http.StatusOK, responseCode, "Login request should return 200 code")
-	s.Require().Equal("User logged in successfully", targetModel.Message, "Response messages don't match")
+	s.Require().NotEmpty(targetModel.User, "User must not be empty")
 	s.Require().NotEmpty(targetModel.Token, "Token must not be empty")
 
 	s.Require().Equal(http.StatusForbidden, respC, "Request to admin route by driver hould return 403")

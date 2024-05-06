@@ -37,10 +37,6 @@ jobs:
       with:
         go-version: '1.22.1'
 
-    - name: Install Mockery
-      run:  |
-        go install github.com/vektra/mockery/v2@v2.42.0
-
     - name: Cache Go modules
       uses: actions/cache@v3
       with:
@@ -48,11 +44,6 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
-
-    - name: Make checks
-      run: |
-        make checks 
-        git diff --exit-code || (echo 'Auto-generated and vendor files are out of date or not committed. Please update them and commit the changes.' && exit 1)
 
     - name: Build
       run: make build

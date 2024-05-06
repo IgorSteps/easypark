@@ -119,6 +119,54 @@ func (_c *Middleware_CheckStatus_Call) RunAndReturn(run func(http.Handler) http.
 	return _c
 }
 
+// CorsMiddleware provides a mock function with given fields: next
+func (_m *Middleware) CorsMiddleware(next http.Handler) http.Handler {
+	ret := _m.Called(next)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CorsMiddleware")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func(http.Handler) http.Handler); ok {
+		r0 = rf(next)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// Middleware_CorsMiddleware_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CorsMiddleware'
+type Middleware_CorsMiddleware_Call struct {
+	*mock.Call
+}
+
+// CorsMiddleware is a helper method to define mock.On call
+//   - next http.Handler
+func (_e *Middleware_Expecter) CorsMiddleware(next interface{}) *Middleware_CorsMiddleware_Call {
+	return &Middleware_CorsMiddleware_Call{Call: _e.mock.On("CorsMiddleware", next)}
+}
+
+func (_c *Middleware_CorsMiddleware_Call) Run(run func(next http.Handler)) *Middleware_CorsMiddleware_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.Handler))
+	})
+	return _c
+}
+
+func (_c *Middleware_CorsMiddleware_Call) Return(_a0 http.Handler) *Middleware_CorsMiddleware_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Middleware_CorsMiddleware_Call) RunAndReturn(run func(http.Handler) http.Handler) *Middleware_CorsMiddleware_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // RequireRole provides a mock function with given fields: requiredRole
 func (_m *Middleware) RequireRole(requiredRole entities.UserRole) func(http.Handler) http.Handler {
 	ret := _m.Called(requiredRole)
