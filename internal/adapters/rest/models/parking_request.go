@@ -31,4 +31,5 @@ type CreateParkingRequestResponse struct {
 	StartTime   time.Time                     `json:"starttime"`
 	EndTime     time.Time                     `json:"endtime"`
 	Status      entities.ParkingRequestStatus `json:"status"`
+	Cost        int                           `json:"cost"`
 }

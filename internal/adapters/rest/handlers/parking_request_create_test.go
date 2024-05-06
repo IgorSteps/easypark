@@ -58,6 +58,7 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 		StartTime:               time.Now(),
 		EndTime:                 time.Now().Add(5),
 		Status:                  entities.RequestStatusPending,
+		Cost:                    10,
 	}
 	mockFacade.EXPECT().CreateParkingRequest(req.Context(), mock.Anything).Return(createdParkingRequest, nil).Once()
 
@@ -69,6 +70,7 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 		StartTime:   createdParkingRequest.StartTime,
 		EndTime:     createdParkingRequest.EndTime,
 		Status:      createdParkingRequest.Status,
+		Cost:        createdParkingRequest.Cost,
 	}
 	expectedJson, _ := json.Marshal(expectedResponse)
 

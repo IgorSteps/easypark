@@ -74,6 +74,7 @@ func (s *ParkingRequestCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 		StartTime:   createdParkingRequest.StartTime,
 		EndTime:     createdParkingRequest.EndTime,
 		Status:      createdParkingRequest.Status,
+		Cost:        createdParkingRequest.Cost,
 	}
 	json.NewEncoder(w).Encode(response)
 }
