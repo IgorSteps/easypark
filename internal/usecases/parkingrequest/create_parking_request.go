@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"context"
+	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
@@ -42,6 +43,13 @@ func (s *CreateParkingRequest) Execute(ctx context.Context, parkingRequest *enti
 // validate validates the parking request.
 // TODO: check if the desired parking lot exists.
 func (s *CreateParkingRequest) validate(parkingRequest *entities.ParkingRequest) error {
+	if parkingRequest.StartTime.Before(time.Now()) {
+		s.logger.WithFields(logrus.Fields{
+			"start time": parkingRequest.StartTime,
+			"now time":   time.Now(),
+		}).Warn("start time cannot be in the past")
+		return repositories.NewInvalidInputError("start time cannot be in the past")
+	}
 	if parkingRequest.StartTime.After(parkingRequest.EndTime) {
 		s.logger.WithFields(logrus.Fields{
 			"start time": parkingRequest.StartTime,

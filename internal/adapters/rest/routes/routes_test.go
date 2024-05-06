@@ -42,7 +42,7 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockHandlerFactory.EXPECT().ParkingLotCreate().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllParkingRequests().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().GetAllParkingRequestsForDriver().Return(testHandler).Once()
-	mockHandlerFactory.EXPECT().GetAllParkingLots().Return(testHandler).Once()
+	mockHandlerFactory.EXPECT().GetAllParkingLots().Return(testHandler).Twice()
 	mockHandlerFactory.EXPECT().DeleteParkingLot().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().UpdateParkingSpaceStatus().Return(testHandler).Once()
 	mockHandlerFactory.EXPECT().CreateNotification().Return(testHandler).Once()
@@ -58,6 +58,7 @@ func TestRoutes_NewRouter_HappyPath(t *testing.T) {
 	mockMiddleware.EXPECT().CheckStatus(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Times(5)
 	mockMiddleware.EXPECT().RequireRole(entities.RoleDriver).Return(passThroughMiddleware).Once()
 	mockMiddleware.EXPECT().RequireRole(entities.RoleAdmin).Return(passThroughMiddleware).Once()
+	mockMiddleware.EXPECT().CorsMiddleware(mock.AnythingOfType("http.HandlerFunc")).Return(testHandler).Once()
 
 	// --------
 	// ACT
