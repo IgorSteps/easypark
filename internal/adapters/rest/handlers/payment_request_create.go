@@ -33,6 +33,6 @@ func (s *PaymentCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.WriteHeader(http.StatusOK)
-	resp := models.LoginUserResponse{Message: "Payment sent successfully"}
+	resp := models.PaymentResponse{Message: "Payment sent successfully"}
 	json.NewEncoder(w).Encode(resp)
 }

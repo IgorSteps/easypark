@@ -12,3 +12,7 @@ type CreatePaymentRequest struct {
 	ExpiryDate     time.Time
 	CVC            int
 }
+
+type PaymentResponse struct {
+	Message string `json:"message"`
+}
