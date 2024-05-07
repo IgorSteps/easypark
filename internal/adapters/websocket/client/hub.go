@@ -8,18 +8,20 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Hub maintains the set of active clients and broadcasts messages to the them.
+// Hub maintains the set of active clients, registers and unregisters clients, and broadcasts messages to them.
 type Hub struct {
-	logger *logrus.Logger
-	facade MessageFacade
 	// Registered Clients by their user ids.
 	Clients map[uuid.UUID]*Client
+
+	logger *logrus.Logger
+	facade MessageFacade
+
 	// Inbound messages from the clients.
-	Broadcast chan *models.Message
+	broadcast chan *models.Message
 	// Register requests from the clients.
 	Register chan *Client
 	// Unregister requests from clients.
-	Unregister chan *Client
+	unregister chan *Client
 }
 
 // NewHub returns a new instance of Hub.
@@ -27,13 +29,14 @@ func NewHub(l *logrus.Logger, f MessageFacade) *Hub {
 	return &Hub{
 		logger:     l,
 		facade:     f,
-		Broadcast:  make(chan *models.Message),
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
 		Clients:    make(map[uuid.UUID]*Client),
+		broadcast:  make(chan *models.Message),
+		Register:   make(chan *Client),
+		unregister: make(chan *Client),
 	}
 }
 
+// Run listens on the Hub channels to handle client connections and message broadcasting.
 func (h *Hub) Run() {
 	for {
 		select {
@@ -52,14 +55,14 @@ func (h *Hub) Run() {
 			}
 			h.logger.Debug("registered client")
 
-		case client := <-h.Unregister:
+		case client := <-h.unregister:
 			if _, ok := h.Clients[client.UserID]; ok {
 				delete(h.Clients, client.UserID)
 				close(client.Send)
 			}
 			h.logger.Debug("unregistered client")
 
-		case message := <-h.Broadcast:
+		case message := <-h.broadcast:
 			h.broadcastMessage(message)
 		}
 	}

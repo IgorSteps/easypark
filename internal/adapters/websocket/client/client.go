@@ -9,6 +9,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Client is setup for every websocket connection, it acts as 'transmitter' between the Hub and Websocket connection, ie.
+// it transfers client's outgoing messages to the WS Connection and incoming messages to the Hub.
 type Client struct {
 	Logger *logrus.Logger
 	Hub    *Hub
@@ -17,10 +19,13 @@ type Client struct {
 	UserID uuid.UUID
 }
 
-// TODO: Add a timeout or rate limiting for message sending to prevent abuse or resource exhaustion.
-func (c *Client) ReadPump() {
+// Read transfers incoming messages from the Websocket connection to the Hub.
+//
+// Must run as a go-routine for every connection to avoid blocking other operations, like writing or handling other conns.
+func (c *Client) Read() {
+	// TODO: Add timeout and rate limiting for message reading.
 	defer func() {
-		c.Hub.Unregister <- c
+		c.Hub.unregister <- c
 		c.Conn.Close()
 	}()
 	for {
@@ -40,12 +45,19 @@ func (c *Client) ReadPump() {
 			break
 		}
 		c.Logger.WithField("data", target).Debug("reading message")
-		c.Hub.Broadcast <- &target
+
+		// Send to the hub
+		c.Hub.broadcast <- &target
 	}
 }
 
-// TODO: Add a timeout or rate limiting for message sending to prevent abuse or resource exhaustion.
-func (c *Client) WritePump() {
+// Write transfers outgoing messages the Hub to the Websocket connection.
+//
+// Run as a go-routine for every connection to avoid blocking other operations, like writing or handling other conns.
+func (c *Client) Write() {
+	// TODO:
+	// 1) Add a timeout or rate limiting for message sending.
+	// 2) Add ping/pong mechanism - find out if this required? How our UI can handle this?
 	defer func() {
 		c.Conn.Close()
 	}()
