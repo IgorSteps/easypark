@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// UserFacade is provides an interface implemented by usecasefacades.UserFacade.
+// UserFacade provides an interface implemented by usecasefacades.UserFacade.
 type UserFacade interface {
 	// CreateDriver is implemented by usecasefacades.UserFacade that wraps driver user creation usecase.
 	CreateDriver(ctx context.Context, driver *entities.User) (*entities.User, error)
