@@ -16,12 +16,12 @@ type Middleware interface {
 }
 
 // NewRouter constructs routes for our Websocket API.
-func NewRouter(logger *logrus.Logger, hub *client.Hub, middleware Middleware) chi.Router {
+func NewRouter(logger *logrus.Logger, hub *client.Hub) chi.Router {
 	router := chi.NewRouter()
 	router.Use(chiLogger.Logger("router", logger))
 
 	router.Group(func(r chi.Router) {
-		r.Use(middleware.Authorise)
+		//r.Use(middleware.Authorise)
 		r.Method(http.MethodGet, "/ws/{id}", handlers.NewWebsocketHandler(logger, hub))
 	})
 

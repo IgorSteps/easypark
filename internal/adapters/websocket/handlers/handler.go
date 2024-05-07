@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/IgorSteps/easypark/internal/adapters/websocket/client"
+	"github.com/IgorSteps/easypark/internal/adapters/websocket/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -14,6 +15,11 @@ import (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		// Allow connections from specific origins
+		// Modify this logic as needed to allow connections from your frontend origin
+		return true
+	},
 }
 
 type WebsocketHandler struct {
@@ -48,7 +54,7 @@ func (s *WebsocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Logger: s.logger,
 		Hub:    s.hub,
 		Conn:   conn,
-		Send:   make(chan []byte, 256),
+		Send:   make(chan *models.Message),
 		UserID: parsedID,
 	}
 	// Register client with the Hub.

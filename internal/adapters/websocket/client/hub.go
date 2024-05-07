@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/IgorSteps/easypark/internal/adapters/websocket/models"
 	"github.com/google/uuid"
@@ -16,7 +15,7 @@ type Hub struct {
 	// Registered Clients by their user ids.
 	Clients map[uuid.UUID]*Client
 	// Inbound messages from the clients.
-	Broadcast chan []byte
+	Broadcast chan *models.Message
 	// Register requests from the clients.
 	Register chan *Client
 	// Unregister requests from clients.
@@ -28,7 +27,7 @@ func NewHub(l *logrus.Logger, f MessageFacade) *Hub {
 	return &Hub{
 		logger:     l,
 		facade:     f,
-		Broadcast:  make(chan []byte),
+		Broadcast:  make(chan *models.Message),
 		Register:   make(chan *Client),
 		Unregister: make(chan *Client),
 		Clients:    make(map[uuid.UUID]*Client),
@@ -41,55 +40,84 @@ func (h *Hub) Run() {
 		case client := <-h.Register:
 			h.Clients[client.UserID] = client
 
-			// Dequeue messages if any.
+			//Dequeue messages if any.
 			err := h.dequeueMessages(client)
 			if err != nil {
+				h.logger.WithError(err).WithField("client id", client.UserID).Error("failed to dequeue messages")
 				// Send the error back to the client.
-				client.Send <- []byte(err.Error())
+				client.Send <- &models.Message{
+					SenderID: client.UserID,
+					Content:  "An error ocurred, please try again later.",
+				}
 			}
+			h.logger.Debug("registered client")
 
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client.UserID]; ok {
 				delete(h.Clients, client.UserID)
 				close(client.Send)
-			} else {
-				h.logger.WithField("user id", client.UserID).Warn("tried to unregister non registered client")
 			}
+			h.logger.Debug("unregistered client")
 
 		case message := <-h.Broadcast:
-			var modelMsg models.Message
-			if err := json.Unmarshal(message, &modelMsg); err != nil {
-				h.logger.WithField("raw message", string(message)).WithError(err).Error("failed to unmarshal received message")
-				continue // TODO: Find out how to handle this error appropriately.
-			}
-
-			// Direct message if recipient is registered with the Hub(they're online).
-			if client, ok := h.Clients[modelMsg.ReceiverID]; ok {
-				select {
-				case client.Send <- []byte(modelMsg.Content):
-				default: // If send buffer is full.
-					// Unregister the client and close the connection.
-					close(client.Send)
-					delete(h.Clients, client.UserID)
-				}
-			} else {
-				// Persist message if the user is not registered with the Hub(ie. they're offline).
-				h.enqueueMessage(modelMsg)
-			}
+			h.broadcastMessage(message)
 		}
 	}
 }
 
-func (h *Hub) enqueueMessage(modelMsg models.Message) {
+func (h *Hub) broadcastMessage(msg *models.Message) {
+	// Direct message recipient if they are registered with the Hub(they're online).
+	if receiverClient, ok := h.Clients[msg.ReceiverID]; ok {
+		select {
+		case receiverClient.Send <- msg:
+			h.logger.WithFields(logrus.Fields{
+				"msg":        msg,
+				"senderID":   msg.SenderID,
+				"receivedID": msg.ReceiverID,
+			}).Debug("broadcast message to receiver")
+		default: // If send buffer is full.
+			// Unregister the client and close the connection.
+			close(receiverClient.Send)
+			delete(h.Clients, receiverClient.UserID)
+			h.logger.Warn("sender buffer is full, unregistered client and closed send channel ")
+		}
+	} else {
+		// Persist message if the recipient is not registered with the Hub(ie. they're offline).
+		h.enqueueMessage(msg)
+	}
+
+	// Broadcast senders message to themselves.
+	if senderClient, ok := h.Clients[msg.SenderID]; ok {
+		select {
+		case senderClient.Send <- msg:
+			h.logger.WithFields(logrus.Fields{
+				"msg":        msg,
+				"senderID":   msg.SenderID,
+				"receivedID": msg.ReceiverID,
+			}).Debug("broadcast message to sender")
+		default: // If send buffer is full.
+			// Unregister the client and close the connection.
+			close(senderClient.Send)
+			delete(h.Clients, senderClient.UserID)
+			h.logger.Warn("sender buffer is full, unregistered client and closed send channel ")
+		}
+	}
+}
+
+func (h *Hub) enqueueMessage(modelMsg *models.Message) {
 	_, err := h.facade.EnqueueMessage(context.TODO(), modelMsg.SenderID, modelMsg.ReceiverID, modelMsg.Content)
 	if err != nil {
 		h.logger.WithError(err).Error("failed to enqueue message")
 
 		// Notify the sender enqueueing failed.
 		if sender, ok := h.Clients[modelMsg.SenderID]; ok {
-			sender.Send <- []byte("failed to enqueue message")
+			h.logger.WithField("client id", sender.UserID).Error("enqueueing failed")
+			sender.Send <- &models.Message{
+				SenderID: modelMsg.SenderID,
+				Content:  "An error ocurred, please try again later.",
+			}
 		} else {
-			h.logger.Warn("sender is not found in registered clients")
+			h.logger.Warn("enqueueing failed, tried to send the error to the sender, but couldn't find them in registered clients")
 		}
 	}
 
@@ -112,7 +140,7 @@ func (h *Hub) dequeueMessages(client *Client) error {
 
 	// Send each message to the client's send channel.
 	for _, msg := range messages {
-		client.Send <- []byte(msg.Content)
+		client.Send <- models.FromDomain(msg)
 	}
 
 	return nil
