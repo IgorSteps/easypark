@@ -254,11 +254,11 @@ func (s *TestAssignParkingSpace) TestAssignParkingSpace_UnhappyPath_OutdatedRequ
 	// Creating a parking request.
 	createRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: parkingLot.ID,
-		StartTime:               time.Now().Add(-10 * time.Minute), // time is in the past
-		EndTime:                 time.Now().Add(-5 * time.Minute),
+		StartTime:               time.Now().Add(2 * time.Second), // time is in the past
+		EndTime:                 time.Now().Add(8 * time.Second),
 	}
 	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, createRequest, &s.RestClientSuite)
-
+	time.Sleep(3 * time.Second)
 	testUpdateRequestSpace := &models.ParkingRequestSpaceUpdateRequest{
 		ParkingSpaceID: parkingLot.ParkingSpaces[0].ID,
 	}

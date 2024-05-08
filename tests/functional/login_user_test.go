@@ -56,7 +56,7 @@ func (s *TestLoginUserSuite) TestLoginUser_HappyPath() {
 		s.T().Fail()
 	}
 	s.Require().Equal(http.StatusOK, responseCode, "Login request should return 200 code")
-	s.Require().Equal("User logged in successfully", targetModel.Message, "Response messages don't match")
+	s.Require().NotEmpty(targetModel.User, "User must not be empty")
 	s.Require().NotEmpty(targetModel.Token, "Token must not be empty")
 }
 

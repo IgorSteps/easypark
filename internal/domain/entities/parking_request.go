@@ -19,14 +19,15 @@ const (
 
 // ParkingRequest represents a parking request.
 type ParkingRequest struct {
-	ID                      uuid.UUID `gorm:"primary_key"`
-	UserID                  uuid.UUID
-	ParkingSpaceID          *uuid.UUID // Can be nil, because the Admin chooses it after request is created.
-	DestinationParkingLotID uuid.UUID
-	StartTime               time.Time
-	EndTime                 time.Time
-	Status                  ParkingRequestStatus
-	Cost                    int
+	ID                        uuid.UUID `gorm:"primary_key"`
+	UserID                    uuid.UUID
+	ParkingSpaceID            *uuid.UUID // Can be nil, because the Admin chooses it after request is created.
+	DestinationParkingLotID   uuid.UUID
+	DestinationParkingLotName string
+	StartTime                 time.Time
+	EndTime                   time.Time
+	Status                    ParkingRequestStatus
+	Cost                      int
 }
 
 // OnCreate sets requests's fields on create.

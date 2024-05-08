@@ -14,7 +14,7 @@ type DriverCreator interface {
 
 // UserAuthenticator provides an interface implemented by the AuthenticateUser usecase.
 type UserAuthenticator interface {
-	Execute(ctx context.Context, username, password string) (string, error)
+	Execute(ctx context.Context, username, password string) (*entities.User, string, error)
 }
 
 // DriversGetter provides an interface implemented by the GetDrivers usecase.
@@ -56,7 +56,7 @@ func (s *UserFacade) CreateDriver(ctx context.Context, user *entities.User) (*en
 }
 
 // AuthoriseUser wraps the AuthenticateUser usecase.
-func (s *UserFacade) AuthoriseUser(ctx context.Context, username, password string) (string, error) {
+func (s *UserFacade) AuthoriseUser(ctx context.Context, username, password string) (*entities.User, string, error) {
 	return s.userAuthenticator.Execute(ctx, username, password)
 }
 

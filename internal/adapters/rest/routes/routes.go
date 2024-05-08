@@ -54,12 +54,14 @@ type Middleware interface {
 	Authorise(next http.Handler) http.Handler
 	RequireRole(requiredRole entities.UserRole) func(next http.Handler) http.Handler
 	CheckStatus(next http.Handler) http.Handler
+	CorsMiddleware(next http.Handler) http.Handler
 }
 
 // NewRouter constructs routes for our REST API.
 func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *logrus.Logger) chi.Router {
 	router := chi.NewRouter()
 	router.Use(lgr.Logger("router", logger))
+	router.Use(middleware.CorsMiddleware)
 
 	// Public routes
 	router.Method(http.MethodPost, "/register", handlerFactory.DriverCreate())
@@ -77,6 +79,8 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
 		// payments
 		r.Method(http.MethodPost, "/drivers/{id}/payments", handlerFactory.PaymentCreate())
+		// Park lots
+		r.Method(http.MethodGet, "/driver-parking-lots", handlerFactory.GetAllParkingLots())
 	})
 
 	// Admin routes

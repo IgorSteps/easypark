@@ -66,7 +66,7 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 	expectedResponse := models.CreateParkingRequestResponse{
 		ID:          createdParkingRequest.ID,
 		UserID:      createdParkingRequest.UserID,
-		Destination: createdParkingRequest.DestinationParkingLotID,
+		DestinationLotID: createdParkingRequest.DestinationParkingLotID,
 		StartTime:   createdParkingRequest.StartTime,
 		EndTime:     createdParkingRequest.EndTime,
 		Status:      createdParkingRequest.Status,
