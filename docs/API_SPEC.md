@@ -595,13 +595,13 @@ curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/driver/par
   - **400 BAD REQUEST**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
 
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ### 3. Update Parking Space Status API Endpoint
@@ -900,6 +900,49 @@ curl -X POST http://localhost:8080/alerts/overstays \
   ```
 
 - **500 INTERNAL SERVER**
+
+  ```json
+  { "error": "meaningful error message" }
+  ```
+
+  ## Payment
+
+### 1. Create Payment API Endpoint
+
+**Endpoint**: `POST /drivers/{id}/payments`
+
+**Description**: Creates a payment for the driver.
+
+**Request Body**:
+
+```bash
+curl -X POST http://localhost:8080/drivers/{id}/payments \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <DRIVER_TOKEN>" \
+-d '{
+    "Name": "John Doe",
+		"BillingAddress": "123 Street Name, City, Postcode",
+		"CardNumber": "1111222233334444",
+		"ExpiryDate": "2025-01-01T00:00:00Z",
+		"CVC": "123"
+}'
+```
+
+**Responses**:
+
+- **200 Ok**
+
+  ```json
+  { "message": "Payment sent successfully" }
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  { "error": "meaningful error message" }
+  ```
+
+- **500 INTERNAL SERVER ERROR**
 
   ```json
   { "error": "meaningful error message" }

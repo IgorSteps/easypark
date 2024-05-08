@@ -43,6 +43,9 @@ type HandlerFactory interface {
 	CheckForLateArrivals() http.Handler
 	GetAllAlerts() http.Handler
 	CheckForOverStays() http.Handler
+
+	// Payment handler
+	PaymentCreate() http.Handler
 }
 
 // RequestAuthoriser defines an interfaces for middleware that authorises users' tokens.
@@ -75,6 +78,8 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPost, "/drivers/{id}/notifications", handlerFactory.CreateNotification())
 		// Parking spaces
 		r.Method(http.MethodGet, "/driver/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
+		// payments
+		r.Method(http.MethodPost, "/drivers/{id}/payments", handlerFactory.PaymentCreate())
 		// Park lots
 		r.Method(http.MethodGet, "/driver-parking-lots", handlerFactory.GetAllParkingLots())
 	})
