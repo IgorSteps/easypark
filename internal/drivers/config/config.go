@@ -28,7 +28,8 @@ type DatabaseConfig struct {
 
 // HTTPConfig represents a config for our HTTP server.
 type HTTPConfig struct {
-	Address string
+	Address          string
+	WebsocketAddress string
 }
 
 // AuthConfig represents our config for Auth service.

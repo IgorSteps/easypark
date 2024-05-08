@@ -9,6 +9,7 @@ database:
 
 http:
   address: :8080
+  websocketaddress: :8081
 
 auth:
   secretkey: whatever
