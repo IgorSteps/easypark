@@ -76,7 +76,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		// Notifications
 		r.Method(http.MethodPost, "/drivers/{id}/notifications", handlerFactory.CreateNotification())
 		// Parking spaces
-		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
+    r.Method(http.MethodGet, "/driver/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
 		// payments
 		r.Method(http.MethodPost, "/drivers/{id}/payments", handlerFactory.PaymentCreate())
 		// Park lots

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 mode: set
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/alert_get_all.go:19.81,24.2 1 1
 github.com/IgorSteps/easypark/internal/adapters/rest/handlers/alert_get_all.go:27.80,29.16 2 1
@@ -647,3 +648,5 @@ github.com/IgorSteps/easypark/internal/usecases/notification/create_notification
 github.com/IgorSteps/easypark/internal/usecases/notification/create_notification.go:160.10,161.75 1 1
 github.com/IgorSteps/easypark/internal/usecases/notification/get_all_notifications.go:18.107,23.2 1 1
 github.com/IgorSteps/easypark/internal/usecases/notification/get_all_notifications.go:26.93,28.2 1 1
+=======
+>>>>>>> a8454aa1ffeb52b09df57b7588eca00bfab5820d
