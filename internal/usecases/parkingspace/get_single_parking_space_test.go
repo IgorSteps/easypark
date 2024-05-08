@@ -2,62 +2,73 @@ package usecases_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	usecases "github.com/IgorSteps/easypark/internal/usecases/parkingspace"
+	mocks "github.com/IgorSteps/easypark/mocks/domain/repositories"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
-type MockParkingSpaceRepository struct {
-	mock.Mock
-}
+func TestGetSingleParkingSpace_Execute_HappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockRepo := &mocks.ParkingSpaceRepository{}
+	usecase := usecases.NewGetSingleParkingSpace(testLogger, mockRepo)
 
-func (m *MockParkingSpaceRepository) GetMany(ctx context.Context, query map[string]interface{}) ([]entities.ParkingSpace, error) {
-	args := m.Called(ctx, query)
-	return args.Get(0).([]entities.ParkingSpace), args.Error(1)
-}
+	testCtx := context.Background()
+	testID := uuid.New()
 
-func (m *MockParkingSpaceRepository) Save(ctx context.Context, space *entities.ParkingSpace) error {
-	args := m.Called(ctx, space)
-	return args.Error(0)
-}
-
-func (m *MockParkingSpaceRepository) GetSingle(ctx context.Context, parkingSpaceID uuid.UUID) (entities.ParkingSpace, error) {
-	args := m.Called(ctx, parkingSpaceID)
-	return args.Get(0).(entities.ParkingSpace), args.Error(1)
-}
-
-func TestNewGetSingleParkingSpace(t *testing.T) {
-	logger := logrus.New()
-	repo := new(MockParkingSpaceRepository)
-
-	usecase := usecases.NewGetSingleParkingSpace(logger, repo)
-	assert.NotNil(t, usecase, "Expected GetSingleParkingSpace not to be nil")
-}
-
-func TestExecute_GetSingleParkingSpace(t *testing.T) {
-	ctx := context.Background()
-	parkingSpaceID := uuid.New()
-	expectedParkingSpace := entities.ParkingSpace{
-		ID:           parkingSpaceID,
+	testParkingSpace := entities.ParkingSpace{
+		ID:           testID,
 		ParkingLotID: uuid.New(),
-		Name:         "Location 123",
+		Name:         "main lot",
 		Status:       entities.ParkingSpaceStatusAvailable,
 	}
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(testParkingSpace, nil).Once()
 
-	logger := logrus.New()
-	repo := new(MockParkingSpaceRepository)
-	repo.On("GetSingle", ctx, parkingSpaceID).Return(expectedParkingSpace, nil) // Setting up the expectation
+	// --------
+	// ACT
+	// --------
+	resultSpace, err := usecase.Execute(testCtx, testID)
 
-	usecase := usecases.NewGetSingleParkingSpace(logger, repo)
+	// --------
+	// ASSERT
+	// --------
+	assert.Nil(t, err, "Error must be nil")
+	assert.Equal(t, testParkingSpace, resultSpace, "Returned space should match expected space")
+	mockRepo.AssertExpectations(t)
+}
 
-	space, err := usecase.Execute(ctx, parkingSpaceID)
+func TestGetSingleParkingSpace_Execute_UnhappyPath(t *testing.T) {
+	// --------
+	// ASSEMBLE
+	// --------
+	testLogger, _ := test.NewNullLogger()
+	mockRepo := &mocks.ParkingSpaceRepository{}
+	usecase := usecases.NewGetSingleParkingSpace(testLogger, mockRepo)
 
-	repo.AssertExpectations(t) // Verify that GetSingle was called as expected
-	assert.NoError(t, err, "Unexpected error during execution")
-	assert.Equal(t, expectedParkingSpace, space, "Returned parking space does not match expected")
+	testCtx := context.Background()
+	testID := uuid.New()
+
+	testError := errors.New("data retrieval error")
+	mockRepo.EXPECT().GetSingle(testCtx, testID).Return(entities.ParkingSpace{}, testError).Once()
+
+	// --------
+	// ACT
+	// --------
+	resultSpace, err := usecase.Execute(testCtx, testID)
+
+	// --------
+	// ASSERT
+	// --------
+	assert.EqualError(t, err, "data retrieval error")
+	assert.Empty(t, resultSpace, "Result space should be empty due to error")
+
+	mockRepo.AssertExpectations(t)
 }
