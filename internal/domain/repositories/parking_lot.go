@@ -15,6 +15,9 @@ type ParkingLotRepository interface {
 	// GetAllParkingLots gets all parking lots.
 	GetAllParkingLots(ctx context.Context) ([]entities.ParkingLot, error)
 
+	// GetSingle gets single parking lots.
+	GetSingle(ctx context.Context, lotID uuid.UUID) (*entities.ParkingLot, error)
+
 	// DeleteParkingLot deletes parking lot with the given id.
 	DeleteParkingLot(ctx context.Context, id uuid.UUID) error
 }

@@ -176,6 +176,65 @@ func (_c *ParkingLotRepository_GetAllParkingLots_Call) RunAndReturn(run func(con
 	return _c
 }
 
+// GetSingle provides a mock function with given fields: ctx, lotID
+func (_m *ParkingLotRepository) GetSingle(ctx context.Context, lotID uuid.UUID) (*entities.ParkingLot, error) {
+	ret := _m.Called(ctx, lotID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSingle")
+	}
+
+	var r0 *entities.ParkingLot
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (*entities.ParkingLot, error)); ok {
+		return rf(ctx, lotID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) *entities.ParkingLot); ok {
+		r0 = rf(ctx, lotID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.ParkingLot)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID) error); ok {
+		r1 = rf(ctx, lotID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ParkingLotRepository_GetSingle_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSingle'
+type ParkingLotRepository_GetSingle_Call struct {
+	*mock.Call
+}
+
+// GetSingle is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lotID uuid.UUID
+func (_e *ParkingLotRepository_Expecter) GetSingle(ctx interface{}, lotID interface{}) *ParkingLotRepository_GetSingle_Call {
+	return &ParkingLotRepository_GetSingle_Call{Call: _e.mock.On("GetSingle", ctx, lotID)}
+}
+
+func (_c *ParkingLotRepository_GetSingle_Call) Run(run func(ctx context.Context, lotID uuid.UUID)) *ParkingLotRepository_GetSingle_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uuid.UUID))
+	})
+	return _c
+}
+
+func (_c *ParkingLotRepository_GetSingle_Call) Return(_a0 *entities.ParkingLot, _a1 error) *ParkingLotRepository_GetSingle_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ParkingLotRepository_GetSingle_Call) RunAndReturn(run func(context.Context, uuid.UUID) (*entities.ParkingLot, error)) *ParkingLotRepository_GetSingle_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewParkingLotRepository creates a new instance of ParkingLotRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewParkingLotRepository(t interface {
