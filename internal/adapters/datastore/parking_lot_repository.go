@@ -64,7 +64,7 @@ func (s *ParkingLotPostgresRepository) GetAllParkingLots(ctx context.Context) ([
 func (s *ParkingLotPostgresRepository) GetSingle(ctx context.Context, id uuid.UUID) (*entities.ParkingLot, error) {
 	var parkingLot entities.ParkingLot
 
-	result := s.DB.WithContext(ctx).First(&parkingLot, "id = ?", id)
+	result := s.DB.WithContext(ctx).Preload("ParkingSpaces.ParkingRequests").First(&parkingLot, "id = ?", id)
 	err := result.Error()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
