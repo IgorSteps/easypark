@@ -120,3 +120,8 @@ func (s *HandlerFactory) CheckForLateArrivals() http.Handler {
 func (s *HandlerFactory) GetSingleParkingLot() http.Handler {
 	return NewParkingLotGetSingleHandler(s.facade.parkingLotFacade, s.logger)
 }
+
+// PaymentCreate returns a new REST handler to create payments
+func (s *HandlerFactory) PaymentCreate() http.Handler {
+	return NewPaymentCreateHandler(s.logger)
+}
