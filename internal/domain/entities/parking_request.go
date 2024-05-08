@@ -27,12 +27,14 @@ type ParkingRequest struct {
 	StartTime                 time.Time
 	EndTime                   time.Time
 	Status                    ParkingRequestStatus
+	Cost                      int
 }
 
 // OnCreate sets requests's fields on create.
 func (s *ParkingRequest) OnCreate() {
 	s.ID = uuid.New()
 	s.Status = RequestStatusPending
+	s.Cost = 10
 }
 
 // OnArrivalNotification sets parking requests's status to 'active'.
