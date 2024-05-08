@@ -17,6 +17,11 @@ type ParkingLotGetter interface {
 	Execute(ctx context.Context) ([]entities.ParkingLot, error)
 }
 
+// ParkingLotGetter provides an interface implemented by GetSingleParkingLot usecase.
+type ParkingLotSingleGetter interface {
+	Execute(ctx context.Context, id uuid.UUID) (*entities.ParkingLot, error)
+}
+
 // ParkingLotDeleter provides an interface implemented by DeleteParkingLot usecase.
 type ParkingLotDeleter interface {
 	Execute(ctx context.Context, id uuid.UUID) error
@@ -24,9 +29,10 @@ type ParkingLotDeleter interface {
 
 // ParkingLotFacade uses facade pattern to wrap parking lots' usecases to allow for managing other things such as DB transactions if needed.
 type ParkingLotFacade struct {
-	parkingLotCreator ParkingLotCreator
-	pakringLotGetter  ParkingLotGetter
-	parkingLotDeleter ParkingLotDeleter
+	parkingLotCreator      ParkingLotCreator
+	pakringLotGetter       ParkingLotGetter
+	parkingLotDeleter      ParkingLotDeleter
+	parkingLotSingleGetter ParkingLotSingleGetter
 }
 
 // NewParkingLotFacade returns a new instance of ParkingLotFacade.
@@ -34,11 +40,13 @@ func NewParkingLotFacade(
 	creator ParkingLotCreator,
 	getter ParkingLotGetter,
 	deleter ParkingLotDeleter,
+	sGetter ParkingLotSingleGetter,
 ) *ParkingLotFacade {
 	return &ParkingLotFacade{
-		parkingLotCreator: creator,
-		pakringLotGetter:  getter,
-		parkingLotDeleter: deleter,
+		parkingLotCreator:      creator,
+		pakringLotGetter:       getter,
+		parkingLotDeleter:      deleter,
+		parkingLotSingleGetter: sGetter,
 	}
 }
 
@@ -55,4 +63,9 @@ func (s *ParkingLotFacade) GetAllParkingLots(ctx context.Context) ([]entities.Pa
 // DeleteParkingLot wraps the DeleteParkingLot usecase.
 func (s *ParkingLotFacade) DeleteParkingLot(ctx context.Context, id uuid.UUID) error {
 	return s.parkingLotDeleter.Execute(ctx, id)
+}
+
+// GetSingleParkingLot wraps the GetSingleParkingLot usecase.
+func (s *ParkingLotFacade) GetSingleParkingLot(ctx context.Context, lotID uuid.UUID) (*entities.ParkingLot, error) {
+	return s.parkingLotSingleGetter.Execute(ctx, lotID)
 }

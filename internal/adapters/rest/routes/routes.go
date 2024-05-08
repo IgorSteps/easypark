@@ -28,6 +28,7 @@ type HandlerFactory interface {
 	// Parking lots handlers.
 	ParkingLotCreate() http.Handler
 	GetAllParkingLots() http.Handler
+	GetSingleParkingLot() http.Handler
 	DeleteParkingLot() http.Handler
 
 	// Parking space handlers.
@@ -92,6 +93,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		// Parking lots
 		r.Method(http.MethodPost, "/parking-lots", handlerFactory.ParkingLotCreate())
 		r.Method(http.MethodGet, "/parking-lots", handlerFactory.GetAllParkingLots())
+		r.Method(http.MethodGet, "/parking-lots/{id}", handlerFactory.GetSingleParkingLot())
 		r.Method(http.MethodDelete, "/parking-lots/{id}", handlerFactory.DeleteParkingLot())
 		// Parking requests
 		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
