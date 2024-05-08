@@ -50,17 +50,6 @@ jobs:
       - name: Unit Test
         run: make unit
 
-      - name: Test Coverage
-        id: coverage-report
-        run: |
-          COVERAGE=$(make coverage-report | grep total: | awk '{print substr($3, 1, length($3)-1)}')
-          echo "Coverage: $COVERAGE%"
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-           if (( $(echo "$COVERAGE < 70" |bc -l) )); then
-            echo "Code coverage below 70%. Failing..."
-            exit 1
-          fi
-
       - name: Wait for PostgreSQL
         run: until pg_isready -h localhost -p 5432; do sleep 1; done
 

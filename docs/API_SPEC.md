@@ -408,7 +408,7 @@ curl -X POST http://localhost:8080/parking-lots \
 -H "Authorization: Bearer <ADMIN_TOKEN>" \
 -d '{
     "name": "cmp",
-    "capacity": 10
+    "capacity": 100
 }'
 ```
 
@@ -526,6 +526,56 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
   { "error": "meaningful error message" }
   ```
 
+### 4. Get Single Parking Lot API Endpoint
+
+**Endpoint**: `GET /parking-lots/{id}`
+
+**Description**: Gets single parking lot and its statistics(total, occupied, available, blocked and reserved spaces).
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots/{id}
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+      {
+        "ID":"bb8625ea-8c80-484c-8a75-3386649eef25",
+        "Name":"cmp",
+        "Capacity":10,
+        "ParkingSpaces":[
+          {
+            "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+            "ParkingLotID":"bb8625ea-8c80-484c-8a75-3386649eef25",
+            "Name":"cmp-1",
+            "Status":"blocked",
+            "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+          },
+          {"other parking spaces..."}
+        ],
+        "Available":0,
+        "Occupied":0,
+        "Reserved":0,
+        "Blocked":0
+      }
+  ```
+
+- **400 BAD REQUEST**
+  
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+  
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
 ## Parking Space
 
 ### 1. Admin Get Single Parking Space API Endpoint
@@ -537,7 +587,7 @@ curl -X DELETE http://localhost:8080/parking-lots/{id} \
 **Request Body**:
 
 ```bash
-curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-spaces/{id}
+curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spaces/{id}
 ```
 
 **Response**:
@@ -568,14 +618,14 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-spa
 
 ### 2. Driver Get Single Parking Space API Endpoint
 
-**Endpoint**: `GET /driver/parking-spaces/{id}`
+**Endpoint**: `GET /parking-spaces/{id}`
 
 **Description**: Gets a parking space status with the given ID.
 
 **Request Body**:
 
 ```bash
-curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/driver/parking-spaces/{id}
+curl -H "Authorization: Bearer <_TOKEN>"  http://localhost:8080/parking-spaces/{id}
 ```
 
 **Response**:

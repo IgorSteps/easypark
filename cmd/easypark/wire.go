@@ -88,6 +88,8 @@ func SetupApp() (*App, error) {
 		wire.Bind(new(usecasefacades.ParkingLotGetter), new(*parkingLotUsecases.GetAllParkingLots)),
 		parkingLotUsecases.NewDeleteParkingLot,
 		wire.Bind(new(usecasefacades.ParkingLotDeleter), new(*parkingLotUsecases.DeteleParkingLot)),
+		parkingLotUsecases.NewGetSingleParkingLot,
+		wire.Bind(new(usecasefacades.ParkingLotSingleGetter), new(*parkingLotUsecases.GetSingleParkingLot)),
 		// parking space
 		parkingSpaceUsecases.NewUpdateParkingSpaceStatus,
 		wire.Bind(new(usecasefacades.ParkingSpaceStatusUpdater), new(*parkingSpaceUsecases.UpdateParkingSpaceStatus)),

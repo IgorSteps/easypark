@@ -60,6 +60,25 @@ func (s *ParkingLotPostgresRepository) GetAllParkingLots(ctx context.Context) ([
 	return lots, nil
 }
 
+// GetSingle gets a single parking lot using its ID.
+func (s *ParkingLotPostgresRepository) GetSingle(ctx context.Context, id uuid.UUID) (*entities.ParkingLot, error) {
+	var parkingLot entities.ParkingLot
+
+	result := s.DB.WithContext(ctx).Preload("ParkingSpaces.ParkingRequests").First(&parkingLot, "id = ?", id)
+	err := result.Error()
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			s.Logger.WithField("parking lot id", id).Error("failed to find parking lot with given id in the database")
+			return nil, repositories.NewNotFoundError(id.String())
+		}
+
+		s.Logger.WithError(err).Error("failed to query for parking lot in the database")
+		return nil, repositories.NewInternalError("failed to query for parking lot in the database")
+	}
+
+	return &parkingLot, nil
+}
+
 func (s *ParkingLotPostgresRepository) DeleteParkingLot(ctx context.Context, id uuid.UUID) error {
 	result := s.DB.WithContext(ctx).Delete(&entities.ParkingLot{}, id)
 

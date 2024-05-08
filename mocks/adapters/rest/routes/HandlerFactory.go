@@ -679,6 +679,53 @@ func (_c *HandlerFactory_GetSingleAlert_Call) RunAndReturn(run func() http.Handl
 	return _c
 }
 
+// GetSingleParkingLot provides a mock function with given fields:
+func (_m *HandlerFactory) GetSingleParkingLot() http.Handler {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSingleParkingLot")
+	}
+
+	var r0 http.Handler
+	if rf, ok := ret.Get(0).(func() http.Handler); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(http.Handler)
+		}
+	}
+
+	return r0
+}
+
+// HandlerFactory_GetSingleParkingLot_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSingleParkingLot'
+type HandlerFactory_GetSingleParkingLot_Call struct {
+	*mock.Call
+}
+
+// GetSingleParkingLot is a helper method to define mock.On call
+func (_e *HandlerFactory_Expecter) GetSingleParkingLot() *HandlerFactory_GetSingleParkingLot_Call {
+	return &HandlerFactory_GetSingleParkingLot_Call{Call: _e.mock.On("GetSingleParkingLot")}
+}
+
+func (_c *HandlerFactory_GetSingleParkingLot_Call) Run(run func()) *HandlerFactory_GetSingleParkingLot_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *HandlerFactory_GetSingleParkingLot_Call) Return(_a0 http.Handler) *HandlerFactory_GetSingleParkingLot_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *HandlerFactory_GetSingleParkingLot_Call) RunAndReturn(run func() http.Handler) *HandlerFactory_GetSingleParkingLot_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetSingleParkingSpace provides a mock function with given fields:
 func (_m *HandlerFactory) GetSingleParkingSpace() http.Handler {
 	ret := _m.Called()
