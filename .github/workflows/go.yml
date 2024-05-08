@@ -29,6 +29,7 @@ jobs:
     steps:
       - name: Build
         run: |
+          pwd
           ls -la
           make build
 
