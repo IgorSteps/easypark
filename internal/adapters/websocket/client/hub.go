@@ -82,7 +82,7 @@ func (h *Hub) broadcastMessage(msg *models.Message) {
 			// Unregister the client and close the connection.
 			close(receiverClient.Send)
 			delete(h.Clients, receiverClient.UserID)
-			h.logger.Warn("sender buffer is full, unregistered client and closed send channel ")
+			h.logger.Warn("receiver's sender buffer is full, unregistered client and closed send channel ")
 		}
 	} else {
 		// Persist message if the recipient is not registered with the Hub(ie. they're offline).
@@ -102,7 +102,7 @@ func (h *Hub) broadcastMessage(msg *models.Message) {
 			// Unregister the client and close the connection.
 			close(senderClient.Send)
 			delete(h.Clients, senderClient.UserID)
-			h.logger.Warn("sender buffer is full, unregistered client and closed send channel ")
+			h.logger.Warn("sender's send buffer is full, unregistered client and closed send channel ")
 		}
 	}
 }

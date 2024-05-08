@@ -61,10 +61,13 @@ func (s *TestMessagingSuite) TestDriverToAdminChat() {
 	_, response, err := adminConn.ReadMessage()
 	s.Require().NoError(err, "Failed to read message on admin's connection")
 
+	var receivedMsg models.Message
+	err = json.Unmarshal(response, &receivedMsg)
+	s.Require().NoError(err)
 	// ------
 	// ASSERT
 	// ------
-	s.Require().Equal(content, string(response), "Message received doesn't match message that was sent")
+	s.Require().Equal(message, receivedMsg, "Message received doesn't match message that was sent")
 }
 
 func (s *TestMessagingSuite) TestFullConversation() {
@@ -99,9 +102,12 @@ func (s *TestMessagingSuite) TestFullConversation() {
 	// ACT
 	// --------
 	for _, msg := range conversation {
-		conn := driverConn
+		s.T().Log(msg)
+		senderConn := driverConn
+		receiverConn := adminConn
 		if msg.SenderID == adminUserID {
-			conn = adminConn
+			senderConn = adminConn
+			receiverConn = driverConn
 		}
 
 		// Serialize message to JSON
@@ -109,22 +115,32 @@ func (s *TestMessagingSuite) TestFullConversation() {
 		s.Require().NoError(err, "Failed to serialize message")
 
 		// Send message
-		err = conn.WriteMessage(websocket.TextMessage, msgData)
+		err = senderConn.WriteMessage(websocket.TextMessage, msgData)
 		s.Require().NoError(err, "Failed to send message")
 
-		// Receive message on the opposite connection
-		targetConn := adminConn
-		if msg.SenderID == adminUserID {
-			targetConn = driverConn
-		}
+		// Receive message on the sender connection
+		_, senderResponse, err := senderConn.ReadMessage()
+		s.Require().NoError(err, "Failed to read message from sender")
 
-		_, response, err := targetConn.ReadMessage()
-		s.Require().NoError(err, "Failed to read message")
+		// Receive message on the receiver connection
+		_, receiverResponse, err := receiverConn.ReadMessage()
+		s.Require().NoError(err, "Failed to read message from receiver")
 
 		// --------
 		// ASSERT
 		// --------
-		s.Require().Equal(msg.Content, string(response), "Message content does not match")
+		var senderReceivedMsg models.Message
+		var receiverReceivedMsg models.Message
+
+		err = json.Unmarshal(senderResponse, &senderReceivedMsg)
+		s.Require().NoError(err)
+
+		err = json.Unmarshal(receiverResponse, &receiverReceivedMsg)
+		s.Require().NoError(err)
+
+		// Ensure both sender and receiver get the correct messages
+		s.Require().Equal(msg.Content, senderReceivedMsg.Content, "Sender message content does not match")
+		s.Require().Equal(msg.Content, receiverReceivedMsg.Content, "Receiver message content does not match")
 	}
 }
 
@@ -164,6 +180,9 @@ func (s *TestMessagingSuite) TestMessagesAreDequeued() {
 		// Don't do anything, messages should be persisted in the db.
 	}
 
+	// Wait for server to process and queue messages
+	time.Sleep(3 * time.Second)
+
 	// Now connect the admin
 	adminConn, _, err := websocket.DefaultDialer.Dial("ws://localhost:8081/ws/"+"a131a9a0-8d09-4166-b6fc-f8a08ba549e9", nil)
 	s.Require().NoError(err, "Failed to establish WebSocket connection for admin")
@@ -180,7 +199,9 @@ func (s *TestMessagingSuite) TestMessagesAreDequeued() {
 		// --------
 		// ASSERT
 		// --------
-		s.Require().Equal(msg.Content, string(response), "Message received doesn't match messages that were sent")
+		var message models.Message
+		err = json.Unmarshal(response, &message)
+		s.Require().Equal(msg, message, "Message received doesn't match messages that were sent")
 	}
 }
 
