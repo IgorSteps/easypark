@@ -392,6 +392,50 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
   { "error": "meaningful error message" }
   ```
 
+### 5. Automatically Assign Parking Request a Space API Endpoint
+
+**Endpoint**: `PATCH /parking-requests/{id}/automatic/space`
+
+**Description**: Update a parking request with a parking space automatically. Returns a parking space.
+
+**Request Body**:
+
+```bash
+curl -X PATCH http://localhost:8080/parking-requests/{id}/automatic/space \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "parkingRequestID": "parking request id"
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+   {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
+    "Name":"cmp-1",
+    "Status":"blocked",
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+  },
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+
 ## Parking Lot
 
 ### 1. Create Parking Lot API Endpoint

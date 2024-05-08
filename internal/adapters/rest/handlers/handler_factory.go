@@ -130,3 +130,8 @@ func (s *HandlerFactory) GetSingleParkingLot() http.Handler {
 func (s *HandlerFactory) PaymentCreate() http.Handler {
 	return NewPaymentCreateHandler(s.logger)
 }
+
+// AutomaticallyAssignParkingSpace returns a new REST handler to automatically assign parking spaces.
+func (s *HandlerFactory) AutomaticallyAssignParkingSpace() http.Handler {
+	return NewParkingRequestAutomaticSpaceHandler(s.facade.parkingRequestFacade, s.logger)
+}

@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"context"
+	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/IgorSteps/easypark/internal/domain/repositories"
@@ -67,5 +68,38 @@ func (s *ParkingSpacePostgresRepository) GetMany(ctx context.Context, query map[
 		return nil, repositories.NewInternalError("failed to query for parking spaces")
 	}
 
+	return spaces, nil
+}
+
+// FindAvailableSpaces finds all available parking spaces.
+func (s *ParkingSpacePostgresRepository) FindAvailableSpaces(
+	ctx context.Context,
+	lotID uuid.UUID,
+	startTime,
+	endTime time.Time,
+) ([]entities.ParkingSpace, error) {
+	var spaces []entities.ParkingSpace
+
+	// Find all spaces and their parking requests that are available in the specified parking lot.
+	result := s.DB.WithContext(ctx).
+		Where("parking_lot_id = ? AND status = ?", lotID, entities.ParkingSpaceStatusAvailable).
+		Preload("ParkingRequests").
+		FindAll(&spaces)
+
+	if result.Error() != nil {
+		s.Logger.WithError(result.Error()).Error("failed to query for parking spaces")
+		return nil, repositories.NewInternalError("failed to query for parking spaces")
+	}
+
+	// Filter out spaces with overlapping parking requests.
+	// TODO: can it be converted to a DB query?
+	var availableSpaces []entities.ParkingSpace
+	for _, space := range spaces {
+		if !space.CheckForOverlap(startTime, endTime) {
+			availableSpaces = append(availableSpaces, space)
+		}
+	}
+
+	spaces = availableSpaces
 	return spaces, nil
 }

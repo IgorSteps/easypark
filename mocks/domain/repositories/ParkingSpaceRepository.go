@@ -8,6 +8,8 @@ import (
 	entities "github.com/IgorSteps/easypark/internal/domain/entities"
 	mock "github.com/stretchr/testify/mock"
 
+	time "time"
+
 	uuid "github.com/google/uuid"
 )
 
@@ -22,6 +24,67 @@ type ParkingSpaceRepository_Expecter struct {
 
 func (_m *ParkingSpaceRepository) EXPECT() *ParkingSpaceRepository_Expecter {
 	return &ParkingSpaceRepository_Expecter{mock: &_m.Mock}
+}
+
+// FindAvailableSpaces provides a mock function with given fields: ctx, lotID, startTime, endTime
+func (_m *ParkingSpaceRepository) FindAvailableSpaces(ctx context.Context, lotID uuid.UUID, startTime time.Time, endTime time.Time) ([]entities.ParkingSpace, error) {
+	ret := _m.Called(ctx, lotID, startTime, endTime)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAvailableSpaces")
+	}
+
+	var r0 []entities.ParkingSpace
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, time.Time, time.Time) ([]entities.ParkingSpace, error)); ok {
+		return rf(ctx, lotID, startTime, endTime)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, time.Time, time.Time) []entities.ParkingSpace); ok {
+		r0 = rf(ctx, lotID, startTime, endTime)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.ParkingSpace)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID, time.Time, time.Time) error); ok {
+		r1 = rf(ctx, lotID, startTime, endTime)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ParkingSpaceRepository_FindAvailableSpaces_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindAvailableSpaces'
+type ParkingSpaceRepository_FindAvailableSpaces_Call struct {
+	*mock.Call
+}
+
+// FindAvailableSpaces is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lotID uuid.UUID
+//   - startTime time.Time
+//   - endTime time.Time
+func (_e *ParkingSpaceRepository_Expecter) FindAvailableSpaces(ctx interface{}, lotID interface{}, startTime interface{}, endTime interface{}) *ParkingSpaceRepository_FindAvailableSpaces_Call {
+	return &ParkingSpaceRepository_FindAvailableSpaces_Call{Call: _e.mock.On("FindAvailableSpaces", ctx, lotID, startTime, endTime)}
+}
+
+func (_c *ParkingSpaceRepository_FindAvailableSpaces_Call) Run(run func(ctx context.Context, lotID uuid.UUID, startTime time.Time, endTime time.Time)) *ParkingSpaceRepository_FindAvailableSpaces_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(time.Time), args[3].(time.Time))
+	})
+	return _c
+}
+
+func (_c *ParkingSpaceRepository_FindAvailableSpaces_Call) Return(_a0 []entities.ParkingSpace, _a1 error) *ParkingSpaceRepository_FindAvailableSpaces_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ParkingSpaceRepository_FindAvailableSpaces_Call) RunAndReturn(run func(context.Context, uuid.UUID, time.Time, time.Time) ([]entities.ParkingSpace, error)) *ParkingSpaceRepository_FindAvailableSpaces_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 // GetMany provides a mock function with given fields: ctx, query

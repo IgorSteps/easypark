@@ -24,6 +24,7 @@ type HandlerFactory interface {
 	AssignParkingSpace() http.Handler
 	GetAllParkingRequests() http.Handler
 	GetAllParkingRequestsForDriver() http.Handler
+	AutomaticallyAssignParkingSpace() http.Handler
 
 	// Parking lots handlers.
 	ParkingLotCreate() http.Handler
@@ -79,7 +80,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPost, "/drivers/{id}/notifications", handlerFactory.CreateNotification())
 		// Parking spaces
 		r.Method(http.MethodGet, "/driver/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())
-		// payments
+		// Payments
 		r.Method(http.MethodPost, "/drivers/{id}/payments", handlerFactory.PaymentCreate())
 		// Park lots
 		r.Method(http.MethodGet, "/driver-parking-lots", handlerFactory.GetAllParkingLots())
@@ -100,6 +101,7 @@ func NewRouter(handlerFactory HandlerFactory, middleware Middleware, logger *log
 		r.Method(http.MethodPatch, "/parking-requests/{id}/status", handlerFactory.ParkingRequestStatusUpdate())
 		r.Method(http.MethodPatch, "/parking-requests/{id}/space", handlerFactory.AssignParkingSpace())
 		r.Method(http.MethodGet, "/parking-requests", handlerFactory.GetAllParkingRequests())
+		r.Method(http.MethodPatch, "/parking-requests/{id}/automatic/space", handlerFactory.AutomaticallyAssignParkingSpace())
 		// Parking spaces
 		r.Method(http.MethodPatch, "/parking-spaces/{id}/status", handlerFactory.UpdateParkingSpaceStatus())
 		r.Method(http.MethodGet, "/parking-spaces/{id}", handlerFactory.GetSingleParkingSpace())

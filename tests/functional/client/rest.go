@@ -81,6 +81,11 @@ func (s *RestClientSuite) UpdateParkingRequestSpace(ctx context.Context, token s
 	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-requests/"+parkingReqID.String()+"/space", req, token)
 }
 
+// AutomaticallyUpdateParkingRequestSpace interacts with the REST API to automatically update a parking request with a parking space.
+func (s *RestClientSuite) AutomaticallyUpdateParkingRequestSpace(ctx context.Context, token string, parkingReqID uuid.UUID, req *models.ParkingRequestAutomaticSpaceUpdateRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPatch, "/parking-requests/"+parkingReqID.String()+"/automatic/space", req, token)
+}
+
 // GetAllParkingRequests interacts with the REST API to get all parking requests.
 func (s *RestClientSuite) GetAllParkingRequests(ctx context.Context, token string) ([]byte, int, error) {
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/parking-requests", nil, token)

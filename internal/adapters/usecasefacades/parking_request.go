@@ -32,13 +32,19 @@ type ParkingRequestSpaceAssigner interface {
 	Execute(ctx context.Context, requestID uuid.UUID, spaceID uuid.UUID) error
 }
 
+// ParkingRequestAutomaticSpaceAssigner provides an interface implemented by AutomaticAssignParkingSpace usecase.
+type ParkingRequestAutomaticSpaceAssigner interface {
+	Execute(ctx context.Context, requestID uuid.UUID) (*entities.ParkingSpace, error)
+}
+
 // ParkingRequestFacade uses facade pattern to wrap parking request' usecases to allow for managing other things such as DB transactions if needed.
 type ParkingRequestFacade struct {
-	parkingRequestCreator       ParkingRequestCreator
-	parkingRequestStatusUpdater ParkingRequestStatusUpdater
-	parkingRequestSpaceAssigner ParkingRequestSpaceAssigner
-	parkingRequestAllGetter     ParkingRequestsAllGetter
-	parkingRequestDriversGetter ParkingRequestDriversGetter
+	parkingRequestCreator         ParkingRequestCreator
+	parkingRequestStatusUpdater   ParkingRequestStatusUpdater
+	parkingRequestSpaceAssigner   ParkingRequestSpaceAssigner
+	parkingRequestAllGetter       ParkingRequestsAllGetter
+	parkingRequestDriversGetter   ParkingRequestDriversGetter
+	parkingAutomaticSpaceAssigner ParkingRequestAutomaticSpaceAssigner
 }
 
 // NewParkingRequestFacade creates a new instance of ParkingRequestFacade.
@@ -48,13 +54,15 @@ func NewParkingRequestFacade(
 	assigner ParkingRequestSpaceAssigner,
 	allGetter ParkingRequestsAllGetter,
 	specificGetter ParkingRequestDriversGetter,
+	automaticAssigner ParkingRequestAutomaticSpaceAssigner,
 ) *ParkingRequestFacade {
 	return &ParkingRequestFacade{
-		parkingRequestCreator:       creator,
-		parkingRequestStatusUpdater: updater,
-		parkingRequestSpaceAssigner: assigner,
-		parkingRequestAllGetter:     allGetter,
-		parkingRequestDriversGetter: specificGetter,
+		parkingRequestCreator:         creator,
+		parkingRequestStatusUpdater:   updater,
+		parkingRequestSpaceAssigner:   assigner,
+		parkingRequestAllGetter:       allGetter,
+		parkingRequestDriversGetter:   specificGetter,
+		parkingAutomaticSpaceAssigner: automaticAssigner,
 	}
 }
 
@@ -81,4 +89,8 @@ func (s *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]ent
 // GetDriversParkingRequests wraps the GetDriversParkingRequests usecase.
 func (s *ParkingRequestFacade) GetDriversParkingRequests(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error) {
 	return s.parkingRequestDriversGetter.Execute(ctx, id)
+}
+
+func (s *ParkingRequestFacade) AutomaticallyAssignParkingSpace(ctx context.Context, parkingRequestID uuid.UUID) (*entities.ParkingSpace, error) {
+	return s.parkingAutomaticSpaceAssigner.Execute(ctx, parkingRequestID)
 }
