@@ -1,4 +1,4 @@
-# API Specification
+# REST API Specification
 
 This document provides an overview of available API endpoints with example request and response bodies.
 
@@ -998,13 +998,15 @@ curl -X POST http://localhost:8080/drivers/{id}/payments \
   { "error": "meaningful error message" }
   ```
 
-## Real-time Messaging
+# WebSocket API Specification
 
-1. Initiate WebSocket connection Endpoint:
+## Message
+
+### 1. Real-time messaging
 
 **Endpoint**: `ws://localhost:8081/ws/{id}`
 
-**Description**: Establishes a WebSocket connection for real-time, bidirectional communication between the client and the server.
+**Description**: Establishes a WebSocket connection for real-time, bidirectional communication between the client and the server. ID in the URL is senders user ID.
 
 **Message body**:
 
