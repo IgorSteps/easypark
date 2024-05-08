@@ -565,15 +565,15 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
   ```
 
 - **400 BAD REQUEST**
-  
+
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 - **500 INTERNAL SERVER ERROR**
-  
+
   ```json
-  {"error": "meaningful error message"}
+  { "error": "meaningful error message" }
   ```
 
 ## Parking Space
@@ -955,7 +955,7 @@ curl -X POST http://localhost:8080/alerts/overstays \
   { "error": "meaningful error message" }
   ```
 
-  ## Payment
+## Payment
 
 ### 1. Create Payment API Endpoint
 
@@ -997,3 +997,21 @@ curl -X POST http://localhost:8080/drivers/{id}/payments \
   ```json
   { "error": "meaningful error message" }
   ```
+
+## Real-time Messaging
+
+1. Initiate WebSocket connection Endpoint:
+
+**Endpoint**: `ws://localhost:8081/ws/{id}`
+
+**Description**: Establishes a WebSocket connection for real-time, bidirectional communication between the client and the server.
+
+**Message body**:
+
+```json
+{
+  "senderID": "7eec740d-be10-4083-aefb-39d1843e981a",
+  "receiverID": "5fa4c475-556e-4b4e-8298-c13e5283d37a",
+  "content": "your message"
+}
+```

@@ -48,21 +48,22 @@ Open the project in VS Code:
 
 From project root in your Linux Environment, run `docker-compose up -d` to create required PostgreSQL image and optional PgAdmin image for DB user interface.
 
-### Starting the app
+### Starting the apps
 
 From project root, run:
 
-1. Build the app, run `make build`.
-2. To run the app, run `make run`.
+1. Build the apps, run `make build`.
+2. To run the rest app, run `make run`.
+3. To run the websocket app, run `make run-ws`.
 
-If changes to dependecy graph have been made, you must edit `wire.go` file and run `make wire` to regenerate dependecy injection code(`wire_gen.go` file).
+If changes to dependency graph have been made, you must edit `wire.go` file and run `make wire` to regenerate dependency injection code(`wire_gen.go` file).
 
 ### Troubleshooting
 
 #### Failed to run `make wire` or `make mocks`
 
 1. Make sure you have `wire`(https://github.com/google/wire) and `mockery`(https://vektra.github.io/mockery/latest/installation/) installed.
-2. If after installation it still doesn't work, add `GO BIN` to your PATH, run `export PATH="$HOME/go/bin:$PATH"`(given that your GO BIN is go/bin which it usuall is).
+2. If after installation it still doesn't work, add `GO BIN` to your PATH, run `export PATH="$HOME/go/bin:$PATH"`(given that your GO BIN is go/bin which it usual is).
 
 ## Testing
 
