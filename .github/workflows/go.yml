@@ -28,7 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build
-        run: make build
+        run: |
+        ls -la
+        make build
 
   test:
     needs: build
