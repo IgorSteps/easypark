@@ -31,32 +31,32 @@ func NewAutomaticAssignParkingSpace(
 }
 
 // Execute runs the business logic to assign a parking space to a parking request.
-func (s *AutomaticAssignParkingSpace) Execute(ctx context.Context, requestID uuid.UUID) error {
+func (s *AutomaticAssignParkingSpace) Execute(ctx context.Context, requestID uuid.UUID) (*entities.ParkingSpace, error) {
 	parkingRequest, err := s.parkingRequestRepo.GetSingle(ctx, requestID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Check if the parking request has passed its desired start time.
 	if parkingRequest.StartTime.Before(time.Now()) {
 		s.logger.Warn("not allowed to assign a parking space to a parking request with the desired start time in the past")
-		return repositories.NewInvalidInputError("not allowed to assign a parking space to a parking request with the desired start time in the past")
+		return nil, repositories.NewInvalidInputError("not allowed to assign a parking space to a parking request with the desired start time in the past")
 
 	}
 
 	// Check if the status of parking request is 'rejected'.
 	if parkingRequest.Status == entities.RequestStatusRejected {
 		s.logger.Warn("not allowed to assign parking space to a 'rejected' parking request")
-		return repositories.NewInvalidInputError("not allowed to assign parking space to a 'rejected' parking request")
+		return nil, repositories.NewInvalidInputError("not allowed to assign parking space to a 'rejected' parking request")
 	}
 
 	availableSpaces, err := s.parkingSpaceRepo.FindAvailableSpaces(ctx, parkingRequest.DestinationParkingLotID, parkingRequest.StartTime, parkingRequest.EndTime)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if len(availableSpaces) == 0 {
-		return repositories.NewInvalidInputError("no available parking spaces at the desired time")
+		return nil, repositories.NewInvalidInputError("no available parking spaces at the desired time")
 	}
 
 	// Select the first available space
@@ -69,8 +69,8 @@ func (s *AutomaticAssignParkingSpace) Execute(ctx context.Context, requestID uui
 	// Save updated parking request.
 	err = s.parkingRequestRepo.Save(ctx, &parkingRequest)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &selectedSpace, nil
 }
