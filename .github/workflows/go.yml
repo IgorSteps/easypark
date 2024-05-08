@@ -29,8 +29,8 @@ jobs:
     steps:
       - name: Build
         run: |
-        ls -la
-        make build
+          ls -la
+          make build
 
   test:
     needs: build
