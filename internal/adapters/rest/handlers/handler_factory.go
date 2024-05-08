@@ -115,3 +115,13 @@ func (s *HandlerFactory) GetAllAlerts() http.Handler {
 func (s *HandlerFactory) CheckForLateArrivals() http.Handler {
 	return NewCheckLateArrivalHandler(s.logger, s.facade.alertFacade)
 }
+
+// GetSingleParkingLot returns a new REST handler to get single parking lot.
+func (s *HandlerFactory) GetSingleParkingLot() http.Handler {
+	return NewParkingLotGetSingleHandler(s.facade.parkingLotFacade, s.logger)
+}
+
+// PaymentCreate returns a new REST handler to create payments
+func (s *HandlerFactory) PaymentCreate() http.Handler {
+	return NewPaymentCreateHandler(s.logger)
+}

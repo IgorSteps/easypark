@@ -58,17 +58,19 @@ func TestParkingRequestCreateHandler_ServeHTTP_HappyPath(t *testing.T) {
 		StartTime:               time.Now(),
 		EndTime:                 time.Now().Add(5),
 		Status:                  entities.RequestStatusPending,
+		Cost:                    10,
 	}
 	mockFacade.EXPECT().CreateParkingRequest(req.Context(), mock.Anything).Return(createdParkingRequest, nil).Once()
 
 	// Create a response from the created parking request to be able to comapre with the response body
 	expectedResponse := models.CreateParkingRequestResponse{
-		ID:               createdParkingRequest.ID,
-		UserID:           createdParkingRequest.UserID,
+		ID:          createdParkingRequest.ID,
+		UserID:      createdParkingRequest.UserID,
 		DestinationLotID: createdParkingRequest.DestinationParkingLotID,
-		StartTime:        createdParkingRequest.StartTime,
-		EndTime:          createdParkingRequest.EndTime,
-		Status:           createdParkingRequest.Status,
+		StartTime:   createdParkingRequest.StartTime,
+		EndTime:     createdParkingRequest.EndTime,
+		Status:      createdParkingRequest.Status,
+		Cost:        createdParkingRequest.Cost,
 	}
 	expectedJson, _ := json.Marshal(expectedResponse)
 

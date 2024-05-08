@@ -33,6 +33,9 @@ type ParkingLotFacade interface {
 
 	// DeleteParkingLot is implemented by usecasefacades.ParkingLotFacade that wraps deleting parking lot usecase.
 	DeleteParkingLot(ctx context.Context, id uuid.UUID) error
+
+	// GetSingleParkingLotis implemented by usecasefacades.ParkingLotFacade that wraps getting single parking lot useacse.
+	GetSingleParkingLot(ctx context.Context, lotID uuid.UUID) (*entities.ParkingLot, error)
 }
 
 // ParkingSpaceFacade provides an interface implemented by usecasefacades.ParkingSpaceFacade.
