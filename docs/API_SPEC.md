@@ -412,6 +412,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/automatic/space \
 **Responses**:
 
 - **200 OK**
+
   ```json
    {
     "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
