@@ -12,16 +12,18 @@ import (
 )
 
 type ParkingLotFacadeTestSuite struct {
-	creator *mocks.ParkingLotCreator
-	getter  *mocks.ParkingLotGetter
-	deleter *mocks.ParkingLotDeleter
+	creator      *mocks.ParkingLotCreator
+	getter       *mocks.ParkingLotGetter
+	deleter      *mocks.ParkingLotDeleter
+	singleGetter *mocks.ParkingLotSingleGetter
 }
 
 func newParkingLotFacadeTestSuite() *ParkingLotFacadeTestSuite {
 	return &ParkingLotFacadeTestSuite{
-		creator: &mocks.ParkingLotCreator{},
-		getter:  &mocks.ParkingLotGetter{},
-		deleter: &mocks.ParkingLotDeleter{},
+		creator:      &mocks.ParkingLotCreator{},
+		getter:       &mocks.ParkingLotGetter{},
+		deleter:      &mocks.ParkingLotDeleter{},
+		singleGetter: &mocks.ParkingLotSingleGetter{},
 	}
 }
 
@@ -34,6 +36,7 @@ func TestParkingLotFacade_Create(t *testing.T) {
 		s.creator,
 		s.getter,
 		s.deleter,
+		s.singleGetter,
 	)
 
 	testCtx := context.Background()
@@ -63,6 +66,7 @@ func TestParkingLotFacade_GetAll(t *testing.T) {
 		s.creator,
 		s.getter,
 		s.deleter,
+		s.singleGetter,
 	)
 
 	testCtx := context.Background()
@@ -92,6 +96,7 @@ func TestParkingLotFacade_Delete(t *testing.T) {
 		s.creator,
 		s.getter,
 		s.deleter,
+		s.singleGetter,
 	)
 
 	testCtx := context.Background()
