@@ -63,6 +63,9 @@ type ParkingRequestFacade interface {
 
 	// GetDriversParkingRequests is implemented by usecasefacades.ParkingRequestFacade that wraps getting parking requests for particular driver.
 	GetDriversParkingRequests(ctx context.Context, id uuid.UUID) ([]entities.ParkingRequest, error)
+
+	// AutomaticallyAssignParkingSpace is implemented by usecasefacades.ParkingRequestFacade that wraps automatically assigning parking space.
+	AutomaticallyAssignParkingSpace(ctx context.Context, parkingRequestID uuid.UUID) (*entities.ParkingSpace, error)
 }
 
 // NotificationFacade provides an interface implemented by usecasefacades.NotificationFacade.
