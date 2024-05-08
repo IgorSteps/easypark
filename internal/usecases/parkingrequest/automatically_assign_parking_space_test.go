@@ -56,13 +56,13 @@ func TestAutomaticAssignParkingSpace_HappyPath(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := usecase.Execute(testCtx, reqID)
+	space, err := usecase.Execute(testCtx, reqID)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.NoError(t, err, "Must not return error")
-
+	assert.Equal(t, testParkSpaces[0], *space)
 	reqRepo.AssertExpectations(t)
 	spaceRepo.AssertExpectations(t)
 }
@@ -101,13 +101,13 @@ func TestAutomaticAssignParkingSpace_HappyPath_NoSpaces(t *testing.T) {
 	// --------
 	// ACT
 	// --------
-	err := usecase.Execute(testCtx, reqID)
+	space, err := usecase.Execute(testCtx, reqID)
 
 	// --------
 	// ASSERT
 	// --------
 	assert.Error(t, err, "no available parking spaces at the desired time ", "Must not return error")
-
+	assert.Nil(t, space)
 	reqRepo.AssertExpectations(t)
 	spaceRepo.AssertExpectations(t)
 }
