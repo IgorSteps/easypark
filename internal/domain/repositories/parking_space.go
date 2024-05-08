@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/google/uuid"
@@ -17,4 +18,7 @@ type ParkingSpaceRepository interface {
 
 	// Save saves an updated parking space.
 	Save(ctx context.Context, space *entities.ParkingSpace) error
+
+	// FindAvailableSpaces finds suitable parking space using given parameters.§
+	FindAvailableSpaces(ctx context.Context, lotID uuid.UUID, startTime time.Time, endTime time.Time) ([]entities.ParkingSpace, error)
 }
