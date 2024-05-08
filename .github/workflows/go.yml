@@ -58,6 +58,9 @@ jobs:
       run: |
         make run &
         APP_PID=$!
+        make run-ws &
+        WS_PID=$!
         sleep 5
         make functional
         kill $APP_PID
+        kill $WS_PID
