@@ -15,7 +15,7 @@ States a parking request can be in: `pending`, `approved`, `rejected`, `active` 
 
 - **Pending**:
   - All new parking requests are created a 'pending' status.
-  - _TODO: If the admin 'reserves' or 'blocks' a space assigned to parking request, it will change request's status to 'pending' and disassociate with that parking space in the system._
+  - If the admin 'reserves' or 'blocks' a space assigned to parking request, it will change request's status to 'pending' and disassociate with that parking space in the system.
   - If the assigned parking space is de-assigned.
 - **Approval Conditions**:
   - A parking request can only be approved if:

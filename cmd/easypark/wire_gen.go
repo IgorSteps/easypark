@@ -69,7 +69,7 @@ func SetupApp() (*App, error) {
 	deteleParkingLot := usecases3.NewDeleteParkingLot(logrusLogger, parkingLotPostgresRepository)
 	getSingleParkingLot := usecases3.NewGetSingleParkingLot(logrusLogger, parkingLotPostgresRepository)
 	parkingLotFacade := usecasefacades.NewParkingLotFacade(createParkingLot, getAllParkingLots, deteleParkingLot, getSingleParkingLot)
-	updateParkingSpaceStatus := usecases4.NewUpdateParkingSpaceStatus(logrusLogger, parkingSpacePostgresRepository)
+	updateParkingSpaceStatus := usecases4.NewUpdateParkingSpaceStatus(logrusLogger, parkingSpacePostgresRepository, parkingRequestPostgresRepository)
 	getSingleParkingSpace := usecases4.NewGetSingleParkingSpace(logrusLogger, parkingSpacePostgresRepository)
 	parkingSpaceFacade := usecasefacades.NewParkingSpaceFacade(updateParkingSpaceStatus, getSingleParkingSpace)
 	notificationPostgresRepository := datastore.NewNotificationPostgresRepository(logrusLogger, gormWrapper)

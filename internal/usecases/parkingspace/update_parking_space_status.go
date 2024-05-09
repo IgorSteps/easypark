@@ -11,15 +11,21 @@ import (
 
 // UpdateParkingSpaceStatus provides business logic to update a parking space status.
 type UpdateParkingSpaceStatus struct {
-	logger *logrus.Logger
-	repo   repositories.ParkingSpaceRepository
+	logger      *logrus.Logger
+	spaceRepo   repositories.ParkingSpaceRepository
+	requestRepo repositories.ParkingRequestRepository
 }
 
 // NewUpdateParkingSpaceStatus returns a new instance of the UpdateParkingSpaceStatus.
-func NewUpdateParkingSpaceStatus(l *logrus.Logger, r repositories.ParkingSpaceRepository) *UpdateParkingSpaceStatus {
+func NewUpdateParkingSpaceStatus(
+	l *logrus.Logger,
+	spaceRepo repositories.ParkingSpaceRepository,
+	reqRepo repositories.ParkingRequestRepository,
+) *UpdateParkingSpaceStatus {
 	return &UpdateParkingSpaceStatus{
-		logger: l,
-		repo:   r,
+		logger:      l,
+		spaceRepo:   spaceRepo,
+		requestRepo: reqRepo,
 	}
 }
 
@@ -31,15 +37,29 @@ func (s *UpdateParkingSpaceStatus) Execute(ctx context.Context, id uuid.UUID, st
 		return entities.ParkingSpace{}, err
 	}
 
-	parkSpace, err := s.repo.GetSingle(ctx, id)
+	parkSpace, err := s.spaceRepo.GetSingle(ctx, id)
 	if err != nil {
 		return entities.ParkingSpace{}, err
+	}
+
+	// If we are blocking/reserving parking spaces, we must check if they have been assigned to a parking request.
+	if domainStatus == entities.ParkingSpaceStatusBlocked || domainStatus == entities.ParkingSpaceStatusReserved {
+		// De-assign from this parking space.
+		if parkSpace.ParkingRequests != nil {
+			for _, req := range parkSpace.ParkingRequests {
+				req.OnSpaceDeassign()
+				s.requestRepo.Save(ctx, &req)
+			}
+
+			// Remove reference to parking requests.
+			parkSpace.ParkingRequests = nil
+		}
 	}
 
 	// Update status.
 	parkSpace.Status = domainStatus
 
-	err = s.repo.Save(ctx, &parkSpace)
+	err = s.spaceRepo.Save(ctx, &parkSpace)
 	if err != nil {
 		return entities.ParkingSpace{}, err
 	}
