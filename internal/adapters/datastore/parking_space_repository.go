@@ -79,7 +79,11 @@ func (s *ParkingSpacePostgresRepository) FindAvailableSpaces(
 	endTime time.Time,
 ) ([]entities.ParkingSpace, error) {
 	var spaces []entities.ParkingSpace
-
+	s.Logger.WithFields(logrus.Fields{
+		"lotID":      lotID,
+		"start time": startTime,
+		"end time":   endTime,
+	}).Debug("parameters")
 	// Find all spaces and their parking requests that are available in the specified parking lot.
 	result := s.DB.WithContext(ctx).
 		Where("parking_lot_id = ? AND status = ?", lotID, entities.ParkingSpaceStatusAvailable).
@@ -90,7 +94,7 @@ func (s *ParkingSpacePostgresRepository) FindAvailableSpaces(
 		s.Logger.WithError(result.Error()).Error("failed to query for parking spaces")
 		return nil, repositories.NewInternalError("failed to query for parking spaces")
 	}
-
+	s.Logger.WithField("spaces", spaces).Debug("got all available parking spaces in the desired parking lot")
 	// Filter out spaces with overlapping parking requests.
 	// TODO: can it be converted to a DB query?
 	var availableSpaces []entities.ParkingSpace
@@ -99,6 +103,7 @@ func (s *ParkingSpacePostgresRepository) FindAvailableSpaces(
 			availableSpaces = append(availableSpaces, space)
 		}
 	}
+	s.Logger.WithField("spaces", spaces).Debug("filtered parking spaces t")
 
 	spaces = availableSpaces
 	return spaces, nil
