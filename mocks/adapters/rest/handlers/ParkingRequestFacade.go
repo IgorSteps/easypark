@@ -191,6 +191,53 @@ func (_c *ParkingRequestFacade_CreateParkingRequest_Call) RunAndReturn(run func(
 	return _c
 }
 
+// DeassignParkingSpace provides a mock function with given fields: ctx, requestID
+func (_m *ParkingRequestFacade) DeassignParkingSpace(ctx context.Context, requestID uuid.UUID) error {
+	ret := _m.Called(ctx, requestID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeassignParkingSpace")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) error); ok {
+		r0 = rf(ctx, requestID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ParkingRequestFacade_DeassignParkingSpace_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeassignParkingSpace'
+type ParkingRequestFacade_DeassignParkingSpace_Call struct {
+	*mock.Call
+}
+
+// DeassignParkingSpace is a helper method to define mock.On call
+//   - ctx context.Context
+//   - requestID uuid.UUID
+func (_e *ParkingRequestFacade_Expecter) DeassignParkingSpace(ctx interface{}, requestID interface{}) *ParkingRequestFacade_DeassignParkingSpace_Call {
+	return &ParkingRequestFacade_DeassignParkingSpace_Call{Call: _e.mock.On("DeassignParkingSpace", ctx, requestID)}
+}
+
+func (_c *ParkingRequestFacade_DeassignParkingSpace_Call) Run(run func(ctx context.Context, requestID uuid.UUID)) *ParkingRequestFacade_DeassignParkingSpace_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uuid.UUID))
+	})
+	return _c
+}
+
+func (_c *ParkingRequestFacade_DeassignParkingSpace_Call) Return(_a0 error) *ParkingRequestFacade_DeassignParkingSpace_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *ParkingRequestFacade_DeassignParkingSpace_Call) RunAndReturn(run func(context.Context, uuid.UUID) error) *ParkingRequestFacade_DeassignParkingSpace_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetAllParkingRequests provides a mock function with given fields: ctx
 func (_m *ParkingRequestFacade) GetAllParkingRequests(ctx context.Context) ([]entities.ParkingRequest, error) {
 	ret := _m.Called(ctx)
