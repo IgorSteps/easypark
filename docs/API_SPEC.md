@@ -392,7 +392,7 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
   { "error": "meaningful error message" }
   ```
 
-### 5. Automatically Assign Parking Request a Space API Endpoint
+### 6. Automatically Assign Parking Request a Space API Endpoint
 
 **Endpoint**: `PATCH /parking-requests/{id}/automatic/space`
 
@@ -421,6 +421,43 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/automatic/space \
     "Status":"blocked",
     "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
   },
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+### 7. De-assign Parking Request a Space API Endpoint
+
+**Endpoint**: `PATCH /parking-requests/{id}/space`
+
+**Description**: De-assign the parking space from a parking request.
+
+**Request Body**:
+
+```bash
+curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "parkingSpaceID": null
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+  {"message": "successfully deassigned the space from a parking request"}
   ```
 
 - **400 BAD REQUEST**
