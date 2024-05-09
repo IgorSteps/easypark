@@ -20,7 +20,8 @@ func TestUpdateParkingSpaceStatus_Execute_HappyPath(t *testing.T) {
 	// --------
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingSpaceRepository{}
-	usecase := usecases.NewUpdateParkingSpaceStatus(testLogger, mockRepo)
+	mockReq := &mocks.ParkingRequestRepository{}
+	usecase := usecases.NewUpdateParkingSpaceStatus(testLogger, mockRepo, mockReq)
 
 	testCtx := context.Background()
 	testID := uuid.New()
@@ -56,8 +57,8 @@ func TestUpdateParkingSpaceStatus_Execute_UnhappyPath_FailedStatusParsing(t *tes
 	// --------
 	testLogger, hook := test.NewNullLogger()
 	mockRepo := &mocks.ParkingSpaceRepository{}
-	usecase := usecases.NewUpdateParkingSpaceStatus(testLogger, mockRepo)
-
+	mockReq := &mocks.ParkingRequestRepository{}
+	usecase := usecases.NewUpdateParkingSpaceStatus(testLogger, mockRepo, mockReq)
 	testCtx := context.Background()
 	testID := uuid.New()
 	testStatus := "invalid"
@@ -87,8 +88,8 @@ func TestUpdateParkingSpaceStatus_Execute_UnhappyPath_GetParkingSpaceError(t *te
 	// --------
 	testLogger, _ := test.NewNullLogger()
 	mockRepo := &mocks.ParkingSpaceRepository{}
-	usecase := usecases.NewUpdateParkingSpaceStatus(testLogger, mockRepo)
-
+	mockReq := &mocks.ParkingRequestRepository{}
+	usecase := usecases.NewUpdateParkingSpaceStatus(testLogger, mockRepo, mockReq)
 	testCtx := context.Background()
 	testID := uuid.New()
 	testStatus := "available"
