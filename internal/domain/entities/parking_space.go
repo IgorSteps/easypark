@@ -23,6 +23,9 @@ type ParkingSpace struct {
 	Name            string
 	Status          ParkingSpaceStatus
 	ParkingRequests []ParkingRequest `gorm:"constraint:OnDelete:CASCADE;"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // OnCreate sets parking space fields on creation.
@@ -31,16 +34,20 @@ func (s *ParkingSpace) OnCreate(name string, parkingLotID uuid.UUID) {
 	s.ParkingLotID = parkingLotID
 	s.Status = ParkingSpaceStatusAvailable
 	s.Name = name
+	s.CreatedAt = time.Now()
+	s.UpdatedAt = time.Now()
 }
 
 // OnArrival changes the status of parking space to 'occupied'.
 func (s *ParkingSpace) OnArrival() {
 	s.Status = ParkingSpaceStatusOccupied
+	s.UpdatedAt = time.Now()
 }
 
 // OnDeparture changes the status of parking space to 'available'.
 func (s *ParkingSpace) OnDeparture() {
 	s.Status = ParkingSpaceStatusAvailable
+	s.UpdatedAt = time.Now()
 }
 
 // CheckForOverlap checks that the new request's time slot doesn't overlap with existing parking requests' time slots.

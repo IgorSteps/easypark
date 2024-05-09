@@ -2,6 +2,7 @@ package entities
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -18,6 +19,9 @@ type ParkingLot struct {
 	Occupied  int `gorm:"-"`
 	Reserved  int `gorm:"-"`
 	Blocked   int `gorm:"-"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // OnCreate sets internally managed fields, name and capacity and creates parking spaces and sets initial statistics.
@@ -25,6 +29,8 @@ func (s *ParkingLot) OnCreate(name string, capacity int) {
 	s.ID = uuid.New()
 	s.Name = name
 	s.Capacity = capacity
+	s.CreatedAt = time.Now()
+	s.UpdatedAt = time.Now()
 
 	s.ParkingSpaces = make([]ParkingSpace, 0, capacity)
 	for i := 0; i < capacity; i++ {

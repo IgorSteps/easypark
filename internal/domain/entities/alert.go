@@ -1,6 +1,10 @@
 package entities
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 // AlertType is an enum for the types of alerts that can be created.
 type AlertType int
@@ -22,6 +26,9 @@ type Alert struct {
 	Message        string
 	UserID         uuid.UUID
 	ParkingSpaceID uuid.UUID
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (s *Alert) CreateLocationMismatchAlert(msg string, driverID, spaceID uuid.UUID) {
@@ -30,6 +37,8 @@ func (s *Alert) CreateLocationMismatchAlert(msg string, driverID, spaceID uuid.U
 	s.Message = msg
 	s.UserID = driverID
 	s.ParkingSpaceID = spaceID
+	s.CreatedAt = time.Now()
+	s.UpdatedAt = time.Now()
 }
 
 func (s *Alert) CreateLateArrivalAlert(msg string, driverID, spaceID uuid.UUID) {
@@ -38,4 +47,6 @@ func (s *Alert) CreateLateArrivalAlert(msg string, driverID, spaceID uuid.UUID) 
 	s.Message = msg
 	s.UserID = driverID
 	s.ParkingSpaceID = spaceID
+	s.CreatedAt = time.Now()
+	s.UpdatedAt = time.Now()
 }

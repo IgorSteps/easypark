@@ -68,14 +68,16 @@ func (s *ParkingRequestCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.R
 
 	w.WriteHeader(http.StatusCreated)
 	response := models.CreateParkingRequestResponse{
-		ID:          createdParkingRequest.ID,
-		UserID:      createdParkingRequest.UserID,
+		ID:                 createdParkingRequest.ID,
+		UserID:             createdParkingRequest.UserID,
 		DestinationLotID:   createdParkingRequest.DestinationParkingLotID,
 		DestinationLotName: createdParkingRequest.DestinationParkingLotName,
-		StartTime:   createdParkingRequest.StartTime,
-		EndTime:     createdParkingRequest.EndTime,
-		Status:      createdParkingRequest.Status,
-		Cost:        createdParkingRequest.Cost,
+		StartTime:          createdParkingRequest.StartTime,
+		EndTime:            createdParkingRequest.EndTime,
+		Status:             createdParkingRequest.Status,
+		Cost:               createdParkingRequest.Cost,
+		CreatedAt:          createdParkingRequest.CreatedAt,
+		UpdatedAt:          createdParkingRequest.UpdatedAt,
 	}
 	json.NewEncoder(w).Encode(response)
 }

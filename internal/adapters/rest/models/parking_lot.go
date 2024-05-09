@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/IgorSteps/easypark/internal/domain/entities"
 	"github.com/google/uuid"
 )
@@ -17,4 +19,6 @@ type CreateParkingLotResponse struct {
 	Name          string                  `json:"name"`
 	Capacity      int                     `json:"capacity"`
 	PakringSpaces []entities.ParkingSpace `json:"parkingSpaces"`
+	CreatedAt     time.Time               `json:"createdAt"`
+	UpdatedAt     time.Time               `json:"updatedAt"`
 }

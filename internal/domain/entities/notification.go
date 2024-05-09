@@ -21,7 +21,9 @@ type Notification struct {
 	DriverID       uuid.UUID
 	ParkingSpaceID uuid.UUID
 	Location       string
-	Timestamp      time.Time
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (s *Notification) OnCreate(driverID, spaceID uuid.UUID, location string, notificationType NotificationType) {
@@ -30,5 +32,6 @@ func (s *Notification) OnCreate(driverID, spaceID uuid.UUID, location string, no
 	s.DriverID = driverID
 	s.ParkingSpaceID = spaceID
 	s.Location = location
-	s.Timestamp = time.Now()
+	s.CreatedAt = time.Now()
+	s.UpdatedAt = time.Now()
 }
