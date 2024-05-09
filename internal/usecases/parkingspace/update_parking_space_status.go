@@ -46,21 +46,7 @@ func (s *UpdateParkingSpaceStatus) Execute(ctx context.Context, id uuid.UUID, st
 	if domainStatus == entities.ParkingSpaceStatusBlocked || domainStatus == entities.ParkingSpaceStatusReserved {
 		// De-assign from this parking space.
 		if parkSpace.ParkingRequests != nil {
-			var ids []uuid.UUID
 			for _, req := range parkSpace.ParkingRequests {
-				ids = append(ids, req.ID)
-			}
-
-			// Create the query map with ids
-			query := map[string]interface{}{
-				"id": ids,
-			}
-			parkingRequests, err := s.requestRepo.GetMany(ctx, query)
-			if err != nil {
-				return entities.ParkingSpace{}, err
-			}
-
-			for _, req := range parkingRequests {
 				req.OnSpaceDeassign()
 				s.requestRepo.Save(ctx, &req)
 			}
