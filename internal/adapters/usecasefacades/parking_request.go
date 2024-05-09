@@ -105,5 +105,5 @@ func (s *ParkingRequestFacade) AutomaticallyAssignParkingSpace(ctx context.Conte
 
 // DeassignParkingSpace wraps the DeassignParlingSpace usecase.
 func (s *ParkingRequestFacade) DeassignParkingSpace(ctx context.Context, parkingRequestID uuid.UUID) error {
-	return s.DeassignParkingSpace(ctx, parkingRequestID)
+	return s.parkingSpaceDeassigner.Execute(ctx, parkingRequestID)
 }

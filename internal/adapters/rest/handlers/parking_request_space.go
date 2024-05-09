@@ -32,13 +32,14 @@ func (s *ParkingRequestSpaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 	var updateParkingRequest models.ParkingRequestSpaceUpdateRequest
 
 	parkingRequestID := chi.URLParam(r, "id")
-
+	s.logger.WithField("raw msg", r.Body).Debug("got request to update park req space")
 	err := json.NewDecoder(r.Body).Decode(&updateParkingRequest)
 	if err != nil {
 		s.logger.WithError(err).Error("failed to decode request")
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
+	s.logger.WithField("model msg", updateParkingRequest).Debug("got request to update park req space")
 
 	parsedID, err := uuid.Parse(parkingRequestID)
 	if err != nil {
@@ -76,6 +77,8 @@ func (s *ParkingRequestSpaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 		}
 		json.NewEncoder(w).Encode(response)
 	} else if updateParkingRequest.ParkingSpaceID == uuid.Nil {
+		s.logger.Debug("called")
+
 		err := s.facade.DeassignParkingSpace(r.Context(), parsedID)
 		if err != nil {
 			s.logger.WithError(err).Error("failed to deassign parking request from a space")
@@ -96,9 +99,14 @@ func (s *ParkingRequestSpaceHandler) ServeHTTP(w http.ResponseWriter, r *http.Re
 				return
 			}
 		}
+
+		w.WriteHeader(http.StatusOK)
+		response := models.ParkingRequestSpaceUpdateResponse{
+			Message: "successfully deassigned the space from a parking request",
+		}
+		json.NewEncoder(w).Encode(response)
 	} else {
 		s.logger.WithField("space id", updateParkingRequest.ParkingSpaceID).Warn("unknown parking space ID state")
 		w.WriteHeader(http.StatusOK)
-		return
 	}
 }
