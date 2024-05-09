@@ -30,7 +30,7 @@ func TestGetAllNotifications_Execute(t *testing.T) {
 			DriverID:       uuid.New(),
 			ParkingSpaceID: uuid.New(),
 			Location:       "bom",
-			Timestamp:      time.Now(),
+			CreatedAt:      time.Now(),
 		},
 		{
 			ID:             uuid.New(),
@@ -38,7 +38,7 @@ func TestGetAllNotifications_Execute(t *testing.T) {
 			DriverID:       uuid.New(),
 			ParkingSpaceID: uuid.New(),
 			Location:       "bom",
-			Timestamp:      time.Now(),
+			CreatedAt:      time.Now(),
 		},
 		{
 			ID:             uuid.New(),
@@ -46,7 +46,7 @@ func TestGetAllNotifications_Execute(t *testing.T) {
 			DriverID:       uuid.New(),
 			ParkingSpaceID: uuid.New(),
 			Location:       "bom",
-			Timestamp:      time.Now(),
+			CreatedAt:      time.Now(),
 		},
 	}
 	mockRepo.EXPECT().GetAll(testCtx).Return(testNotifications, nil).Once()

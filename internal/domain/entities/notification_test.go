@@ -31,5 +31,5 @@ func TestNotifiation_OnCreate(t *testing.T) {
 	assert.Equal(t, testParkSpaceID, notification.ParkingSpaceID)
 	assert.Equal(t, testLocation, notification.Location)
 	assert.Equal(t, testType, notification.Type)
-	assert.NotNil(t, notification.Timestamp)
+	assert.NotNil(t, notification.CreatedAt)
 }

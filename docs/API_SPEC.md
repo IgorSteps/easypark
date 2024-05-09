@@ -91,7 +91,9 @@ curl -X POST http://localhost:8080/register \
       "FirstName":"John",
       "LastName":"Doe",
       "Status":"active",
-      "Role":"driver"
+      "Role":"driver",
+      "CreateAt": "2024-05-01T17:00:00Z",
+      "UpdatedAt": "2024-05-01T17:00:00Z"
     }
     ```
 
@@ -138,6 +140,8 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN> http://localhost:8080/drivers
         "LastName":"user1",
         "Role":"driver",
         "Status":"active",
+        "CreateAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       },
       {"other users..."}
     ]
@@ -212,7 +216,9 @@ curl -X POST http://localhost:8080/drivers/{id}/parking-requests \
     "destinationLotName": "the name",
     "startTime": "2024-05-01T09:00:00Z",
     "endTime": "2024-05-01T17:00:00Z",
-    "status": "pending"
+    "status": "pending",
+    "createAt": "2024-05-01T17:00:00Z",
+    "updatedAt": "2024-05-01T17:00:00Z"
   }
   ```
 
@@ -253,7 +259,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
     "DestinationParkingLotID":"714a2875-d358-423b-83b2-72a701a82492",
     "StartTime":"2024-04-06T16:59:09.441792+01:00",
     "EndTime":"2024-04-06T16:59:09.441792+01:00",
-    "Status":"pending"
+    "Status":"pending",
+    "CreateAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   },
   {
     "ID":"e071153e-9f5b-409e-8451-457e64dba8a2",
@@ -262,7 +270,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/parking-req
     "DestinationParkingLotID":"2fa0a013-9d29-451c-9b04-0e65c5c82990",
     "StartTime":"2024-04-06T16:59:09.443992",
     "EndTime":"2024-04-06T16:59:09.441792+01:00",
-    "Status":"pending"
+    "Status":"pending",
+    "CreateAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   },
   {"others requests..."}
 ]
@@ -299,7 +309,9 @@ curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/drivers/{i
         "DestinationParkingLotID":"714a2875-d358-423b-83b2-72a701a82492",
         "StartTime":"2024-04-06T16:59:09.441792+01:00",
         "EndTime":"2024-04-06T16:59:09.441792+01:00",
-        "Status":"pending"
+        "Status":"pending",
+        "CreateAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       },
       {
         "ID":"e071153e-9f5b-409e-8451-457e64dba8a2",
@@ -308,7 +320,9 @@ curl -H "Authorization: Bearer <DRIVER_TOKEN>"  http://localhost:8080/drivers/{i
         "DestinationParkingLotID":"2fa0a013-9d29-451c-9b04-0e65c5c82990",
         "StartTime":"2024-04-06T16:59:09.443992",
         "EndTime":"2024-04-06T16:59:09.441792+01:00",
-        "Status":"pending"
+        "Status":"pending",
+        "CreateAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       },
       {"their others requests..."}
     ]
@@ -419,7 +433,9 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/automatic/space \
     "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
     "Name":"cmp-1",
     "Status":"blocked",
-    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}],
+    "CreateAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   },
   ```
 
@@ -503,15 +519,17 @@ curl -X POST http://localhost:8080/parking-lots \
     "name":"cmp",
     "capacity":10,
     "parkingSpaces":[
-        {
-          "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-          "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
-          "Name":"cmp-1",
-          "Status":"blocked",
-          "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
-        },
-        {"other spaces..."}
-      ]
+      {
+        "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
+        "Name":"cmp-1",
+        "Status":"blocked",
+        "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+      },
+      {"other spaces..."}
+    ],
+    "CreatedAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   }
 ```
 
@@ -562,7 +580,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
         "Available":0,
         "Occupied":0,
         "Reserved":0,
-        "Blocked":0
+        "Blocked":0,
+        "CreatedAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       },
       {"other parking lots..."}
     ]
@@ -641,7 +661,9 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
         "Available":0,
         "Occupied":0,
         "Reserved":0,
-        "Blocked":0
+        "Blocked":0,
+        "CreatedAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       }
   ```
 
@@ -681,7 +703,9 @@ curl -H "Authorization: Bearer <USER_TOKEN>"  http://localhost:8080/parking-spac
     "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
     "Name":"cmp-1",
     "Status":"blocked",
-    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}],
+    "CreatedAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   }
   ```
 
@@ -719,7 +743,9 @@ curl -H "Authorization: Bearer <_TOKEN>"  http://localhost:8080/parking-spaces/{
     "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
     "Name":"cmp-1",
     "Status":"blocked",
-    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}],
+    "CreatedAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   }
   ```
 
@@ -764,7 +790,9 @@ curl -X PATCH http://localhost:8080/parking-spaces/{id}/status \
     "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
     "Name":"cmp-1",
     "Status":"blocked",
-    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}],
+    "CreatedAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   }
   ```
 
@@ -813,7 +841,8 @@ curl -X POST http://localhost:8080/drivers/{id}/notifications \
     "DriverID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
     "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
     "Location":"cmp-1",
-    "Timestamp":"0000-12-31T23:58:45-00:01",
+    "CreatedAt": "2024-05-01T17:00:00Z",
+    "UpdatedAt": "2024-05-01T17:00:00Z"
   }
   ```
 
@@ -854,6 +883,8 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>"  http://localhost:8080/notificatio
       "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
       "Location":"cmp-1",
       "Timestamp":"0000-12-31T23:58:45-00:01",
+      "CreatedAt": "2024-05-01T17:00:00Z",
+      "UpdatedAt": "2024-05-01T17:00:00Z"
     },
     {"other notifications"}
   ]
@@ -891,7 +922,9 @@ Returns an error of one of these types: `0 - Location mismatch alert`.
       "Type": 0,
       "Message": "some message",
       "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+      "CreatedAt": "2024-05-01T17:00:00Z",
+      "UpdatedAt": "2024-05-01T17:00:00Z"
   },
   ```
 
@@ -931,15 +964,18 @@ curl -X POST http://localhost:8080/alerts/late-arrivals \
   ```json
     [
       {
-      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "Type": 0,
-      "Message": "some message",
-      "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+        "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "Type": 0,
+        "Message": "some message",
+        "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "CreatedAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       },
       {"other alerts..."}
     ]
   ```
+
 - **400 BAD REQUEST**
 
   ```json
@@ -973,11 +1009,13 @@ Returns an alert of one of these types: `Late arrival alert or Location mismatch
     ```json
     [
       {
-      "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "Type": 0,
-      "Message": "some message",
-      "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
-      "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b"
+        "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "Type": 0,
+        "Message": "some message",
+        "UserID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "ParkingSpaceID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+        "CreatedAt": "2024-05-01T17:00:00Z",
+        "UpdatedAt": "2024-05-01T17:00:00Z"
       },
       {"other alerts..."}
     ]
@@ -1004,11 +1042,11 @@ curl -X POST http://localhost:8080/drivers/{id}/payments \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <DRIVER_TOKEN>" \
 -d '{
-    "Name": "John Doe",
-		"BillingAddress": "123 Street Name, City, Postcode",
-		"CardNumber": "1111222233334444",
-		"ExpiryDate": "2025-01-01T00:00:00Z",
-		"CVC": "123"
+  "Name": "John Doe",
+  "BillingAddress": "123 Street Name, City, Postcode",
+  "CardNumber": "1111222233334444",
+  "ExpiryDate": "2025-01-01T00:00:00Z",
+  "CVC": "123"
 }'
 ```
 

@@ -56,6 +56,8 @@ func (s *ParkingLotCreateHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 		Name:          lot.Name,
 		Capacity:      lot.Capacity,
 		PakringSpaces: lot.ParkingSpaces,
+		CreatedAt:     lot.CreatedAt,
+		UpdatedAt:     lot.UpdatedAt,
 	}
 	json.NewEncoder(w).Encode(resp)
 }
