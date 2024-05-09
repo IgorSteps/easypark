@@ -52,3 +52,9 @@ func (s *ParkingRequest) OnSpaceAssign(spaceID uuid.UUID) {
 	s.ParkingSpaceID = &spaceID
 	s.Status = RequestStatusApproved
 }
+
+// OnSpaceDeassign deassociates this parking request with the parking space and changes status to pending.
+func (s *ParkingRequest) OnSpaceDeassign() {
+	s.ParkingSpaceID = nil
+	s.Status = RequestStatusPending
+}
