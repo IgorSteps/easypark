@@ -18,6 +18,7 @@ type ParkingRequestFacadeTestSuite struct {
 	statusUpdate           *mocks.ParkingRequestStatusUpdater
 	spaceAssigner          *mocks.ParkingRequestSpaceAssigner
 	automaticSpaceAssigner *mocks.ParkingRequestAutomaticSpaceAssigner
+	deassigner             *mocks.ParkingRequestSpaceDeassigner
 }
 
 func newParkingRequestFacadeTestSuite() *ParkingRequestFacadeTestSuite {
@@ -28,6 +29,7 @@ func newParkingRequestFacadeTestSuite() *ParkingRequestFacadeTestSuite {
 		statusUpdate:           &mocks.ParkingRequestStatusUpdater{},
 		spaceAssigner:          &mocks.ParkingRequestSpaceAssigner{},
 		automaticSpaceAssigner: &mocks.ParkingRequestAutomaticSpaceAssigner{},
+		deassigner:             &mocks.ParkingRequestSpaceDeassigner{},
 	}
 }
 
@@ -43,6 +45,7 @@ func TestParkingRequestFacade_Create(t *testing.T) {
 		s.allGetter,
 		s.driversGetter,
 		s.automaticSpaceAssigner,
+		s.deassigner,
 	)
 
 	parkreq := &entities.ParkingRequest{
@@ -75,6 +78,7 @@ func TestParkingRequestFacade_UpdateStatus(t *testing.T) {
 		s.allGetter,
 		s.driversGetter,
 		s.automaticSpaceAssigner,
+		s.deassigner,
 	)
 
 	id := uuid.New()
@@ -105,6 +109,7 @@ func TestParkingRequestFacade_AssignSpace(t *testing.T) {
 		s.allGetter,
 		s.driversGetter,
 		s.automaticSpaceAssigner,
+		s.deassigner,
 	)
 
 	id := uuid.New()
@@ -135,6 +140,7 @@ func TestParkingRequestFacade_GetAll(t *testing.T) {
 		s.allGetter,
 		s.driversGetter,
 		s.automaticSpaceAssigner,
+		s.deassigner,
 	)
 	reqs := []entities.ParkingRequest{
 		{ID: uuid.New()},
@@ -166,6 +172,7 @@ func TestParkingRequestFacade_GetDrivers(t *testing.T) {
 		s.allGetter,
 		s.driversGetter,
 		s.automaticSpaceAssigner,
+		s.deassigner,
 	)
 	reqs := []entities.ParkingRequest{
 		{ID: uuid.New()},

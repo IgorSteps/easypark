@@ -66,6 +66,9 @@ type ParkingRequestFacade interface {
 
 	// AutomaticallyAssignParkingSpace is implemented by usecasefacades.ParkingRequestFacade that wraps automatically assigning parking space.
 	AutomaticallyAssignParkingSpace(ctx context.Context, parkingRequestID uuid.UUID) (*entities.ParkingSpace, error)
+
+	// DeassignParkingSpace is implemented by usecasefacades.ParkingRequestFacade that wraps deassigning a parking space.
+	DeassignParkingSpace(ctx context.Context, requestID uuid.UUID) error
 }
 
 // NotificationFacade provides an interface implemented by usecasefacades.NotificationFacade.
