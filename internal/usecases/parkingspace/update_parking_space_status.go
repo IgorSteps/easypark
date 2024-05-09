@@ -61,10 +61,12 @@ func (s *UpdateParkingSpaceStatus) Execute(ctx context.Context, id uuid.UUID, st
 			}
 
 			for _, req := range parkingRequests {
-				req.ParkingSpaceID = nil // De-assign this space.
+				req.OnSpaceDeassign()
 				s.requestRepo.Save(ctx, &req)
 			}
-			s.logger.WithField("park reqs", parkingRequests).Debug("de-assigned parking space")
+
+			// Remove reference to parking requests.
+			parkSpace.ParkingRequests = nil
 		}
 	}
 
