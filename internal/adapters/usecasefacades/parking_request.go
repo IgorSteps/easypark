@@ -37,6 +37,11 @@ type ParkingRequestAutomaticSpaceAssigner interface {
 	Execute(ctx context.Context, requestID uuid.UUID) (*entities.ParkingSpace, error)
 }
 
+// ParkingRequestSpaceDeassigner provides an interface implemented by the DeassignParkingSpace usecase.
+type ParkingRequestSpaceDeassigner interface {
+	Execute(ctx context.Context, requestID uuid.UUID) error
+}
+
 // ParkingRequestFacade uses facade pattern to wrap parking request' usecases to allow for managing other things such as DB transactions if needed.
 type ParkingRequestFacade struct {
 	parkingRequestCreator         ParkingRequestCreator
@@ -45,6 +50,7 @@ type ParkingRequestFacade struct {
 	parkingRequestAllGetter       ParkingRequestsAllGetter
 	parkingRequestDriversGetter   ParkingRequestDriversGetter
 	parkingAutomaticSpaceAssigner ParkingRequestAutomaticSpaceAssigner
+	parkingSpaceDeassigner        ParkingRequestSpaceDeassigner
 }
 
 // NewParkingRequestFacade creates a new instance of ParkingRequestFacade.
@@ -55,6 +61,7 @@ func NewParkingRequestFacade(
 	allGetter ParkingRequestsAllGetter,
 	specificGetter ParkingRequestDriversGetter,
 	automaticAssigner ParkingRequestAutomaticSpaceAssigner,
+	deassigner ParkingRequestSpaceDeassigner,
 ) *ParkingRequestFacade {
 	return &ParkingRequestFacade{
 		parkingRequestCreator:         creator,
@@ -63,6 +70,7 @@ func NewParkingRequestFacade(
 		parkingRequestAllGetter:       allGetter,
 		parkingRequestDriversGetter:   specificGetter,
 		parkingAutomaticSpaceAssigner: automaticAssigner,
+		parkingSpaceDeassigner:        deassigner,
 	}
 }
 
@@ -93,4 +101,9 @@ func (s *ParkingRequestFacade) GetDriversParkingRequests(ctx context.Context, id
 
 func (s *ParkingRequestFacade) AutomaticallyAssignParkingSpace(ctx context.Context, parkingRequestID uuid.UUID) (*entities.ParkingSpace, error) {
 	return s.parkingAutomaticSpaceAssigner.Execute(ctx, parkingRequestID)
+}
+
+// DeassignParkingSpace wraps the DeassignParlingSpace usecase.
+func (s *ParkingRequestFacade) DeassignParkingSpace(ctx context.Context, parkingRequestID uuid.UUID) error {
+	return s.DeassignParkingSpace(ctx, parkingRequestID)
 }
