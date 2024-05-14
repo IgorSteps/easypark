@@ -63,3 +63,4 @@ jobs:
           make functional
           kill $APP_PID
           kill $WS_PID
+

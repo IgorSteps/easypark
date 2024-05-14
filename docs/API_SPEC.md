@@ -472,6 +472,87 @@ curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
   { "error": "meaningful error message" }
   ```
 
+### 6. Automatically Assign Parking Request a Space API Endpoint
+
+**Endpoint**: `PATCH /parking-requests/{id}/automatic/space`
+
+**Description**: Update a parking request with a parking space automatically. Returns a parking space.
+
+**Request Body**:
+
+```bash
+curl -X PATCH http://localhost:8080/parking-requests/{id}/automatic/space \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "parkingRequestID": "parking request id"
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+   {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingLotID":"83601bb8-9ad1-45a8-a3f4-21dd219fd054",
+    "Name":"cmp-1",
+    "Status":"blocked",
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+  },
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+### 7. De-assign Parking Request a Space API Endpoint
+
+**Endpoint**: `PATCH /parking-requests/{id}/space`
+
+**Description**: De-assign the parking space from a parking request.
+
+**Request Body**:
+
+```bash
+curl -X PATCH http://localhost:8080/parking-requests/{id}/space \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <ADMIN_TOKEN>" \
+-d '{
+    "parkingSpaceID": null
+}'
+```
+
+**Responses**:
+
+- **200 OK**
+
+  ```json
+  {"message": "successfully deassigned the space from a parking request"}
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+
 ## Parking Lot
 
 ### 1. Create Parking Lot API Endpoint
@@ -656,6 +737,56 @@ curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots
   { "error": "meaningful error message" }
   ```
 
+### 4. Get Single Parking Lot API Endpoint
+
+**Endpoint**: `GET /parking-lots/{id}`
+
+**Description**: Gets single parking lot and its statistics(total, occupied, available, blocked and reserved spaces).
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <ADMIN_TOKEN>" http://localhost:8080/parking-lots/{id}
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+      {
+        "ID":"bb8625ea-8c80-484c-8a75-3386649eef25",
+        "Name":"cmp",
+        "Capacity":10,
+        "ParkingSpaces":[
+          {
+            "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+            "ParkingLotID":"bb8625ea-8c80-484c-8a75-3386649eef25",
+            "Name":"cmp-1",
+            "Status":"blocked",
+            "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+          },
+          {"other parking spaces..."}
+        ],
+        "Available":0,
+        "Occupied":0,
+        "Reserved":0,
+        "Blocked":0
+      }
+  ```
+
+- **400 BAD REQUEST**
+  
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+  
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
 ## Parking Space
 
 ### 1. Admin Get Single Parking Space API Endpoint
@@ -734,6 +865,44 @@ curl -H "Authorization: Bearer <_TOKEN>"  http://localhost:8080/parking-spaces/{
   { "error": "meaningful error message" }
   ```
 
+### 2. Driver Get Single Parking Space API Endpoint
+
+**Endpoint**: `GET /parking-spaces/{id}`
+
+**Description**: Gets a parking space status with the given ID.
+
+**Request Body**:
+
+```bash
+curl -H "Authorization: Bearer <_TOKEN>"  http://localhost:8080/parking-spaces/{id}
+```
+
+**Response**:
+
+- **200 OK**
+
+  ```json
+  {
+    "ID":"a678f5a6-9731-4741-ad0b-de5efbbffc9b",
+    "ParkingLotID":"6404407e-6729-4a7b-9f5e-22059233a030",
+    "Name":"cmp-1",
+    "Status":"blocked",
+    "ParkingRequests":[{"approved parking requests assigned to this parking space"}]
+  }
+  ```
+
+  - **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+  
 ### 3. Update Parking Space Status API Endpoint
 
 **Endpoint**: `PATCH /parking-spaces/{id}/status`
@@ -1077,7 +1246,50 @@ curl -X POST http://localhost:8080/drivers/{id}/payments \
   ```json
   { "error": "meaningful error message" }
   ```
+  
+## Payment
 
+### 1. Create Payment API Endpoint
+
+**Endpoint**: `POST /drivers/{id}/payments`
+
+**Description**: Creates a payment for the driver.
+
+**Request Body**:
+
+```bash
+curl -X POST http://localhost:8080/drivers/{id}/payments \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <DRIVER_TOKEN>" \
+-d '{
+    "Name": "John Doe",
+		"BillingAddress": "123 Street Name, City, Postcode",
+		"CardNumber": "1111222233334444",
+		"ExpiryDate": "2025-01-01T00:00:00Z",
+		"CVC": "123"
+}'
+```
+
+**Responses**:
+
+- **200 Ok**
+
+  ```json
+  {"message": "Payment sent successfully"}
+  ```
+
+- **400 BAD REQUEST**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+
+- **500 INTERNAL SERVER ERROR**
+
+  ```json
+  {"error": "meaningful error message"}
+  ```
+  
 # WebSocket API Specification
 
 ## Message
