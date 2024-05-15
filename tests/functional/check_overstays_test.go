@@ -41,8 +41,8 @@ func (s *CheckOverStaysTestSuite) TestCheckOverStays() {
 	// Create a parking request that will end in 3 seconds
 	createParkingRequest := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: parkingLot.ID,
-		StartTime:               time.Now(),
-		EndTime:                 time.Now().Add(3 * time.Second),
+		StartTime:               time.Now().Add(3 * time.Second),
+		EndTime:                 time.Now().Add(6 * time.Second),
 	}
 	parkingRequest := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, createParkingRequest, &s.RestClientSuite)
 	utils.AssignParkingSpace(ctx, parkingSpaceID, parkingRequest.ID, adminToken, &s.RestClientSuite)
@@ -50,7 +50,7 @@ func (s *CheckOverStaysTestSuite) TestCheckOverStays() {
 	// Create another parking request that will end in 2 hours
 	createParkingRequest2 := &models.CreateParkingRequestRequest{
 		DestinationParkingLotID: parkingLot.ID,
-		StartTime:               time.Now(),
+		StartTime:               time.Now().Add(1 * time.Hour),
 		EndTime:                 time.Now().Add(2 * time.Hour),
 	}
 	parkingRequest2 := utils.CreateParkingRequest(ctx, driverToken, driver.ID, parkingLot.ID, createParkingRequest2, &s.RestClientSuite)
