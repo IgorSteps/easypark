@@ -37,6 +37,7 @@ func (s *CheckOverStaysTestSuite) TestCheckOverStays() {
 	}
 	parkingLot := utils.CreateParkingLot(ctx, adminToken, createParkingLot, &s.RestClientSuite)
 	parkingSpaceID := parkingLot.ParkingSpaces[0].ID
+	parkingSpaceName := parkingLot.ParkingSpaces[0].Name
 
 	// Create a parking request that will end in 3 seconds
 	createParkingRequest := &models.CreateParkingRequestRequest{
@@ -60,7 +61,7 @@ func (s *CheckOverStaysTestSuite) TestCheckOverStays() {
 	testRequest := &models.CreateNotificationRequest{
 		ParkingRequestID: parkingRequest.ID,
 		ParkingSpaceID:   parkingSpaceID,
-		Location:         "parkingSpaceName",
+		Location:         parkingSpaceName,
 		NotificationType: 0, // arrival
 	}
 	s.CreateNotification(ctx, driverToken, driver.ID, testRequest)
