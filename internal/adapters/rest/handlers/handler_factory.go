@@ -116,6 +116,11 @@ func (s *HandlerFactory) CheckForLateArrivals() http.Handler {
 	return NewCheckLateArrivalHandler(s.logger, s.facade.alertFacade)
 }
 
+// CheckForOverStays returns a new REST handler to check for over staying users.
+func (s *HandlerFactory) CheckForOverStays() http.Handler {
+	return NewCheckOverStaysHandler(s.logger, s.facade.alertFacade)
+}
+
 // GetSingleParkingLot returns a new REST handler to get single parking lot.
 func (s *HandlerFactory) GetSingleParkingLot() http.Handler {
 	return NewParkingLotGetSingleHandler(s.facade.parkingLotFacade, s.logger)

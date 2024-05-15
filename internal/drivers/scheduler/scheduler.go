@@ -45,6 +45,13 @@ func (s *Scheduler) Start() {
 			return
 		}
 	})
+	s.cron.AddFunc(s.schedulerConfig.Interval, func() {
+		_, err := s.facade.CheckForOverStays(context.TODO(), s.alertConfig.OverStayThresholdMinutes)
+		if err != nil {
+			s.logger.WithError(err).Error("failed to check for overdue stays")
+			return
+		}
+	})
 	s.cron.Start()
 }
 

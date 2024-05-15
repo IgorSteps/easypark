@@ -19,8 +19,9 @@ func TestAlertFacade_GetSingle(t *testing.T) {
 	singleGetter := &mocks.AlertSingleGetter{}
 	allGetter := &mocks.AlertAllGetter{}
 	lateArrivalChecker := &mocks.AlertLateArrivalChecker{}
+	overStayChecker := &mocks.AlertOverStayChecker{}
 
-	facade := usecasefacades.NewAlertFacade(singleGetter, lateArrivalChecker, allGetter)
+	facade := usecasefacades.NewAlertFacade(singleGetter, lateArrivalChecker, overStayChecker, allGetter)
 
 	testID := uuid.New()
 	testCtx := context.Background()
@@ -48,8 +49,9 @@ func TestAlertFacade_GetAll(t *testing.T) {
 	singleGetter := &mocks.AlertSingleGetter{}
 	allGetter := &mocks.AlertAllGetter{}
 	lateArrivalChecker := &mocks.AlertLateArrivalChecker{}
+	overStayChecker := &mocks.AlertOverStayChecker{}
 
-	facade := usecasefacades.NewAlertFacade(singleGetter, lateArrivalChecker, allGetter)
+	facade := usecasefacades.NewAlertFacade(singleGetter, lateArrivalChecker, overStayChecker, allGetter)
 	testCtx := context.Background()
 	alerts := []entities.Alert{
 		{ID: uuid.New()},
@@ -75,8 +77,9 @@ func TestAlertFacade_LateArrivalCheck(t *testing.T) {
 	singleGetter := &mocks.AlertSingleGetter{}
 	allGetter := &mocks.AlertAllGetter{}
 	lateArrivalChecker := &mocks.AlertLateArrivalChecker{}
+	overStayChecker := &mocks.AlertOverStayChecker{}
 
-	facade := usecasefacades.NewAlertFacade(singleGetter, lateArrivalChecker, allGetter)
+	facade := usecasefacades.NewAlertFacade(singleGetter, lateArrivalChecker, overStayChecker, allGetter)
 	testCtx := context.Background()
 	alerts := []entities.Alert{
 		{ID: uuid.New()},

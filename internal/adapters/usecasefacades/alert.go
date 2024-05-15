@@ -23,18 +23,25 @@ type AlertLateArrivalChecker interface {
 	Execute(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
 }
 
+// AlertOverStayChecker provides an interface implemented by the CheckOverStay usecase.
+type AlertOverStayChecker interface {
+	Execute(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
+}
+
 // AlertFacade uses facade patter to wrap alert usecases to allow for managing other things such as DB transactions if needed.
 type AlertFacade struct {
 	singleGetter       AlertSingleGetter
 	lateArrivalChecker AlertLateArrivalChecker
+	overStayChecker    AlertOverStayChecker
 	allGetter          AlertAllGetter
 }
 
 // NewAlertFacade returns a new instance of AlertFacade.
-func NewAlertFacade(getter AlertSingleGetter, lateChecker AlertLateArrivalChecker, getAll AlertAllGetter) *AlertFacade {
+func NewAlertFacade(getter AlertSingleGetter, lateChecker AlertLateArrivalChecker, overStayCheck AlertOverStayChecker, getAll AlertAllGetter) *AlertFacade {
 	return &AlertFacade{
 		singleGetter:       getter,
 		lateArrivalChecker: lateChecker,
+		overStayChecker:    overStayCheck,
 		allGetter:          getAll,
 	}
 }
@@ -47,6 +54,11 @@ func (s *AlertFacade) GetAlert(ctx context.Context, id uuid.UUID) (entities.Aler
 // CheckForLateArrivals wraps the CheckLateArrival usecase.
 func (s *AlertFacade) CheckForLateArrivals(ctx context.Context, threshold time.Duration) ([]entities.Alert, error) {
 	return s.lateArrivalChecker.Execute(ctx, threshold)
+}
+
+// CheckForOverStay wraps the CheckOverStay usecase.
+func (s *AlertFacade) CheckForOverStays(ctx context.Context, threshold time.Duration) ([]entities.Alert, error) {
+	return s.overStayChecker.Execute(ctx, threshold)
 }
 
 // GetAlert wraps the GetAllAlerts usecase.

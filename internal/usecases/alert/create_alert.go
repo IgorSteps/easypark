@@ -30,6 +30,8 @@ func (s *CreateAlert) Execute(ctx context.Context, alertType entities.AlertType,
 		alert = createLocationMismatchAlert(msg, driverID, spaceID)
 	case entities.LateArrival:
 		alert = createLateArrivalAlert(msg, driverID, spaceID)
+	case entities.OverStay:
+		alert = createOverStayAlert(msg, driverID, spaceID)
 	default:
 		s.logger.Warn("unknown alert type")
 		return nil, repositories.NewInvalidInputError("unknown alert type")
@@ -50,6 +52,12 @@ func createLateArrivalAlert(msg string, driverID, spaceID uuid.UUID) *entities.A
 	return lateArrivalAlert
 }
 
+func createOverStayAlert(msg string, driverID, spaceID uuid.UUID) *entities.Alert {
+	overStayAlert := &entities.Alert{}
+	overStayAlert.CreateOverStayAlert(msg, driverID, spaceID)
+
+	return overStayAlert
+}
 func createLocationMismatchAlert(msg string, driverID, spaceID uuid.UUID) *entities.Alert {
 	locationMisMatchAlert := &entities.Alert{}
 	locationMisMatchAlert.CreateLocationMismatchAlert(msg, driverID, spaceID)

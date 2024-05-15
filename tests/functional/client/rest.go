@@ -136,6 +136,11 @@ func (s *RestClientSuite) GetAllAlerts(ctx context.Context, adminToken string) (
 	return s.sendRequestWithToken(ctx, http.MethodGet, "/alerts", nil, adminToken)
 }
 
+// CheckForOverStays interacts with the REST API to check for overdue stays.
+func (s *RestClientSuite) CheckForOverStays(ctx context.Context, adminToken string, body *models.CheckForOverStaysRequest) ([]byte, int, error) {
+	return s.sendRequestWithToken(ctx, http.MethodPost, "/alerts/overstays", body, adminToken)
+}
+
 // CreatePayment interacts with the REST API to create a payment for the given userID.
 func (s *RestClientSuite) CreatePayment(ctx context.Context, token, userID string, req *models.CreatePaymentRequest) ([]byte, int, error) {
 	return s.sendRequestWithToken(ctx, http.MethodPost, "/drivers/"+userID+"/payments", req, token)

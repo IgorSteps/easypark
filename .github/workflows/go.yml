@@ -5,12 +5,11 @@ name: Easypark CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     services:
@@ -30,37 +29,38 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.22.1'
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22.1"
 
-    - name: Cache Go modules
-      uses: actions/cache@v3
-      with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
-    - name: Build
-      run: make build
+      - name: Build
+        run: make build
 
-    - name: Unit Test
-      run: make unit
-    
-    - name: Wait for PostgreSQL
-      run: until pg_isready -h localhost -p 5432; do sleep 1; done
+      - name: Unit Test
+        run: make unit
 
-    - name: Functional Tests
-      run: |
-        make run &
-        APP_PID=$!
-        make run-ws &
-        WS_PID=$!
-        sleep 5
-        make functional
-        kill $APP_PID
-        kill $WS_PID
+      - name: Wait for PostgreSQL
+        run: until pg_isready -h localhost -p 5432; do sleep 1; done
+
+      - name: Functional Tests
+        run: |
+          make run &
+          APP_PID=$!
+          make run-ws &
+          WS_PID=$!
+          sleep 5
+          make functional
+          kill $APP_PID
+          kill $WS_PID
+

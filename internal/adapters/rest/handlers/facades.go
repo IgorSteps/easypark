@@ -90,6 +90,9 @@ type AlertFacade interface {
 
 	// CheckForLateArrivals is implemented by usecasefacades.AlertFacade that wraps checking for late arrivals usecase.
 	CheckForLateArrivals(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
+
+	// CheckForOverStays is implemented by usecasefacades.AlertFacade that wraps checking for over stays usecase.
+	CheckForOverStays(ctx context.Context, threshold time.Duration) ([]entities.Alert, error)
 }
 
 // Facade acts as a single entry point to access functionalities provided by all usecase facades.

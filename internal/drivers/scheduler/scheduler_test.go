@@ -20,6 +20,7 @@ func TestScheduler_NewScheduler(t *testing.T) {
 	}
 	alertConfig := config.AlertConfig{
 		LateArrivalThresholdMinutes: time.Hour,
+		OverStayThresholdMinutes:    time.Hour,
 	}
 	facade := &mocks.AlertFacade{}
 

@@ -24,3 +24,4 @@ scheduler:
 
 alert:
   LateArrivalThresholdMinutes: "60m" # 60 minutes.
+  OverStayThresholdMinutes: "30m" # 30 minutes.
